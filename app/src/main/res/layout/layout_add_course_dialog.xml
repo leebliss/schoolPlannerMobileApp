@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:textSize="20dp"
+        android:hint="Course Name"
+        android:id="@+id/courseName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Start Date"
+        android:id="@+id/courseStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseName"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="End Date"
+        android:id="@+id/courseEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseStartDate"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Status (completed, enrolled...)"
+        android:id="@+id/courseStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseEndDate"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Professor"
+        android:id="@+id/courseProfessor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseStatus"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Professor's Phone#"
+        android:id="@+id/courseProfessorPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseProfessor"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Professor's Email"
+        android:id="@+id/courseProfessorEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/courseProfessorPhone"
+        />
+
+</RelativeLayout>

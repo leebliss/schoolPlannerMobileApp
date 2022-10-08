@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <EditText
+        android:textSize="20dp"
+        android:hint="Assessment Name"
+        android:id="@+id/assessmentName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Start Date"
+        android:id="@+id/assessmentStartDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/assessmentName"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="End Date"
+        android:id="@+id/assessmentEndDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/assessmentStartDate"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Assessment Type"
+        android:id="@+id/assessmentType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/assessmentEndDate"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="Start Alert?"
+        android:id="@+id/assessmentStartAlert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/assessmentType"
+        />
+    <EditText
+        android:textSize="20dp"
+        android:hint="End Alert?"
+        android:id="@+id/assessmentEndAlert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/assessmentStartAlert"
+        />
+
+</RelativeLayout>
