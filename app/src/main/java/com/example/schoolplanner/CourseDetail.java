@@ -54,7 +54,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
 
-        //database connection
+        //database connection test github
         dbHelper = new DBHelper(this);
         //for displaying data in a list
         listItem = new ArrayList<>();
