@@ -54,7 +54,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
 
-        //database connection test github
+        //database connection
         dbHelper = new DBHelper(this);
         //for displaying data in a list
         listItem = new ArrayList<>();
@@ -158,6 +158,33 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             public void onClick(View view) {
 
                 openAssessmentDetailActivity();
+            }
+        });
+
+        //this is for saving a detail screen when done with changes
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //get values to save changes
+                String courseName = titleText.getText().toString();
+                String courseStart = startDate.getText().toString();
+                String courseEnd = endDate.getText().toString();
+                String courseStatus = status.getText().toString();
+                String courseProfessor = professor.getText().toString();
+                String courseProfessorPhone = professorPhone.getText().toString();
+                String courseProfessorEmail = professorEmail.getText().toString();
+
+                //save the changes
+                Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,courseStatus,courseProfessor,courseProfessorPhone,courseProfessorEmail);
+                //test for success
+                if(checkSavedChanges) {
+                    Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                    refreshList();
+                }
+                else{
+                    Toast.makeText(CourseDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

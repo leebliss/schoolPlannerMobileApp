@@ -143,6 +143,15 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         });
     }
 
+    //this causes everything to reload so the data is up to date when the back arrow is used
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
+    }
+
     //methods
     //refresh the list after making changes to data
     public void refreshList(){

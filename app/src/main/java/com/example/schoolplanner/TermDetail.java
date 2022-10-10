@@ -81,8 +81,6 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 termStartDate = cursor.getString(2);
                 termEndDate = cursor.getString(3);
             }
-            //toast item
-            //Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
         }
 
         //set name for this activity in title bar using value passed in by previous activity
@@ -154,13 +152,25 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             }
         });
 
-        //this is for saving a detail screen when done with changes/additions
-        //this includes the name, start and end dates
+        //this is for saving a detail screen when done with changes
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //code here for saving changed to name, start and end date edittext fields
+                //get values to save changes
+                String termName = titleText.getText().toString();
+                String termStart = startDate.getText().toString();
+                String termEnd = endDate.getText().toString();
+                //save the changes
+                Boolean checkSavedChanges = dbHelper.updateTermData(termID,termName,termStart,termEnd);
+                //test for success
+                if(checkSavedChanges) {
+                    Toast.makeText(TermDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                    refreshList();
+                }
+                else{
+                    Toast.makeText(TermDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -185,6 +195,15 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 }
             }
         });
+    }
+
+    //this causes everything to reload so the data is up to date when back arrow is used
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+        finish();
+        startActivity(getIntent());
     }
 
     //methods

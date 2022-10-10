@@ -95,14 +95,40 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("termName", name);
         contentValues.put("startDate", start);
         contentValues.put("endDate", end);
-        Cursor cursor = DB.rawQuery("Select * from TermInfo where termName = ?", new String[]{name} );
+        Cursor cursor = DB.rawQuery("Select * from TermInfo where termID = ?", new String[]{String.valueOf(termID)} );
         if(cursor.getCount()>0) {
-            long result = DB.update("TermInfo", contentValues, "name=?", new String[]{name});
+            long result = DB.update("TermInfo", contentValues, "termID=?", new String[]{String.valueOf(termID)} );
 
             if (result == -1) {
                 return false;
             } else {
                 return true;  
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    public Boolean updateCourseData(int courseID, String name, String start, String end, String status, String professor, String phone, String email){
+        SQLiteDatabase DB = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("courseName", name);
+        contentValues.put("startDate", start);
+        contentValues.put("endDate", end);
+        contentValues.put("status", status);
+        contentValues.put("professor", professor);
+        contentValues.put("phone", phone);
+        contentValues.put("email", email);
+
+        Cursor cursor = DB.rawQuery("Select * from CourseInfo where courseID = ?", new String[]{String.valueOf(courseID)} );
+        if(cursor.getCount()>0) {
+            long result = DB.update("CourseInfo", contentValues, "courseID=?", new String[]{String.valueOf(courseID)} );
+
+            if (result == -1) {
+                return false;
+            } else {
+                return true;
             }
         }
         else{
@@ -190,7 +216,6 @@ public class DBHelper extends SQLiteOpenHelper {
             case "CourseInfo":
                 tableName = "CourseInfo";
                 primaryID = "courseID";
-                //cursor = DB.rawQuery("Select * from CourseInfo where courseName = ?", new String[]{name} );
                 break;
             case "AssessmentInfo":
                 tableName = "AssessmentInfo";
