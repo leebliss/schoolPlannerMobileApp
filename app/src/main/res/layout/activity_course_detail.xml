@@ -1,88 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="20dp"
-    tools:context=".CourseDetail">
 
-    <EditText
-        android:id="@+id/textTitle"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:orientation="vertical"
+        android:id="@+id/mainLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".CourseDetail">
+
+        <EditText
+            android:id="@+id/textTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/holo_blue_dark"
+            android:hint="variable text"
+            android:textSize="22dp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_marginBottom="3dp"
+            android:gravity="center"
+            />
+    <LinearLayout
+        android:id="@+id/courseStart"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_dark"
-        android:hint="variable text"
-        android:textSize="22dp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:padding="10dp"
-        android:layout_marginBottom="3dp"
-        android:textAlignment="center"
-        />
-    <EditText
-        android:id="@+id/courseStartDate"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        layout android:layout_below="@id/textTitle"
+        >
+        <TextView
+            android:id="@+id/courseStartDateTitle"
+            android:layout_width= "0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text ="Course Start Date: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/courseStartDate"
+            android:layout_width= "0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textTitle"
-        android:textSize="18dp"
-        android:hint="variable text"
-        android:layout_marginLeft="5dp"
-        />
-    <EditText
-        android:id="@+id/courseEndDate"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        layout android:layout_below="@id/courseStart"
+        >
+        <TextView
+            android:id="@+id/courseEndDateTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Course End Date: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/courseEndDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseStartDate"
-        android:textSize="18dp"
-        android:hint="variable text"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        />
-    <EditText
-        android:id="@+id/courseStatus"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+        <TextView
+            android:id="@+id/courseStatusTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Course Status: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/courseStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+        </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseEndDate"
-        android:textSize="18dp"
-        android:hint="variable text"
-        android:layout_marginLeft="5dp"
-        />
-    <EditText
-        android:id="@+id/courseProfessor"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+        <TextView
+            android:id="@+id/courseProfessorTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Course Professor: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/courseProfessor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseStatus"
-        android:textSize="18dp"
-        android:hint="variable text"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        />
-    <EditText
-        android:id="@+id/courseProfessorPhone"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+        <TextView
+            android:id="@+id/courseProfessorPhoneTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Professor Phone: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/courseProfessorPhone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseProfessor"
-        android:textSize="18dp"
-        android:hint="variable text"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        />
-    <EditText
-        android:id="@+id/courseProfessorEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/courseProfessorPhone"
-        android:textSize="18dp"
-        android:hint="variable text"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
+        <TextView
+            android:id="@+id/courseProfessorEmailTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Professor Email: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/courseProfessorEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
     <TextView
         android:id="@+id/assessmentListHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/courseProfessorEmail"
         android:textSize="20dp"
         android:textColor="@color/black"
         android:textAlignment="center"
@@ -90,56 +161,62 @@
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"
         />
-    <ListView
-        android:id="@+id/displayAssessmentNames"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:layout_below="@+id/assessmentListHeader"
-        android:scrollbars="vertical"
-        android:layout_above="@+id/bottomButtonLayout"
-        />
     <LinearLayout
-        android:id="@+id/bottomButtonLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         >
-
+        <ListView
+            android:id="@+id/displayAssessmentNames"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_below="@+id/assessmentListHeader"
+            android:scrollbars="vertical"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottomButtonLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        >
         <Button
             android:id="@+id/btnInsert"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
             android:layout_marginRight="5dp"
             android:text="Add"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btnUpdate"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
             android:layout_marginRight="5dp"
             android:text="Open"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_weight="1"
             android:layout_marginRight="5dp"
             android:text="Save"
             android:textSize="13dp" />
 
         <Button
             android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:text="Delete"
             android:textSize="13dp" />
 

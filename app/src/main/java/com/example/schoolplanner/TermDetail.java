@@ -88,10 +88,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         titleText.setText(nameOfTermSelected);
         //set start date and end date for term in textviews
         startDate = findViewById(R.id.termStartDate);
-        String startHolder = "Start Date: "+termStartDate;
+        String startHolder = termStartDate;
         startDate.setText(startHolder);
         endDate = findViewById(R.id.termEndDate);
-        String endHolder = "End Date: "+termEndDate;
+        String endHolder = termEndDate;
         endDate.setText(endHolder);
 
         //text input fields

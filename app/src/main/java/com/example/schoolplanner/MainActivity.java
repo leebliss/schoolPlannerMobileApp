@@ -47,12 +47,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         //set name for this activity in title bar
         titleText = findViewById(R.id.textTitle);
         titleText.setText("Term List");
-        //text input fields
-        //name = findViewById(R.id.termName);
-        //contact = findViewById(R.id.termStartDate);
-        //DOB = findViewById(R.id.termEndDate);
-        //text views
-        //displayTermsText = findViewById(R.id.displayTerms);
         //buttons
         addNew = findViewById(R.id.btnInsert);
         update = findViewById(R.id.btnUpdate);
