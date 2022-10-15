@@ -93,28 +93,28 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
 
         //set values in edit texts
         startDate = findViewById(R.id.courseStartDate);
-        String startHolder = "Start Date: "+courseStartDate;
-        startDate.setText(startHolder);
+        //String startHolder = "Start Date: "+courseStartDate;
+        startDate.setText(courseStartDate);
 
         endDate = findViewById(R.id.courseEndDate);
-        String endHolder = "End Date: "+courseEndDate;
-        endDate.setText(endHolder);
+        //String endHolder = "End Date: "+courseEndDate;
+        endDate.setText(courseEndDate);
 
         status = findViewById(R.id.courseStatus);
-        String statusHolder = "Status: "+courseStatus;
-        status.setText(statusHolder);
+        //String statusHolder = "Status: "+courseStatus;
+        status.setText(courseStatus);
 
         professor = findViewById(R.id.courseProfessor);
-        String professorHolder = "Professor: "+courseProfessor;
-        professor.setText(professorHolder);
+        //String professorHolder = "Professor: "+courseProfessor;
+        professor.setText(courseProfessor);
 
         professorPhone = findViewById(R.id.courseProfessorPhone);
-        String professorPhoneHolder = "Professor Phone: "+courseProfessorPhone;
-        professorPhone.setText(professorPhoneHolder);
+        //String professorPhoneHolder = "Professor Phone: "+courseProfessorPhone;
+        professorPhone.setText(courseProfessorPhone);
 
         professorEmail = findViewById(R.id.courseProfessorEmail);
-        String professorEmailHolder = "Professor Email: "+courseProfessorEmail;
-        professorEmail.setText(professorEmailHolder);
+        //String professorEmailHolder = "Professor Email: "+courseProfessorEmail;
+        professorEmail.setText(courseProfessorEmail);
 
         //buttons
         addNew = findViewById(R.id.btnInsert);
@@ -224,9 +224,11 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else{
             //display name and start/end dates
             while (cursor.moveToNext()) {
-                String nameAndDates = (cursor.getString(1))+ "\n"+(cursor.getString(2))+" to "+(cursor.getString(3));
-                listItem.add(nameAndDates); //index 0 is name
-                //listItem.add(cursor.getString(0)); //index 0 is name
+                if(cursor.getInt(7)==courseID) { //index 7 is the courseID foreign key for AssessmentInfo DB
+                    String nameAndDates = (cursor.getString(1)) + "\n" + (cursor.getString(2)) + " to " + (cursor.getString(3));
+                    listItem.add(nameAndDates);
+                    //listItem.add(cursor.getString(0)); //index 0 is name
+                }
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
             userList.setAdapter(adapter);

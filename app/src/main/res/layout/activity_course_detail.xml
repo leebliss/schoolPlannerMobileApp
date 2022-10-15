@@ -6,6 +6,7 @@
         android:id="@+id/mainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="5dp"
         tools:context=".CourseDetail">
 
         <EditText
@@ -22,12 +23,12 @@
             android:gravity="center"
             />
     <LinearLayout
-        android:id="@+id/courseStart"
+        android:id="@+id/courseStartLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        layout android:layout_below="@id/textTitle"
+        android:layout_below="@id/textTitle"
         >
         <TextView
             android:id="@+id/courseStartDateTitle"
@@ -45,11 +46,12 @@
             android:textSize="18dp" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/courseEndLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        layout android:layout_below="@id/courseStart"
+        android:layout_below="@id/courseStartLayout"
         >
         <TextView
             android:id="@+id/courseEndDateTitle"
@@ -67,10 +69,12 @@
             android:textSize="18dp" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/courseStatusLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_below="@id/courseEndLayout"
         >
         <TextView
             android:id="@+id/courseStatusTitle"
@@ -88,10 +92,12 @@
             android:textSize="18dp" />
         </LinearLayout>
     <LinearLayout
+        android:id="@+id/courseProfessorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_below="@id/courseStatusLayout"
         >
         <TextView
             android:id="@+id/courseProfessorTitle"
@@ -109,10 +115,12 @@
             android:textSize="18dp" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/courseProfessorPhoneLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_below="@id/courseProfessorLayout"
         >
         <TextView
             android:id="@+id/courseProfessorPhoneTitle"
@@ -130,10 +138,12 @@
             android:textSize="18dp" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/courseProfessorEmailLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_below="@id/courseProfessorPhoneLayout"
         >
         <TextView
             android:id="@+id/courseProfessorEmailTitle"
@@ -160,19 +170,21 @@
         android:text="List of Assessments"
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"
+        android:layout_below="@id/courseProfessorEmailLayout"
         />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_below="@id/assessmentListHeader"
+        android:layout_above="@id/bottomButtonLayout"
         >
         <ListView
             android:id="@+id/displayAssessmentNames"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
-            android:layout_below="@+id/assessmentListHeader"
             android:scrollbars="vertical"
             />
     </LinearLayout>

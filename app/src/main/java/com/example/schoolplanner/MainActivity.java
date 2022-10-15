@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                         termID = cursor.getInt(0);
                     }
                     //toast item
-                    Toast.makeText(MainActivity.this, "" + termNameOnly, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, termID + " " + termNameOnly, Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -19,12 +19,12 @@ public class AddCourseDialog extends AppCompatDialogFragment {
     private AddCourseDialogListener listener;
     //for holding name of term to save to new course when added
     private int parentTermID=0;
-    private String parentTerm="";
+    //private String parentTerm="";
     //constructor for getting selected term from activity that launched this dialog
     public AddCourseDialog(String termThatOwnsMe, int termIDThatOwnsMe) {
         parentTermID = termIDThatOwnsMe;
         //do I still need this?
-        parentTerm = termThatOwnsMe;
+        //parentTerm = termThatOwnsMe;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                         //this is the foreign key for the courseInfo DB
                         int termID = parentTermID;
                         //do I still need this?
-                        String termName = parentTerm;
+                        //String termName = parentTerm;
 
                         listener.applyTexts(courseName,startDate,endDate,status,professor,phone,email,termID);
                         //refresh list after adding data

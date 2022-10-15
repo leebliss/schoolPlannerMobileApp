@@ -220,8 +220,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             //get name and start/end dates, add to list, also get course ID for passing to assessment detail activity
             while (cursor.moveToNext()) {
                 //courseID = cursor.getInt(0);
-                String nameAndDates = (cursor.getString(1))+ "\n"+(cursor.getString(2))+" to "+(cursor.getString(3));
-                listItem.add(nameAndDates); //index 1 is the name
+                if(cursor.getInt(8)==termID) { //index 8 is the termID foreign key for CourseInfo DB
+                    String nameAndDates = (cursor.getString(1)) + "\n" + (cursor.getString(2)) + " to " + (cursor.getString(3));
+                    listItem.add(nameAndDates); //index 1 is the name
+                }
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
             userList.setAdapter(adapter);
