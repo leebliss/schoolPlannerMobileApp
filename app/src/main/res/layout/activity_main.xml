@@ -45,8 +45,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="6dp"
-            android:text="Add"
-            android:textSize="14dp" />
+            android:text="Add Term"
+            android:textSize="12dp" />
 
         <Button
             android:id="@+id/btnUpdate"
@@ -54,8 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="6dp"
-            android:text="Open"
-            android:textSize="14dp" />
+            android:text="Open Term"
+            android:textSize="12dp" />
 
         <Button
             android:id="@+id/btnDelete"
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="6dp"
-            android:text="Delete"
-            android:textSize="14dp" />
+            android:text="Delete Term"
+            android:textSize="12dp" />
     </LinearLayout>
 </RelativeLayout>

@@ -35,7 +35,7 @@
             android:layout_weight="1"
             android:text ="Course Start Date: "
             android:textSize="18dp" />
-        <EditText
+        <TextView
             android:id="@+id/termStartDate"
             android:layout_width= "0dp"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:text="Course End Date: "
             android:textSize="18dp" />
-        <EditText
+        <TextView
             android:id="@+id/termEndDate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -109,8 +109,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginRight="5dp"
-            android:text="Add"
-            android:textSize="13dp" />
+            android:text="Add Course"
+            android:textSize="12dp" />
 
         <Button
             android:id="@+id/btnUpdate"
@@ -118,24 +118,24 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginRight="5dp"
-            android:text="Open"
-            android:textSize="13dp" />
-
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:text="Save"
-            android:textSize="13dp" />
+            android:text="Open Course"
+            android:textSize="12dp" />
 
         <Button
             android:id="@+id/btnDelete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Delete"
-            android:textSize="13dp" />
+            android:layout_marginRight="5dp"
+            android:text="Delete Course"
+            android:textSize="12dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save Term"
+            android:textSize="12dp" />
     </LinearLayout>
 </RelativeLayout>

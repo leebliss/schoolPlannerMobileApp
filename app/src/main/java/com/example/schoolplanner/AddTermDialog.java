@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
@@ -16,7 +18,8 @@ import java.util.Calendar;
 
 public class AddTermDialog extends AppCompatDialogFragment {
     //for user to enter values
-    private EditText editTextName, editTextStartDate, editEndDate ;
+    private EditText editTextName;
+    private TextView textViewStartDate, textViewEndDate;
     //for date picker
     private int mDate, mMonth, mYear;
     //listener
@@ -41,8 +44,8 @@ public class AddTermDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         String termName = editTextName.getText().toString();
-                        String termContact = editTextStartDate.getText().toString();
-                        String termDOB = editEndDate.getText().toString();
+                        String termContact = textViewStartDate.getText().toString();
+                        String termDOB = textViewEndDate.getText().toString();
                         listener.applyTexts(termName,termContact,termDOB);
                         //refresh list after adding data
                         ((MainActivity)getActivity()).refreshList();
@@ -50,11 +53,11 @@ public class AddTermDialog extends AppCompatDialogFragment {
                 });
 
         editTextName = view.findViewById(R.id.termName);
-        editTextStartDate = view.findViewById(R.id.termStartDate);
-        editEndDate = view.findViewById(R.id.termEndDate);
+        textViewStartDate = view.findViewById(R.id.termStartDate);
+        textViewEndDate = view.findViewById(R.id.termEndDate);
 
         //listener for start date
-        editTextStartDate.setOnClickListener(new View.OnClickListener() {
+        textViewStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -64,14 +67,14 @@ public class AddTermDialog extends AppCompatDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        editTextStartDate.setText(month+"-"+dayOfMonth+"-"+year);
+                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
             }
         });
         //listener for end date
-        editEndDate.setOnClickListener(new View.OnClickListener() {
+        textViewEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -81,7 +84,7 @@ public class AddTermDialog extends AppCompatDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        editEndDate.setText(month+"-"+dayOfMonth+"-"+year);
+                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();

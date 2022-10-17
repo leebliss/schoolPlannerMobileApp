@@ -1,20 +1,28 @@
 package com.example.schoolplanner;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import java.util.Calendar;
+
 public class AddCourseDialog extends AppCompatDialogFragment {
     //for user to enter values
-    private EditText editTextName, editTextStartDate, editTextEndDate, editTextCourseStatus, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
+    private EditText editTextName, editTextCourseStatus, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
+    private TextView textViewStartDate, textViewEndDate;
+    //for date picker
+    private int mDate, mMonth, mYear;
     //listener
     private AddCourseDialogListener listener;
     //for holding name of term to save to new course when added
@@ -46,8 +54,8 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         String courseName = editTextName.getText().toString();
-                        String startDate = editTextStartDate.getText().toString();
-                        String endDate = editTextEndDate.getText().toString();
+                        String startDate = textViewStartDate.getText().toString();
+                        String endDate = textViewEndDate.getText().toString();
                         String status = editTextCourseStatus.getText().toString();
                         String professor = editTextCourseProfessor.getText().toString();
                         String phone = editTextCourseProfessorPhone.getText().toString();
@@ -64,12 +72,48 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                 });
 
         editTextName = view.findViewById(R.id.courseName);
-        editTextStartDate = view.findViewById(R.id.courseStartDate);
-        editTextEndDate = view.findViewById(R.id.courseEndDate);
+        textViewStartDate = view.findViewById(R.id.courseStartDate);
+        textViewEndDate = view.findViewById(R.id.courseEndDate);
         editTextCourseStatus = view.findViewById(R.id.courseStatus);
         editTextCourseProfessor = view.findViewById(R.id.courseProfessor);
         editTextCourseProfessorPhone = view.findViewById(R.id.courseProfessorPhone);
         editTextCourseProfessorEmail = view.findViewById(R.id.courseProfessorEmail);
+
+        //listener for start date
+        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar Cal = Calendar.getInstance();
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
+        //listener for end date
+        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar Cal = Calendar.getInstance();
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
+
 
         return builder.create();
     }

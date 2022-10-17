@@ -1,5 +1,6 @@
 package com.example.schoolplanner;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,11 +23,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener {
 
     //TextView titleText;
-    EditText titleText, startDate, endDate, status, professor, professorPhone, professorEmail;
+    EditText titleText, status, professor, professorPhone, professorEmail;
+    private TextView textViewStartDate, textViewEndDate;
+    //for date picker
+    private int mDate, mMonth, mYear;
     //TextView displayTermsText;
     Button addNew, update, save, delete;
     //for db connectivity
@@ -92,13 +98,13 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         titleText.setText(nameOfCourseSelected);
 
         //set values in edit texts
-        startDate = findViewById(R.id.courseStartDate);
+        textViewStartDate = findViewById(R.id.courseStartDate);
         //String startHolder = "Start Date: "+courseStartDate;
-        startDate.setText(courseStartDate);
+        textViewStartDate.setText(courseStartDate);
 
-        endDate = findViewById(R.id.courseEndDate);
+        textViewEndDate = findViewById(R.id.courseEndDate);
         //String endHolder = "End Date: "+courseEndDate;
-        endDate.setText(courseEndDate);
+        textViewEndDate.setText(courseEndDate);
 
         status = findViewById(R.id.courseStatus);
         //String statusHolder = "Status: "+courseStatus;
@@ -126,6 +132,41 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         viewData();
 
         //set listeners
+        //listener for start date
+        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar Cal = Calendar.getInstance();
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CourseDetail.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
+        //listener for end date
+        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar Cal = Calendar.getInstance();
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(CourseDetail.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
         //for clicking on list items
         userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -168,8 +209,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
 
                 //get values to save changes
                 String courseName = titleText.getText().toString();
-                String courseStart = startDate.getText().toString();
-                String courseEnd = endDate.getText().toString();
+                String courseStart = textViewStartDate.getText().toString();
+                String courseEnd = textViewEndDate.getText().toString();
                 String courseStatus = status.getText().toString();
                 String courseProfessor = professor.getText().toString();
                 String courseProfessorPhone = professorPhone.getText().toString();

@@ -1,5 +1,6 @@
 package com.example.schoolplanner;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TermDetail extends AppCompatActivity implements AddCourseDialog.AddCourseDialogListener {
 
@@ -28,9 +31,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
     public static final String COURSE_ID = "com.example.schoolplanner.COURSE_ID";
     public static final String COURSE_NAME = "com.example.schoolplanner.COURSE_NAME";
 
-    EditText titleText, startDate, endDate;
-    //EditText name, contact, DOB;
-    //TextView displayTermsText;
+    EditText titleText;
+    private TextView textViewStartDate, textViewEndDate;
+    //for date picker
+    private int mDate, mMonth, mYear;
     Button addNew, update, delete, save;
     //for db connectivity
     DBHelper dbHelper;
@@ -87,27 +91,60 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         titleText = findViewById(R.id.textTitle);
         titleText.setText(nameOfTermSelected);
         //set start date and end date for term in textviews
-        startDate = findViewById(R.id.termStartDate);
+        textViewStartDate = findViewById(R.id.termStartDate);
         String startHolder = termStartDate;
-        startDate.setText(startHolder);
-        endDate = findViewById(R.id.termEndDate);
+        textViewStartDate.setText(startHolder);
+        textViewEndDate = findViewById(R.id.termEndDate);
         String endHolder = termEndDate;
-        endDate.setText(endHolder);
+        textViewEndDate.setText(endHolder);
 
-        //text input fields
-        //name = findViewById(R.id.termName);
-        //contact = findViewById(R.id.termStartDate);
-        //DOB = findViewById(R.id.termEndDate);
         //buttons
         addNew = findViewById(R.id.btnInsert);
         update = findViewById(R.id.btnUpdate);
         save = findViewById(R.id.btnSave);
         delete = findViewById(R.id.btnDelete);
 
+
         //call local viewData method
         viewData();
 
         //set listeners
+        //listener for start date
+        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar Cal = Calendar.getInstance();
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TermDetail.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
+        //listener for end date
+        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar Cal = Calendar.getInstance();
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
+                DatePickerDialog datePickerDialog = new DatePickerDialog(TermDetail.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                    }
+                }, mYear, mMonth, mDate);
+                datePickerDialog.show();
+            }
+        });
+
         //for clicking on list items
         userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -159,8 +196,8 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
 
                 //get values to save changes
                 String termName = titleText.getText().toString();
-                String termStart = startDate.getText().toString();
-                String termEnd = endDate.getText().toString();
+                String termStart = textViewStartDate.getText().toString();
+                String termEnd = textViewEndDate.getText().toString();
                 //save the changes
                 Boolean checkSavedChanges = dbHelper.updateTermData(termID,termName,termStart,termEnd);
                 //test for success

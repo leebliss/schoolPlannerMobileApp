@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-    <EditText
+    <TextView
         android:textSize="20dp"
         android:hint="Start Date"
         android:id="@+id/termStartDate"
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/termName"
         />
-    <EditText
+    <TextView
         android:textSize="20dp"
         android:hint="End Date"
         android:id="@+id/termEndDate"
