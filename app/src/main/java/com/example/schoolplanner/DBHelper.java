@@ -135,6 +135,30 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+    public Boolean updateAssessmentData(int assessmentID, String name,String start,String end,String type,String startAlert,String endAlert){
+        SQLiteDatabase DB = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("assessmentName", name);
+        contentValues.put("startDate", start);
+        contentValues.put("endDate", end);
+        contentValues.put("type", type);
+        contentValues.put("startAlert", startAlert);
+        contentValues.put("endAlert", endAlert);
+
+        Cursor cursor = DB.rawQuery("Select * from AssessmentInfo where assessmentID = ?", new String[]{String.valueOf(assessmentID)} );
+        if(cursor.getCount()>0) {
+            long result = DB.update("AssessmentInfo", contentValues, "assessmentID=?", new String[]{String.valueOf(assessmentID)} );
+
+            if (result == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+    }
 
     public Boolean deleteData(String name, String DbToDeleteFrom){
         SQLiteDatabase DB = this.getWritableDatabase();

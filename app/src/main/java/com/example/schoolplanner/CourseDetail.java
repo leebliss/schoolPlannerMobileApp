@@ -27,6 +27,9 @@ import java.util.Calendar;
 
 public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener {
 
+    //for passing values to another activity
+    public static final String ASSESSMENT_ID = "com.example.schoolplanner.ASSESSMENT_ID";
+
     //TextView titleText;
     EditText titleText, status, professor, professorPhone, professorEmail;
     private TextView textViewStartDate, textViewEndDate;
@@ -45,9 +48,11 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     //for parsing name of selected item
     String nameOfSelectedItem;
     String assessmentNameOnly;
-    //for holding courseID sent over in the intent and corresponding values
+    //for holding courseID sent over in the intent
     int courseID;
-    String nameOfCourseSelected; //this is the course featured in this term detail
+    //for holding assessmentID to send over to assessment detail in the intent
+    int assessmentID;
+    String nameOfCourseSelected; //this is the course featured in this  detail
     String courseStartDate;
     String courseEndDate;
     String courseStatus;
@@ -179,11 +184,20 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                     parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
                 }
                 currentlySelectedItem = i;
-                //get course name only
+                //get assessment name only
                 String[] separated = nameOfSelectedItem.split("\n");
                 assessmentNameOnly = separated[0];
-                //toast item
-                Toast.makeText(CourseDetail.this,""+assessmentNameOnly, Toast.LENGTH_SHORT).show();
+                //pass assessment name to database to get assessment ID and assign to assessmentID variable
+                Cursor cursor = dbHelper.getDataByName(assessmentNameOnly, "AssessmentInfo");
+                if (cursor.getCount() == 0) {
+                    Toast.makeText(CourseDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
+                } else {
+                    while (cursor.moveToNext()) {
+                        assessmentID = cursor.getInt(0);
+                    }
+                    //toast item
+                    Toast.makeText(CourseDetail.this, "" + assessmentNameOnly, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -198,7 +212,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             @Override
             public void onClick(View view) {
 
-                openAssessmentDetailActivity();
+                openAssessmentDetailActivity(assessmentID);
             }
         });
 
@@ -288,8 +302,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else
             Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
-    public void openAssessmentDetailActivity(){
+    public void openAssessmentDetailActivity(int ID){
         Intent intent =new Intent(this, AssessmentDetail.class);
+        intent.putExtra(ASSESSMENT_ID, ID);
         startActivity(intent);
     }
 }

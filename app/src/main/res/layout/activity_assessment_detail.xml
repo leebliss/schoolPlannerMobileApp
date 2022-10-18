@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp"
+    tools:context=".AssessmentDetail">
+
+    <EditText
+        android:id="@+id/textTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_dark"
+        android:hint="variable text"
+        android:textSize="22dp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:padding="10dp"
+        android:layout_marginBottom="3dp"
+        android:gravity="center"
+        />
+    <LinearLayout
+        android:id="@+id/assessmentStartLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/textTitle"
+        >
+        <TextView
+            android:id="@+id/assessmentStartDateTitle"
+            android:layout_width= "0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text ="Assessment Start Date: "
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/assessmentStartDate"
+            android:layout_width= "0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/assessmentEndLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/assessmentStartLayout"
+        >
+        <TextView
+            android:id="@+id/assessmentEndDateTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Assessment End Date: "
+            android:textSize="18dp" />
+        <TextView
+            android:id="@+id/assessmentEndDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/assessmentTypeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/assessmentEndLayout"
+        >
+        <TextView
+            android:id="@+id/assessmentTypeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Assessment Type: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/assessmentType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/setStartAlertLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/assessmentTypeLayout"
+        >
+        <TextView
+            android:id="@+id/setStartAlertTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Set Start Alert: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/setStartAlert"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/setEndAlertLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@id/setStartAlertLayout"
+        >
+        <TextView
+            android:id="@+id/setEndAlertTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Set End Alert: "
+            android:textSize="18dp" />
+        <EditText
+            android:id="@+id/setEndAlert"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="variable text"
+            android:textSize="18dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/bottomButtonLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
+        >
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Save Assessment"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+</RelativeLayout>

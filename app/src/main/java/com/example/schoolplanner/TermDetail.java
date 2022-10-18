@@ -160,7 +160,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 //get course name only
                 String[] separated = nameOfSelectedItem.split("\n");
                 courseNameOnly = separated[0];
-                //pass term name to database to get term ID and assign to termID variable
+                //pass course name to database to get course ID and assign to courseID variable
                 Cursor cursor = dbHelper.getDataByName(courseNameOnly, "CourseInfo");
                 if (cursor.getCount() == 0) {
                     Toast.makeText(TermDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
