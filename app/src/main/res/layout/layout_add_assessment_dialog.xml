@@ -35,17 +35,19 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/assessmentEndDate"
         />
-    <EditText
+    <Switch
         android:textSize="20dp"
-        android:hint="Start Alert?"
+        android:hint="Start Alert:"
+        android:checked="false"
         android:id="@+id/assessmentStartAlert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/assessmentType"
         />
-    <EditText
+    <Switch
         android:textSize="20dp"
-        android:hint="End Alert?"
+        android:hint="End Alert:"
+        android:checked="false"
         android:id="@+id/assessmentEndAlert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

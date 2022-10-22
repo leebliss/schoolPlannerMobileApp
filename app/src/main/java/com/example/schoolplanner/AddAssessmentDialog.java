@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -18,10 +19,8 @@ import java.util.Calendar;
 
 public class AddAssessmentDialog extends AppCompatDialogFragment {
     //for user to enter values
-    private EditText editTextName;
-    private EditText editTextType;
-    private EditText editTextStartAlert;
-    private EditText editTextEndAlert;
+    private EditText editTextName, editTextType;
+    private Switch switchStartAlert, switchEndAlert;
     private TextView textViewStartDate, textViewEndDate;
     //for date picker
     private int mDate, mMonth, mYear;
@@ -58,8 +57,15 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         String startDate = textViewStartDate.getText().toString();
                         String endDate = textViewEndDate.getText().toString();
                         String type = editTextType.getText().toString();
-                        String startAlert = editTextStartAlert.getText().toString();
-                        String endAlert = editTextEndAlert.getText().toString();
+                        //change boolean switch values to strings for storage
+                        //for a start alert
+                        Boolean switchState = switchStartAlert.isChecked();
+                        String startAlert = "false"; //default
+                        if(switchState) {startAlert = "true";}
+                        //for an end alert
+                        switchState = switchEndAlert.isChecked();
+                        String endAlert = "false"; //default
+                        if(switchState) {endAlert = "true";}
                         //this is the foreign key for the assessmentInfo DB
                         int courseID = parentCourseID;
                         //do I still need this?
@@ -74,8 +80,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         textViewStartDate = view.findViewById(R.id.assessmentStartDate);
         textViewEndDate = view.findViewById(R.id.assessmentEndDate);
         editTextType = view.findViewById(R.id.assessmentType);
-        editTextStartAlert = view.findViewById(R.id.assessmentStartAlert);
-        editTextEndAlert = view.findViewById(R.id.assessmentEndAlert);
+        switchStartAlert = (Switch) view.findViewById(R.id.assessmentStartAlert);
+        switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
 
         //listener for start date
         textViewStartDate.setOnClickListener(new View.OnClickListener() {

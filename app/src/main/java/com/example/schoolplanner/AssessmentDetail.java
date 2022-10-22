@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
@@ -27,8 +28,8 @@ import java.util.Calendar;
 
 public class AssessmentDetail extends AppCompatActivity {
 
-    //TextView titleText;
-    EditText titleText, type, sAlert, eAlert;
+    EditText titleText, type;
+    private Switch sAlert, eAlert;
     private TextView textViewStartDate, textViewEndDate;
     //for date picker
     private int mDate, mMonth, mYear;
@@ -36,10 +37,8 @@ public class AssessmentDetail extends AppCompatActivity {
     Button save;
     //for db connectivity
     DBHelper dbHelper;
-    //for displaying data in a list
-    //ArrayList<String> listItem;
+
     ArrayAdapter adapter;
-    //ListView userList;
     //for holding index of selected item
     int currentlySelectedItem;
     //for parsing name of selected item
@@ -113,7 +112,16 @@ public class AssessmentDetail extends AppCompatActivity {
         type = findViewById(R.id.assessmentType);
         //String statusHolder = "Status: "+courseStatus;
         type.setText(assessmentType);
+        //set value of start alert switch
+        sAlert = (Switch) findViewById(R.id.setStartAlert);
+        if(startAlert.equals("true")){sAlert.setChecked(true);}
+        else{sAlert.setChecked(false);}
+        //set value of end alert switch
+        eAlert = (Switch) findViewById(R.id.setEndAlert);
+        if(endAlert.equals("true")){eAlert.setChecked(true);}
+        else{eAlert.setChecked(false);}
 
+        /*
         sAlert = findViewById(R.id.setStartAlert);
         //String professorHolder = "Professor: "+courseProfessor;
         sAlert.setText(startAlert);
@@ -121,6 +129,7 @@ public class AssessmentDetail extends AppCompatActivity {
         eAlert = findViewById(R.id.setEndAlert);
         //String professorHolder = "Professor: "+courseProfessor;
         eAlert.setText(endAlert);
+         */
 
         /*
         professorPhone = findViewById(R.id.courseProfessorPhone);
@@ -227,8 +236,17 @@ public class AssessmentDetail extends AppCompatActivity {
                 String assessmentStart = textViewStartDate.getText().toString();
                 String assessmentEnd = textViewEndDate.getText().toString();
                 String assessmentType = type.getText().toString();
-                String startAlert = sAlert.getText().toString();
-                String endAlert = eAlert.getText().toString();
+                //change boolean switch values to strings for storage
+                //for a start alert
+                Boolean switchState = sAlert.isChecked();
+                String startAlert = "false"; //default
+                if(switchState) {startAlert = "true";}
+                //for an end alert
+                switchState = eAlert.isChecked();
+                String endAlert = "false"; //default
+                if(switchState) {endAlert = "true";}
+                //String startAlert = sAlert.getText().toString();
+                //String endAlert = eAlert.getText().toString();
                 //String courseProfessorPhone = professorPhone.getText().toString();
                 //String courseProfessorEmail = professorEmail.getText().toString();
 
