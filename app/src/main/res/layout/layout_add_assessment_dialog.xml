@@ -13,7 +13,7 @@
         />
     <TextView
         android:textSize="20dp"
-        android:hint="Start Date"
+        android:text ="Start Date"
         android:id="@+id/assessmentStartDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,32 +21,52 @@
         />
     <TextView
         android:textSize="20dp"
-        android:hint="End Date"
+        android:text ="End Date"
         android:id="@+id/assessmentEndDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/assessmentStartDate"
         />
-    <EditText
+    <TextView
         android:textSize="20dp"
-        android:hint="Assessment Type"
-        android:id="@+id/assessmentType"
+        android:text ="Assessment Type"
+        android:id="@+id/assessmentTypeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/assessmentEndDate"
         />
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text ="End Date"
+        android:id="@+id/assessmentTypeRadioGroup"
+        android:layout_below="@+id/assessmentTypeTitle"
+        >
+        <RadioButton
+            android:id="@+id/assessmentPerformanceRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text ="Performance"
+            />
+        <RadioButton
+            android:id="@+id/assessmentObjectiveRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text ="Objective"
+        />
+    </RadioGroup>
     <Switch
         android:textSize="20dp"
-        android:hint="Start Alert:"
+        android:text="Start Alert"
         android:checked="false"
         android:id="@+id/assessmentStartAlert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/assessmentType"
+        android:layout_below="@+id/assessmentTypeRadioGroup"
         />
     <Switch
         android:textSize="20dp"
-        android:hint="End Alert:"
+        android:text="End Alert"
         android:checked="false"
         android:id="@+id/assessmentEndAlert"
         android:layout_width="match_parent"

@@ -2,9 +2,9 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:padding="5dp"
         tools:context=".CourseDetail">
 
@@ -184,17 +184,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
-            android:scrollbars="vertical"
             />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/bottomButtonLayout"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:orientation="horizontal"
         >
         <Button
             android:id="@+id/btnInsert"
@@ -230,6 +229,5 @@
             android:layout_weight="1"
             android:text="Save     Course"
             android:textSize="8dp" />
-
     </LinearLayout>
 </RelativeLayout>

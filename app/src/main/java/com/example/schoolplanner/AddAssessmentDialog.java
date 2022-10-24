@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -19,8 +20,9 @@ import java.util.Calendar;
 
 public class AddAssessmentDialog extends AppCompatDialogFragment {
     //for user to enter values
-    private EditText editTextName, editTextType;
+    private EditText editTextName;
     private Switch switchStartAlert, switchEndAlert;
+    private RadioButton performanceAssessmentRadio, objectiveAssessmentRadio;
     private TextView textViewStartDate, textViewEndDate;
     //for date picker
     private int mDate, mMonth, mYear;
@@ -56,7 +58,14 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         String assessmentName = editTextName.getText().toString();
                         String startDate = textViewStartDate.getText().toString();
                         String endDate = textViewEndDate.getText().toString();
-                        String type = editTextType.getText().toString();
+                        //change boolean radiobutton values to strings for storage
+                        //for the performance assessment radio
+                        Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
+                        String assessmentType = ""; //default
+                        if(performanceRadioState) {assessmentType = "performance";}
+                        //for the objective assessment radio
+                        Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
+                        if(objectiveRadioState) {assessmentType = "objective";}
                         //change boolean switch values to strings for storage
                         //for a start alert
                         Boolean switchState = switchStartAlert.isChecked();
@@ -70,7 +79,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         int courseID = parentCourseID;
                         //do I still need this?
                         String courseName = parentCourse;
-                        listener.applyTexts(assessmentName,startDate,endDate,type,startAlert,endAlert,courseID);
+                        listener.applyTexts(assessmentName,startDate,endDate,assessmentType,startAlert,endAlert,courseID);
                         //refresh list after adding data
                         ((CourseDetail)getActivity()).refreshList();
                     }
@@ -79,7 +88,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         editTextName = view.findViewById(R.id.assessmentName);
         textViewStartDate = view.findViewById(R.id.assessmentStartDate);
         textViewEndDate = view.findViewById(R.id.assessmentEndDate);
-        editTextType = view.findViewById(R.id.assessmentType);
+        performanceAssessmentRadio = (RadioButton) view.findViewById(R.id.assessmentPerformanceRadioButton);
+        objectiveAssessmentRadio = (RadioButton) view.findViewById(R.id.assessmentObjectiveRadioButton);
         switchStartAlert = (Switch) view.findViewById(R.id.assessmentStartAlert);
         switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
 

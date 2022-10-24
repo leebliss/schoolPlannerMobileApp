@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -65,6 +66,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
 
+        //so editText layout elements do not trigger input keyboard on loading page
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //database connection
         dbHelper = new DBHelper(this);
         //for displaying data in a list

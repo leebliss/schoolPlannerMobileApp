@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +30,8 @@ import java.util.Calendar;
 
 public class AssessmentDetail extends AppCompatActivity {
 
-    EditText titleText, type;
+    EditText titleText;
+    private RadioButton performanceAssessmentRadio, objectiveAssessmentRadio;
     private Switch sAlert, eAlert;
     private TextView textViewStartDate, textViewEndDate;
     //for date picker
@@ -54,22 +57,15 @@ public class AssessmentDetail extends AppCompatActivity {
     String startAlert;
     String endAlert;
 
-    //String courseProfessorPhone;
-    //String courseProfessorEmail;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_detail);
 
+        //so editText layout elements do not trigger input keyboard on loading page
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //database connection
         dbHelper = new DBHelper(this);
-        //for displaying data in a list
-        //listItem = new ArrayList<>();
-        //userList = findViewById(R.id.displayAssessmentNames);
-        //variables for holding index and name of selected items
-        //currentlySelectedItem = -1;
-        //nameOfSelectedItem = "";
         assessmentNameOnly = "";
 
         //get course ID from the intent passed over from previous activity
@@ -108,10 +104,13 @@ public class AssessmentDetail extends AppCompatActivity {
         textViewEndDate = findViewById(R.id.assessmentEndDate);
         //String endHolder = "End Date: "+courseEndDate;
         textViewEndDate.setText(assessmentEndDate);
-
-        type = findViewById(R.id.assessmentType);
-        //String statusHolder = "Status: "+courseStatus;
-        type.setText(assessmentType);
+        //set radio buttons based on assessment type value from DB
+        performanceAssessmentRadio = (RadioButton) findViewById(R.id.assessmentPerformanceRadioButton);
+        if(assessmentType.equals("performance")){performanceAssessmentRadio.setChecked(true);}
+        else{performanceAssessmentRadio.setChecked(false);}
+        objectiveAssessmentRadio = (RadioButton) findViewById(R.id.assessmentObjectiveRadioButton);
+        if(assessmentType.equals("objective")){objectiveAssessmentRadio.setChecked(true);}
+        else{objectiveAssessmentRadio.setChecked(false);}
         //set value of start alert switch
         sAlert = (Switch) findViewById(R.id.setStartAlert);
         if(startAlert.equals("true")){sAlert.setChecked(true);}
@@ -235,8 +234,14 @@ public class AssessmentDetail extends AppCompatActivity {
                 String assessmentName = titleText.getText().toString();
                 String assessmentStart = textViewStartDate.getText().toString();
                 String assessmentEnd = textViewEndDate.getText().toString();
-                String assessmentType = type.getText().toString();
-                //change boolean switch values to strings for storage
+                //change boolean radiobutton values to strings for storage
+                //for the performance assessment radio
+                Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
+                String assessmentType = ""; //default
+                if(performanceRadioState) {assessmentType = "performance";}
+                //for the objective assessment radio
+                Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
+                if(objectiveRadioState) {assessmentType = "objective";}                //change boolean switch values to strings for storage
                 //for a start alert
                 Boolean switchState = sAlert.isChecked();
                 String startAlert = "false"; //default

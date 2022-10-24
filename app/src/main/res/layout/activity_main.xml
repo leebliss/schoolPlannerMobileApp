@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
+    android:background="@android:color/white"
+    android:padding="5dp"
     tools:context=".MainActivity">
-
+    >
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="match_parent"
@@ -17,24 +17,31 @@
         android:textColor="@color/white"
         android:textStyle="bold"
         android:padding="10dp"
-        android:layout_marginBottom="20dp"
         android:textAlignment="center"
     />
+    <LinearLayout
+        android:id="@+id/listViewLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomButtonLayout"
+        android:layout_below="@+id/textTitle"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/black"
 
+        >
     <ListView
         android:id="@+id/displayTermNames"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:textSize="16dp"
-        android:layout_below="@+id/textTitle"
         android:scrollbars="vertical"
-        android:layout_above="@+id/bottomButtonLayout"
         />
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/bottomButtonLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="3dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         >
@@ -62,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginRight="6dp"
             android:text="Delete Term"
             android:textSize="12dp" />
     </LinearLayout>

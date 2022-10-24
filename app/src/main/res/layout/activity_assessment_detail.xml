@@ -5,6 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:padding="5dp"
     tools:context=".AssessmentDetail">
 
@@ -34,7 +35,7 @@
             android:layout_width= "0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text ="Assessment Start Date: "
+            android:text ="Assessment Start Date"
             android:textSize="18dp" />
         <TextView
             android:id="@+id/assessmentStartDate"
@@ -57,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Assessment End Date: "
+            android:text="Assessment End Date"
             android:textSize="18dp" />
         <TextView
             android:id="@+id/assessmentEndDate"
@@ -67,43 +68,50 @@
             android:hint="variable text"
             android:textSize="18dp" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/assessmentTypeLayout"
+    <TextView
+        android:textSize="18dp"
+        android:text ="Assessment Type"
+        android:id="@+id/assessmentTypeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_below="@id/assessmentEndLayout"
+        android:layout_marginLeft="10dp"
+        />
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text ="End Date"
+        android:id="@+id/assessmentTypeRadioGroup"
+        android:layout_below="@+id/assessmentTypeTitle"
+        android:layout_marginLeft="10dp"
         >
-        <TextView
-            android:id="@+id/assessmentTypeTitle"
-            android:layout_width="0dp"
+        <RadioButton
+            android:id="@+id/assessmentPerformanceRadioButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Assessment Type: "
-            android:textSize="18dp" />
-        <EditText
-            android:id="@+id/assessmentType"
-            android:layout_width="0dp"
+            android:text ="Performance"
+            />
+        <RadioButton
+            android:id="@+id/assessmentObjectiveRadioButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-    </LinearLayout>
+            android:text ="Objective"
+            />
+    </RadioGroup>
     <LinearLayout
         android:id="@+id/setStartAlertLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@id/assessmentTypeLayout"
+        android:layout_below="@id/assessmentTypeRadioGroup"
         >
         <TextView
             android:id="@+id/setStartAlertTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Start Alert: "
+            android:text="Start Alert"
             android:textSize="18dp" />
         <Switch
             android:id="@+id/setStartAlert"
@@ -125,7 +133,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="End Alert: "
+            android:text="End Alert"
             android:textSize="18dp" />
         <Switch
             android:id="@+id/setEndAlert"
