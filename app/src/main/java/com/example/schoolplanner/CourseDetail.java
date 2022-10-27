@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
@@ -30,10 +31,11 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
 
     //for passing values to another activity
     public static final String ASSESSMENT_ID = "com.example.schoolplanner.ASSESSMENT_ID";
-
     //TextView titleText;
-    EditText titleText, status, professor, professorPhone, professorEmail;
+    EditText titleText, professor, professorPhone, professorEmail;
     private TextView textViewStartDate, textViewEndDate;
+    //for course status
+    private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
     //for date picker
     private int mDate, mMonth, mYear;
     //TextView displayTermsText;
@@ -114,9 +116,19 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         //String endHolder = "End Date: "+courseEndDate;
         textViewEndDate.setText(courseEndDate);
 
-        status = findViewById(R.id.courseStatus);
-        //String statusHolder = "Status: "+courseStatus;
-        status.setText(courseStatus);
+        //set radio buttons based on assessment type value from DB
+        inProgressRadio = (RadioButton) findViewById(R.id.inProgressRadioButton);
+        if(courseStatus.equals("in progress")){inProgressRadio.setChecked(true);}
+        else{inProgressRadio.setChecked(false);}
+        completedRadio = (RadioButton) findViewById(R.id.completedRadioButton);
+        if(courseStatus.equals("completed")){completedRadio.setChecked(true);}
+        else{completedRadio.setChecked(false);}
+        droppedRadio = (RadioButton) findViewById(R.id.droppedRadioButton);
+        if(courseStatus.equals("dropped")){droppedRadio.setChecked(true);}
+        else{droppedRadio.setChecked(false);}
+        planToTakeRadio = (RadioButton) findViewById(R.id.planToTakeRadioButton);
+        if(courseStatus.equals("plan to take")){planToTakeRadio.setChecked(true);}
+        else{planToTakeRadio.setChecked(false);}
 
         professor = findViewById(R.id.courseProfessor);
         //String professorHolder = "Professor: "+courseProfessor;
@@ -228,13 +240,26 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 String courseName = titleText.getText().toString();
                 String courseStart = textViewStartDate.getText().toString();
                 String courseEnd = textViewEndDate.getText().toString();
-                String courseStatus = status.getText().toString();
+                //change boolean radiobutton values to strings for storage
+                //for the inProgress radio
+                Boolean inProgressRadioState = inProgressRadio.isChecked();
+                String status = ""; //default
+                if(inProgressRadioState) {status = "in progress";}
+                //for the completed radio
+                Boolean completedRadioState = completedRadio.isChecked();
+                if(completedRadioState) {status = "completed";}
+                //for the dropped radio
+                Boolean droppedRadioState = droppedRadio.isChecked();
+                if(droppedRadioState) {status = "dropped";}
+                //for the planToTake radio
+                Boolean planToTakeRadioState = planToTakeRadio.isChecked();
+                if(planToTakeRadioState) {status = "plan to take";}
                 String courseProfessor = professor.getText().toString();
                 String courseProfessorPhone = professorPhone.getText().toString();
                 String courseProfessorEmail = professorEmail.getText().toString();
 
                 //save the changes
-                Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,courseStatus,courseProfessor,courseProfessorPhone,courseProfessorEmail);
+                Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,status,courseProfessor,courseProfessorPhone,courseProfessorEmail);
                 //test for success
                 if(checkSavedChanges) {
                     Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();

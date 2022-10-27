@@ -55,15 +55,15 @@
             android:text ="Objective"
         />
     </RadioGroup>
+
     <Switch
-        android:textSize="20dp"
-        android:text="Start Alert"
-        android:checked="false"
         android:id="@+id/assessmentStartAlert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/assessmentTypeRadioGroup"
-        />
+        android:checked="false"
+        android:text="Start Alert"
+        android:textSize="20dp" />
     <Switch
         android:textSize="20dp"
         android:text="End Alert"

@@ -27,21 +27,53 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/courseStartDate"
         />
-    <EditText
+    <TextView
         android:textSize="20dp"
-        android:hint="Status (completed, enrolled...)"
-        android:id="@+id/courseStatus"
+        android:hint="Status"
+        android:id="@+id/courseStatusTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/courseEndDate"
         />
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text ="End Date"
+        android:id="@+id/courseStatusRadioGroup"
+        android:layout_below="@+id/courseStatusTitle"
+        >
+            <RadioButton
+                android:id="@+id/inProgressRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text ="In Progress"
+                />
+            <RadioButton
+                android:id="@+id/completedRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text ="Completed"
+                />
+            <RadioButton
+                android:id="@+id/droppedRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text ="Dropped"
+                />
+            <RadioButton
+                android:id="@+id/planToTakeRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text ="Plan to Take"
+                />
+    </RadioGroup>
     <EditText
         android:textSize="20dp"
         android:hint="Professor"
         android:id="@+id/courseProfessor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/courseStatus"
+        android:layout_below="@id/courseStatusRadioGroup"
         />
     <EditText
         android:textSize="20dp"

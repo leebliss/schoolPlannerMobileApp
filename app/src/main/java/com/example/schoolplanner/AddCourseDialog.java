@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,8 +20,10 @@ import java.util.Calendar;
 
 public class AddCourseDialog extends AppCompatDialogFragment {
     //for user to enter values
-    private EditText editTextName, editTextCourseStatus, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
+    private EditText editTextName, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
     private TextView textViewStartDate, textViewEndDate;
+    //for course status
+    private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
     //for date picker
     private int mDate, mMonth, mYear;
     //listener
@@ -56,7 +59,21 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                         String courseName = editTextName.getText().toString();
                         String startDate = textViewStartDate.getText().toString();
                         String endDate = textViewEndDate.getText().toString();
-                        String status = editTextCourseStatus.getText().toString();
+                        //change boolean radiobutton values to strings for storage
+                        //for the inProgress radio
+                        Boolean inProgressRadioState = inProgressRadio.isChecked();
+                        String status = ""; //default
+                        if(inProgressRadioState) {status = "in progress";}
+                        //for the completed radio
+                        Boolean completedRadioState = completedRadio.isChecked();
+                        if(completedRadioState) {status = "completed";}
+                        //for the dropped radio
+                        Boolean droppedRadioState = droppedRadio.isChecked();
+                        if(droppedRadioState) {status = "dropped";}
+                        //for the planToTake radio
+                        Boolean planToTakeRadioState = planToTakeRadio.isChecked();
+                        if(planToTakeRadioState) {status = "plan to take";}
+                        //String status = editTextCourseStatus.getText().toString();
                         String professor = editTextCourseProfessor.getText().toString();
                         String phone = editTextCourseProfessorPhone.getText().toString();
                         String email = editTextCourseProfessorEmail.getText().toString();
@@ -74,7 +91,11 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         editTextName = view.findViewById(R.id.courseName);
         textViewStartDate = view.findViewById(R.id.courseStartDate);
         textViewEndDate = view.findViewById(R.id.courseEndDate);
-        editTextCourseStatus = view.findViewById(R.id.courseStatus);
+        inProgressRadio = (RadioButton) view.findViewById(R.id.inProgressRadioButton);
+        completedRadio = (RadioButton) view.findViewById(R.id.completedRadioButton);
+        droppedRadio = (RadioButton) view.findViewById(R.id.droppedRadioButton);
+        planToTakeRadio = (RadioButton) view.findViewById(R.id.planToTakeRadioButton);
+        //editTextCourseStatus = view.findViewById(R.id.courseStatus);
         editTextCourseProfessor = view.findViewById(R.id.courseProfessor);
         editTextCourseProfessorPhone = view.findViewById(R.id.courseProfessorPhone);
         editTextCourseProfessorEmail = view.findViewById(R.id.courseProfessorEmail);

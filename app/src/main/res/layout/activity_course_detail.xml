@@ -67,36 +67,57 @@
             android:hint="variable text"
             android:textSize="18dp" />
     </LinearLayout>
-    <LinearLayout
-        android:id="@+id/courseStatusLayout"
+    <TextView
+        android:textSize="18dp"
+        android:text ="Status:"
+        android:id="@+id/courseStatusTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_below="@id/courseEndLayout"
+        />
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text ="End Date"
+        android:id="@+id/courseStatusRadioGroup"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/courseStatusTitle"
         >
-        <TextView
-            android:id="@+id/courseStatusTitle"
-            android:layout_width="0dp"
+        <RadioButton
+            android:id="@+id/inProgressRadioButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Course Status: "
-            android:textSize="18dp" />
-        <EditText
-            android:id="@+id/courseStatus"
-            android:layout_width="0dp"
+            android:text ="In Progress"
+            />
+        <RadioButton
+            android:id="@+id/completedRadioButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-        </LinearLayout>
+            android:text ="Completed"
+            />
+        <RadioButton
+            android:id="@+id/droppedRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text ="Dropped"
+            />
+        <RadioButton
+            android:id="@+id/planToTakeRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text ="Plan to Take"
+            />
+    </RadioGroup>
     <LinearLayout
         android:id="@+id/courseProfessorLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@id/courseStatusLayout"
+        android:layout_below="@id/courseStatusRadioGroup"
         >
         <TextView
             android:id="@+id/courseProfessorTitle"
@@ -178,6 +199,7 @@
         android:layout_marginRight="10dp"
         android:layout_below="@id/assessmentListHeader"
         android:layout_above="@id/bottomButtonLayout"
+        android:scrollbars="vertical"
         >
         <ListView
             android:id="@+id/displayAssessmentNames"
