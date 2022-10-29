@@ -1,9 +1,14 @@
 package com.example.schoolplanner;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -19,6 +25,11 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import java.util.Calendar;
 
 public class AddAssessmentDialog extends AppCompatDialogFragment {
+
+    //for passing values to another activity
+    public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
+    String assessmentInfo;
+
     //for user to enter values
     private EditText editTextName;
     private Switch switchStartAlert, switchEndAlert;
@@ -39,6 +50,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     }
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState) {
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -82,6 +94,9 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         listener.applyTexts(assessmentName,startDate,endDate,assessmentType,startAlert,endAlert,courseID);
                         //refresh list after adding data
                         ((CourseDetail)getActivity()).refreshList();
+                        //set up notifications from assessment start and stop times
+                        setReminders();
+                        //setNotifications();
                     }
                 });
 
@@ -92,6 +107,11 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         objectiveAssessmentRadio = (RadioButton) view.findViewById(R.id.assessmentObjectiveRadioButton);
         switchStartAlert = (Switch) view.findViewById(R.id.assessmentStartAlert);
         switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
+
+        //set assessmentInfo
+        assessmentInfo = "Funky Alert!";
+        //create notification channel for assessment notifications
+        createNotificationChannel();
 
         //listener for start date
         textViewStartDate.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +160,54 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement SchoolPlannerDialogListener");
         }
+    }
+
+    private void createNotificationChannel() {
+
+        CharSequence name = "AssessmentReminderChannel";
+        String description = "Channel for assessment reminder";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("assessmentAlert", name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+    private void setReminders(){
+
+        //get target time in millis
+        Calendar calendar1 = Calendar.getInstance();
+        //convert time from DB value here
+        calendar1.set(2022,9,29,22,43, 0);
+        long convertedToMillis = calendar1.getTimeInMillis();
+
+        Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
+        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+        AlarmManager alarmManager = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
+        long timeWhenMethodCalled = System.currentTimeMillis();
+        long tenSecondsInMillis = 1000*10;
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, convertedToMillis,pendingIntent);
+        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeWhenMethodCalled + tenSecondsInMillis,pendingIntent);
+
+        Toast.makeText(getActivity(), String.valueOf(convertedToMillis), Toast.LENGTH_SHORT).show();
+    }
+
+    private void setNotifications(){
+
+        Calendar sevendayalarm = Calendar.getInstance();
+
+        //sevendayalarm.add(Calendar.DATE, 7);
+        sevendayalarm.set(2022,9,29,19,42);
+
+        Intent intent = new Intent(getActivity(), AssessmentNotificationReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 001, intent, 0);
+
+        AlarmManager am = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, sevendayalarm.getTimeInMillis(), pendingIntent);
+
+        Toast.makeText(getActivity(), String.valueOf(sevendayalarm.getTimeInMillis()), Toast.LENGTH_SHORT).show();
+
     }
 
     public interface AddAssessmentDialogListener{

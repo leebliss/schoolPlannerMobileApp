@@ -1,5 +1,9 @@
 package com.example.schoolplanner;
 
+import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -11,8 +15,6 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.ColorInt;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
@@ -20,10 +22,9 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
 
     //for passing values to another activity
     public static final String TERM_ID = "com.example.schoolplanner.TERM_ID";
+    public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
 
     TextView titleText;
-    //EditText name, contact, DOB;
-    //TextView displayTermsText;
     Button addNew, update, delete;
     //for db connectivity
     DBHelper dbHelper;
@@ -40,11 +41,16 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
     int termID;
     String termStartDate;
     String termEndDate;
+    //for passing assessment info to notifications
+    String assessmentInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //create notification channel for assessment notifications
+        createNotificationChannel();
 
         //set name for this activity in title bar
         titleText = findViewById(R.id.textTitle);
@@ -69,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
 
         //call local viewData method
         viewData();
+
+        //set up notifications from assessment start and stop times
+        //setReminders();
 
         //set listeners
         //for clicking on list items
@@ -172,6 +181,30 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
             userList.setAdapter(adapter);
         }
     }
+    private void createNotificationChannel() {
+
+        CharSequence name = "AssessmentReminderChannel";
+        String description = "Channel for assessment reminder";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("assessmentAlert", name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+    private void setReminders(){
+
+        //get
+        Intent intent = new Intent(this,ReminderBroadcast.class);
+        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        long timeWhenMethodCalled = System.currentTimeMillis();
+        long tenSecondsInMillis = 1000*10;
+        alarmManager.set(AlarmManager.RTC_WAKEUP,
+                timeWhenMethodCalled + tenSecondsInMillis,pendingIntent);
+    }
+
     public void  openDialog(){
         AddTermDialog addTermDialog = new AddTermDialog();
         addTermDialog.show(getSupportFragmentManager(), "Add Term Dialog");
