@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,14 +15,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+import java.time.Clock;
 import java.util.Calendar;
 
 public class AddAssessmentDialog extends AppCompatDialogFragment {
@@ -35,9 +39,11 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     private Switch switchStartAlert, switchEndAlert;
     private RadioButton performanceAssessmentRadio, objectiveAssessmentRadio;
     private TextView textViewStartDate, textViewEndDate;
-    //for date picker
-    private int mDate, mMonth, mYear;
+    private ImageView imageStartCalendar, imageStartClock,imageEndCalendar, imageEndClock;
 
+    //for date picker
+    private int mDate, mMonth, mYear, mHour, mMinute;
+    private boolean dateSet;
     //listener
     private AddAssessmentDialogListener listener;
     //for holding ID of course to save to new course when added
@@ -102,7 +108,11 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
 
         editTextName = view.findViewById(R.id.assessmentName);
         textViewStartDate = view.findViewById(R.id.assessmentStartDate);
+        imageStartCalendar = view.findViewById(R.id.assessmentStartCalendar);
+        imageStartClock = view.findViewById(R.id.assessmentStartClock);
         textViewEndDate = view.findViewById(R.id.assessmentEndDate);
+        imageEndCalendar = view.findViewById(R.id.assessmentEndCalendar);
+        imageEndClock = view.findViewById(R.id.assessmentEndClock);
         performanceAssessmentRadio = (RadioButton) view.findViewById(R.id.assessmentPerformanceRadioButton);
         objectiveAssessmentRadio = (RadioButton) view.findViewById(R.id.assessmentObjectiveRadioButton);
         switchStartAlert = (Switch) view.findViewById(R.id.assessmentStartAlert);
@@ -110,28 +120,57 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
 
         //set assessmentInfo
         assessmentInfo = "Funky Alert!";
+        //set boolean for date picker
+        dateSet = false;
         //create notification channel for assessment notifications
         createNotificationChannel();
 
         //listener for start date
-        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
                 mDate = Cal.get(Calendar.DATE);
                 mMonth = Cal.get(Calendar.MONTH);
                 mYear = Cal.get(Calendar.YEAR);
+                //launch date picker dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year); //jan month 0, so must add 1
                     }
                 }, mYear, mMonth, mDate);
+                //set dateSet to true
+                dateSet=true;
                 datePickerDialog.show();
             }
         });
+        //listener for start time
+        imageStartClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dateSet) {
+                    final Calendar Cal = Calendar.getInstance();
+                    mHour = Cal.get(Calendar.HOUR_OF_DAY);
+                    mMinute = Cal.get(Calendar.MINUTE);
+                    // Launch time picker dialog
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
+                            //txtTime.setText(hourOfDay + ":" + minute);
+                        }
+                    }, mHour, mMinute, false);
+                    timePickerDialog.show();
+                }
+                else{
+                    Toast.makeText(getActivity(), "Please choose the date first.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         //listener for end date
-        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -178,7 +217,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //get target time in millis
         Calendar calendar1 = Calendar.getInstance();
         //convert time from DB value here
-        calendar1.set(2022,9,29,22,43, 0);
+        calendar1.set(2022,9,30,12,42, 0);
         long convertedToMillis = calendar1.getTimeInMillis();
 
         Intent intent = new Intent(getActivity(),ReminderBroadcast.class);

@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Layout;
+import android.text.method.ScrollingMovementMethod;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Adapter;
@@ -15,14 +18,19 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,7 +47,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     //for date picker
     private int mDate, mMonth, mYear;
     //TextView displayTermsText;
-    Button addNew, update, save, delete;
+    // Button addNew, update, save, delete;
+    //for bottom navigation menu
+    private BottomNavigationView bottomNavigationView;
     //for db connectivity
     DBHelper dbHelper;
     //for displaying data in a list
@@ -55,6 +65,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     int courseID;
     //for holding assessmentID to send over to assessment detail in the intent
     int assessmentID;
+    //ref to mainlayout
+    private ScrollView mainScrollView;
+
     String nameOfCourseSelected; //this is the course featured in this  detail
     String courseStartDate;
     String courseEndDate;
@@ -141,12 +154,19 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         professorEmail = findViewById(R.id.courseProfessorEmail);
         //String professorEmailHolder = "Professor Email: "+courseProfessorEmail;
         professorEmail.setText(courseProfessorEmail);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
+        //for entire screen to scroll
+        mainScrollView = findViewById(R.id.mainScrollView);
+        //mainScrollView.(new ScrollingMovementMethod());
 
         //buttons
+        /*
         addNew = findViewById(R.id.btnInsert);
         update = findViewById(R.id.btnUpdate);
         save = findViewById(R.id.btnSave);
         delete = findViewById(R.id.btnDelete);
+         */
 
         //call local viewData method
         viewData();
@@ -216,6 +236,79 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             }
         });
 
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.addNew:
+                        openDialog();
+                        return true;
+                    case R.id.open:
+                        openAssessmentDetailActivity(assessmentID);
+                        return true;
+
+                    case R.id.delete:
+                        //parse name off of listItem
+                        String[] separated = nameOfSelectedItem.split("\n");
+                        Boolean checkDeleteData = dbHelper.deleteData(separated[0],"AssessmentInfo");
+                        if(checkDeleteData) {
+                            Toast.makeText(CourseDetail.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
+                            nameOfSelectedItem = "";
+                            refreshList();
+                        }
+                        else{
+                            if(nameOfSelectedItem == ""){
+                                Toast.makeText(CourseDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(CourseDetail.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        return true;
+
+                    case R.id.save:
+                        //get values to save changes
+                        String courseName = titleText.getText().toString();
+                        String courseStart = textViewStartDate.getText().toString();
+                        String courseEnd = textViewEndDate.getText().toString();
+                        //change boolean radiobutton values to strings for storage
+                        //for the inProgress radio
+                        Boolean inProgressRadioState = inProgressRadio.isChecked();
+                        String status = ""; //default
+                        if(inProgressRadioState) {status = "in progress";}
+                        //for the completed radio
+                        Boolean completedRadioState = completedRadio.isChecked();
+                        if(completedRadioState) {status = "completed";}
+                        //for the dropped radio
+                        Boolean droppedRadioState = droppedRadio.isChecked();
+                        if(droppedRadioState) {status = "dropped";}
+                        //for the planToTake radio
+                        Boolean planToTakeRadioState = planToTakeRadio.isChecked();
+                        if(planToTakeRadioState) {status = "plan to take";}
+                        String courseProfessor = professor.getText().toString();
+                        String courseProfessorPhone = professorPhone.getText().toString();
+                        String courseProfessorEmail = professorEmail.getText().toString();
+
+                        //save the changes
+                        Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,status,courseProfessor,courseProfessorPhone,courseProfessorEmail);
+                        //test for success
+                        if(checkSavedChanges) {
+                            Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                            refreshList();
+                        }
+                        else{
+                            Toast.makeText(CourseDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+
+                    case R.id.home:
+                    //code to return home coming soon
+                        return true;
+                }
+                return false;
+            }
+        });
+    /*
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -292,6 +385,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 }
             }
         });
+        */
     }
 
     //this causes everything to reload so the data is up to date when back arrow is used

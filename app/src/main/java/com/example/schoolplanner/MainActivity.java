@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -48,9 +49,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //create notification channel for assessment notifications
-        createNotificationChannel();
 
         //set name for this activity in title bar
         titleText = findViewById(R.id.textTitle);
@@ -181,30 +179,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
             userList.setAdapter(adapter);
         }
     }
-    private void createNotificationChannel() {
-
-        CharSequence name = "AssessmentReminderChannel";
-        String description = "Channel for assessment reminder";
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("assessmentAlert", name, importance);
-        channel.setDescription(description);
-
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
-    }
-    private void setReminders(){
-
-        //get
-        Intent intent = new Intent(this,ReminderBroadcast.class);
-        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        long timeWhenMethodCalled = System.currentTimeMillis();
-        long tenSecondsInMillis = 1000*10;
-        alarmManager.set(AlarmManager.RTC_WAKEUP,
-                timeWhenMethodCalled + tenSecondsInMillis,pendingIntent);
-    }
-
     public void  openDialog(){
         AddTermDialog addTermDialog = new AddTermDialog();
         addTermDialog.show(getSupportFragmentManager(), "Add Term Dialog");

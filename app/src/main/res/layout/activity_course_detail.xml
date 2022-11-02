@@ -1,255 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="5dp"
-        tools:context=".CourseDetail">
+        tools:context=".CourseDetail"
+        android:id="@+id/mainLayOut"
+    >
 
-        <EditText
-            android:id="@+id/textTitle"
+    <ScrollView
+        android:id="@+id/mainScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_navigation"
+        android:scrollbars="vertical">
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/holo_blue_dark"
-            android:hint="variable text"
-            android:textSize="22dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:padding="10dp"
-            android:layout_marginBottom="3dp"
-            android:gravity="center"
-            />
-    <LinearLayout
-        android:id="@+id/courseStartLayout"
+            android:orientation="vertical"
+            >
+
+            <EditText
+                android:id="@+id/textTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:background="@android:color/holo_blue_dark"
+                android:gravity="center"
+                android:hint="variable text"
+                android:padding="10dp"
+                android:textColor="@color/white"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/courseStartLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/textTitle"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/courseStartDateTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Course Start Date: "
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/courseStartDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="variable text"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/courseEndLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/courseStartLayout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/courseEndDateTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Course End Date: "
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/courseEndDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="variable text"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/courseStatusTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/courseEndLayout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="Status:"
+                android:textSize="18dp" />
+
+            <RadioGroup
+                android:id="@+id/courseStatusRadioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/courseStatusTitle"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="End Date">
+
+                <RadioButton
+                    android:id="@+id/inProgressRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="In Progress" />
+
+                <RadioButton
+                    android:id="@+id/completedRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Completed" />
+
+                <RadioButton
+                    android:id="@+id/droppedRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dropped" />
+
+                <RadioButton
+                    android:id="@+id/planToTakeRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Plan to Take" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/courseProfessorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/courseStatusRadioGroup"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/courseProfessorTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Course Professor: "
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/courseProfessor"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="variable text"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/courseProfessorPhoneLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/courseProfessorLayout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/courseProfessorPhoneTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Professor Phone: "
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/courseProfessorPhone"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="variable text"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/courseProfessorEmailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/courseProfessorPhoneLayout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+
+                <TextView
+                    android:id="@+id/courseProfessorEmailTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Professor Email: "
+                    android:textSize="18dp" />
+
+                <EditText
+                    android:id="@+id/courseProfessorEmail"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="variable text"
+                    android:textSize="18dp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/assessmentListViewLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/courseProfessorEmailLayout"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/assessmentListHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:text="List of Assessments"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <ListView
+                    android:id="@+id/displayAssessmentNames"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/assessmentListHeader"
+                    android:textSize="16dp" />
+                    />
+            </RelativeLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/textTitle"
-        >
-        <TextView
-            android:id="@+id/courseStartDateTitle"
-            android:layout_width= "0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text ="Course Start Date: "
-            android:textSize="18dp" />
-        <TextView
-            android:id="@+id/courseStartDate"
-            android:layout_width= "0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/courseEndLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/courseStartLayout"
-        >
-        <TextView
-            android:id="@+id/courseEndDateTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Course End Date: "
-            android:textSize="18dp" />
-        <TextView
-            android:id="@+id/courseEndDate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-    </LinearLayout>
-    <TextView
-        android:textSize="18dp"
-        android:text ="Status:"
-        android:id="@+id/courseStatusTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/courseEndLayout"
-        />
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text ="End Date"
-        android:id="@+id/courseStatusRadioGroup"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@+id/courseStatusTitle"
-        >
-        <RadioButton
-            android:id="@+id/inProgressRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text ="In Progress"
-            />
-        <RadioButton
-            android:id="@+id/completedRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text ="Completed"
-            />
-        <RadioButton
-            android:id="@+id/droppedRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text ="Dropped"
-            />
-        <RadioButton
-            android:id="@+id/planToTakeRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text ="Plan to Take"
-            />
-    </RadioGroup>
-    <LinearLayout
-        android:id="@+id/courseProfessorLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/courseStatusRadioGroup"
-        >
-        <TextView
-            android:id="@+id/courseProfessorTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Course Professor: "
-            android:textSize="18dp" />
-        <EditText
-            android:id="@+id/courseProfessor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/courseProfessorPhoneLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/courseProfessorLayout"
-        >
-        <TextView
-            android:id="@+id/courseProfessorPhoneTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Professor Phone: "
-            android:textSize="18dp" />
-        <EditText
-            android:id="@+id/courseProfessorPhone"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/courseProfessorEmailLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/courseProfessorPhoneLayout"
-        >
-        <TextView
-            android:id="@+id/courseProfessorEmailTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Professor Email: "
-            android:textSize="18dp" />
-        <EditText
-            android:id="@+id/courseProfessorEmail"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
-    </LinearLayout>
-    <TextView
-        android:id="@+id/assessmentListHeader"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:textColor="@color/black"
-        android:textAlignment="center"
-        android:text="List of Assessments"
-        android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@id/courseProfessorEmailLayout"
-        />
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/assessmentListHeader"
-        android:layout_above="@id/bottomButtonLayout"
-        android:scrollbars="vertical"
-        >
-        <ListView
-            android:id="@+id/displayAssessmentNames"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/bottomButtonLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:orientation="horizontal"
-        >
-        <Button
-            android:id="@+id/btnInsert"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:text="Add Assessment"
-            android:textSize="8dp" />
+        app:menu="@menu/bottom_nav_menu" />
 
-        <Button
-            android:id="@+id/btnUpdate"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:text="Open Assessment"
-            android:textSize="8dp" />
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:layout_height="wrap_content"
-            android:text="Delete Assessment"
-            android:textSize="8dp" />
-
-        <Button
-            android:id="@+id/btnSave"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Save     Course"
-            android:textSize="8dp" />
-    </LinearLayout>
 </RelativeLayout>
