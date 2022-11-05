@@ -9,6 +9,7 @@ import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
@@ -417,6 +419,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
             userList.setAdapter(adapter);
+            //programatically reset height of listview each time viewData is called
+            ListViewHelper.setListViewHeightBasedOnChildren(userList);
         }
     }
     public void openDialog(){

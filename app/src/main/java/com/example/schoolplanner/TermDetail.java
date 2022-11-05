@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Adapter;
@@ -23,6 +24,9 @@ import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -30,13 +34,15 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
 
     //for passing values to another activity
     public static final String COURSE_ID = "com.example.schoolplanner.COURSE_ID";
-    public static final String COURSE_NAME = "com.example.schoolplanner.COURSE_NAME";
+    //public static final String COURSE_NAME = "com.example.schoolplanner.COURSE_NAME";
 
     EditText titleText;
     private TextView textViewStartDate, textViewEndDate;
     //for date picker
     private int mDate, mMonth, mYear;
-    Button addNew, update, delete, save;
+    //for bottom navigation menu
+    private BottomNavigationView bottomNavigationView;
+    //Button addNew, update, delete, save;
     //for db connectivity
     DBHelper dbHelper;
     //for displaying data in a list
@@ -100,12 +106,15 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         textViewEndDate = findViewById(R.id.termEndDate);
         String endHolder = termEndDate;
         textViewEndDate.setText(endHolder);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //buttons
+        /*
         addNew = findViewById(R.id.btnInsert);
         update = findViewById(R.id.btnUpdate);
         save = findViewById(R.id.btnSave);
         delete = findViewById(R.id.btnDelete);
+         */
 
 
         //call local viewData method
@@ -177,6 +186,62 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             }
         });
 
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.addNew:
+                        openDialog();
+                        return true;
+                    case R.id.open:
+                        openCourseDetailActivity(courseID);
+                        return true;
+
+                    case R.id.delete:
+                        //parse name off of listItem
+                        String[] separated = nameOfSelectedItem.split("\n");
+                        Boolean checkDeleteData = dbHelper.deleteData(separated[0],"CourseInfo");
+                        if(checkDeleteData) {
+                            Toast.makeText(TermDetail.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
+                            nameOfSelectedItem = "";
+                            refreshList();
+                        }
+                        else{
+                            if(nameOfSelectedItem == ""){
+                                Toast.makeText(TermDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(TermDetail.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        return true;
+
+                    case R.id.save:
+                        //get values to save changes
+                        String termName = titleText.getText().toString();
+                        String termStart = textViewStartDate.getText().toString();
+                        String termEnd = textViewEndDate.getText().toString();
+                        //save the changes
+                        Boolean checkSavedChanges = dbHelper.updateTermData(termID,termName,termStart,termEnd);
+                        //test for success
+                        if(checkSavedChanges) {
+                            Toast.makeText(TermDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                            refreshList();
+                        }
+                        else{
+                            Toast.makeText(TermDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+
+                    case R.id.home:
+                        //code to return home coming soon
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        /*
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -235,6 +300,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 }
             }
         });
+         */
     }
 
     //this causes everything to reload so the data is up to date when back arrow is used
@@ -282,10 +348,9 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         else
             Toast.makeText(TermDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
-    public void openCourseDetailActivity(String name, int ID){
+    public void openCourseDetailActivity(int ID){
         Intent intent =new Intent(this, CourseDetail.class);
         intent.putExtra(COURSE_ID, ID);
-        intent.putExtra(COURSE_NAME, name);
         startActivity(intent);
     }
 }
