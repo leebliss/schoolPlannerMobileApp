@@ -333,6 +333,8 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
             userList.setAdapter(adapter);
+            //programatically reset height of listview each time viewData is called
+            ListViewHelper.setListViewHeightBasedOnChildren(userList);
         }
     }
     public void  openDialog(){

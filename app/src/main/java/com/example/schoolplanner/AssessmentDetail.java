@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Adapter;
@@ -25,6 +26,9 @@ import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -37,7 +41,9 @@ public class AssessmentDetail extends AppCompatActivity {
     //for date picker
     private int mDate, mMonth, mYear;
     //TextView displayTermsText;
-    Button save;
+    //Button save;
+    //for bottom navigation menu
+    private BottomNavigationView bottomNavigationView;
     //for db connectivity
     DBHelper dbHelper;
 
@@ -113,9 +119,10 @@ public class AssessmentDetail extends AppCompatActivity {
         eAlert = (Switch) findViewById(R.id.setEndAlert);
         if(endAlert.equals("true")){eAlert.setChecked(true);}
         else{eAlert.setChecked(false);}
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         //buttons
-        save = findViewById(R.id.btnSave);
+        //save = findViewById(R.id.btnSave);
 
         //set listeners
         //listener for start date
@@ -154,6 +161,53 @@ public class AssessmentDetail extends AppCompatActivity {
             }
         });
 
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.save:
+                        //get values to save changes
+                        String assessmentName = titleText.getText().toString();
+                        String assessmentStart = textViewStartDate.getText().toString();
+                        String assessmentEnd = textViewEndDate.getText().toString();
+                        //change boolean radiobutton values to strings for storage
+                        //for the performance assessment radio
+                        Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
+                        String assessmentType = ""; //default
+                        if(performanceRadioState) {assessmentType = "performance";}
+                        //for the objective assessment radio
+                        Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
+                        if(objectiveRadioState) {assessmentType = "objective";}
+                        //change boolean switch values to strings for storage
+                        //for a start alert
+                        Boolean switchState = sAlert.isChecked();
+                        String startAlert = "false"; //default
+                        if(switchState) {startAlert = "true";}
+                        //for an end alert
+                        switchState = eAlert.isChecked();
+                        String endAlert = "false"; //default
+                        if(switchState) {endAlert = "true";}
+                        //save the changes
+                        Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID,assessmentName,assessmentStart,assessmentEnd,assessmentType,startAlert,endAlert);
+                        //test for success
+                        if(checkSavedChanges) {
+                            Toast.makeText(AssessmentDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                            //refreshList();
+                        }
+                        else{
+                            Toast.makeText(AssessmentDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                        }
+                        return true;
+
+                    case R.id.home:
+                        //code to return home coming soon
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        /*
         //this is for saving a detail screen when done with changes
         save.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,5 +246,6 @@ public class AssessmentDetail extends AppCompatActivity {
                 }
             }
         });
+        */
     }
 }

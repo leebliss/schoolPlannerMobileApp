@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,57 +20,30 @@
         android:padding="10dp"
         android:textAlignment="center"
     />
-    <LinearLayout
-        android:id="@+id/listViewLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomButtonLayout"
-        android:layout_below="@+id/textTitle"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/black"
-
-        >
-    <ListView
-        android:id="@+id/displayTermNames"
+    <ScrollView
+        android:id="@+id/mainScrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="16dp"
-        android:scrollbars="vertical"
-        />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/bottomButtonLayout"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_below="@id/textTitle"
+        android:scrollbars="vertical">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            >
+            <ListView
+                android:id="@+id/displayTermNames"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="16dp"
+                />
+        </RelativeLayout>
+    </ScrollView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        >
-
-        <Button
-            android:id="@+id/btnInsert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="6dp"
-            android:text="Add Term"
-            android:textSize="12dp" />
-
-        <Button
-            android:id="@+id/btnUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="6dp"
-            android:text="Open Term"
-            android:textSize="12dp" />
-
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="Delete Term"
-            android:textSize="12dp" />
-    </LinearLayout>
+        app:menu="@menu/bottom_nav_menu_main" />
 </RelativeLayout>

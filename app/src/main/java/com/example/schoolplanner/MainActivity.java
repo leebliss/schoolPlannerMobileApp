@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,16 +18,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AddTermDialog.AddTermDialogListener {
 
     //for passing values to another activity
     public static final String TERM_ID = "com.example.schoolplanner.TERM_ID";
-    public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
+    //public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
 
     TextView titleText;
-    Button addNew, update, delete;
+    //Button addNew, update, delete;
+    //for bottom navigation menu
+    private BottomNavigationView bottomNavigationView;
     //for db connectivity
     DBHelper dbHelper;
     //for displaying data in a list
@@ -53,10 +60,15 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         //set name for this activity in title bar
         titleText = findViewById(R.id.textTitle);
         titleText.setText("Term List");
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         //buttons
+        /*
         addNew = findViewById(R.id.btnInsert);
         update = findViewById(R.id.btnUpdate);
         delete = findViewById(R.id.btnDelete);
+         */
+
         //database connection
         dbHelper = new DBHelper(this);
         //for displaying data in a list
@@ -107,6 +119,44 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
             }
         });
 
+        bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener(){
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item){
+                switch (item.getItemId()){
+                    case R.id.addNew:
+                        openDialog();
+                        return true;
+                    case R.id.open:
+                        openTermDetailActivity(termID);
+                        return true;
+
+                    case R.id.delete:
+                        //parse name off of listItem
+                        String[] separated = nameOfSelectedItem.split("\n");
+                        Boolean checkDeleteData = dbHelper.deleteData(separated[0],"TermInfo");
+                        if(checkDeleteData) {
+                            Toast.makeText(MainActivity.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
+                            nameOfSelectedItem = "";
+                            refreshList();
+                        }
+                        else{
+                            if(nameOfSelectedItem == ""){
+                                Toast.makeText(MainActivity.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(MainActivity.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        return true;
+
+                    case R.id.home:
+                        //code to return home coming soon
+                        return true;
+                }
+                return false;
+            }
+        });
+    /*
         addNew.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +194,8 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                 }
             }
         });
+
+     */
     }
 
     //this causes everything to reload so the data is up to date when the back arrow is used
@@ -177,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
             userList.setAdapter(adapter);
+            //programatically reset height of listview each time viewData is called
+            ListViewHelper.setListViewHeightBasedOnChildren(userList);
         }
     }
     public void  openDialog(){
@@ -192,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         else
             Toast.makeText(MainActivity.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
-    public void openTermDetailActivity(int termID, String termName, String startDate, String endDate){
+    public void openTermDetailActivity(int termID){
         Intent intent =new Intent(this, TermDetail.class);
         intent.putExtra(TERM_ID, termID );
         startActivity(intent);
