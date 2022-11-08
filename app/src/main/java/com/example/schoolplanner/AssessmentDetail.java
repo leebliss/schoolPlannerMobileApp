@@ -200,7 +200,7 @@ public class AssessmentDetail extends AppCompatActivity {
                         return true;
 
                     case R.id.home:
-                        //code to return home coming soon
+                        goHome();
                         return true;
                 }
                 return false;
@@ -247,5 +247,10 @@ public class AssessmentDetail extends AppCompatActivity {
             }
         });
         */
+
+    }
+    public void goHome(){
+        Intent intent =new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

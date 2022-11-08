@@ -304,7 +304,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                         return true;
 
                     case R.id.home:
-                    //code to return home coming soon
+                        goHome();
                         return true;
                 }
                 return false;
@@ -441,4 +441,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         intent.putExtra(ASSESSMENT_ID, ID);
         startActivity(intent);
     }
+    public void goHome(){
+        Intent intent =new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
 }

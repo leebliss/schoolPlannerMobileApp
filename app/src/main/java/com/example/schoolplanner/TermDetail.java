@@ -234,7 +234,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                         return true;
 
                     case R.id.home:
-                        //code to return home coming soon
+                        goHome();
                         return true;
                 }
                 return false;
@@ -353,6 +353,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
     public void openCourseDetailActivity(int ID){
         Intent intent =new Intent(this, CourseDetail.class);
         intent.putExtra(COURSE_ID, ID);
+        startActivity(intent);
+    }
+    public void goHome(){
+        Intent intent =new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 }
