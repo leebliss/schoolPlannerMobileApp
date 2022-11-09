@@ -18,6 +18,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
                 .setContentText("Alert "+notificationInfo+" has started.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
+        //need to use different IDs to have multiple notifications?
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(200, builder.build());
     }

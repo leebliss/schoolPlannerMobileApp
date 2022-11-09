@@ -33,7 +33,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     //for passing values to another activity
     public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
     String assessmentInfo;
-
+    //for db connectivity
+    DBHelper dbHelper;
     //for user to enter values
     private EditText editTextName;
     private Switch switchStartAlert, switchEndAlert;
@@ -43,6 +44,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
 
     //for date picker
     private int mDate, mMonth, mYear, mHour, mMinute;
+    private int nDate, nMonth, nYear, nHour, nMinute;
     private boolean dateSet;
     //listener
     private AddAssessmentDialogListener listener;
@@ -54,6 +56,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         parentCourseID = courseIDThatOwnsMe;
         parentCourse = courseThatOwnsMe;
     }
+
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState) {
 
@@ -61,6 +64,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_assessment_dialog, null);
+
         //build the dialog
         builder.setView(view)
                 .setTitle("Add New Assessment")
@@ -88,7 +92,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         //for a start alert
                         Boolean switchState = switchStartAlert.isChecked();
                         String startAlert = "false"; //default
-                        if(switchState) {startAlert = "true";}
+                        if(switchState) {startAlert = "true";
+                            //set a reminder
+                            setStartReminder();
+                        }
                         //for an end alert
                         switchState = switchEndAlert.isChecked();
                         String endAlert = "false"; //default
@@ -101,7 +108,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         //refresh list after adding data
                         ((CourseDetail)getActivity()).refreshList();
                         //set up notifications from assessment start and stop times
-                        setReminders();
+                        //setStartReminder();
                         //setNotifications();
                     }
                 });
@@ -119,7 +126,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
 
         //set assessmentInfo
-        assessmentInfo = "Funky Alert!";
+        //assessmentInfo = "Funky Alert!";
         //set boolean for date picker
         dateSet = false;
         //create notification channel for assessment notifications
@@ -138,6 +145,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year); //jan month 0, so must add 1
+                        //pass to notification
+                        assessmentInfo = textViewStartDate.getText().toString();
                     }
                 }, mYear, mMonth, mDate);
                 //set dateSet to true
@@ -158,7 +167,6 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
-                            //txtTime.setText(hourOfDay + ":" + minute);
                         }
                     }, mHour, mMinute, false);
                     timePickerDialog.show();
@@ -174,16 +182,37 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
-                mDate = Cal.get(Calendar.DATE);
-                mMonth = Cal.get(Calendar.MONTH);
-                mYear = Cal.get(Calendar.YEAR);
+                nDate = Cal.get(Calendar.DATE);
+                nMonth = Cal.get(Calendar.MONTH);
+                nYear = Cal.get(Calendar.YEAR);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
                     }
-                }, mYear, mMonth, mDate);
+                }, nYear, nMonth, nDate);
                 datePickerDialog.show();
+            }
+        });
+        imageEndClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (dateSet) {
+                    final Calendar Cal = Calendar.getInstance();
+                    nHour = Cal.get(Calendar.HOUR_OF_DAY);
+                    nMinute = Cal.get(Calendar.MINUTE);
+                    // Launch time picker dialog
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            textViewEndDate.setText((textViewEndDate.getText()) + " " + hourOfDay + ":" + minute);
+                      }
+                    }, nHour, nMinute, false);
+                    timePickerDialog.show();
+                }
+                else{
+                    Toast.makeText(getActivity(), "Please choose the date first.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -212,24 +241,34 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
-    private void setReminders(){
+    private void setStartReminder(){
 
-        //get target time in millis
+        //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
-        //convert time from DB value here
-        calendar1.set(2022,9,30,12,42, 0);
-        long convertedToMillis = calendar1.getTimeInMillis();
+        //test for if user wants an assessment start reminder
+
+        calendar1.set(2022,10,9,20,38, 0);
+        //calendar1.set(mYear,mMonth,mDate,mHour,mMinute,0);
+        long startConvertedToMillis = calendar1.getTimeInMillis();
+
+        /*
+            calendar1.set(2022,9,30,12,42, 0);
+            long startConvertedToMillis = calendar1.getTimeInMillis();
+            long endConvertedToMillis = calendar1.getTimeInMillis();
+
+         */
 
         Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
         intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
         AlarmManager alarmManager = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
-        long timeWhenMethodCalled = System.currentTimeMillis();
-        long tenSecondsInMillis = 1000*10;
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, convertedToMillis,pendingIntent);
+        //long timeWhenMethodCalled = System.currentTimeMillis();
+        //long tenSecondsInMillis = 1000*10;
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
         //alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeWhenMethodCalled + tenSecondsInMillis,pendingIntent);
 
-        Toast.makeText(getActivity(), String.valueOf(convertedToMillis), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+
     }
 
     private void setNotifications(){
