@@ -41,10 +41,12 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     private RadioButton performanceAssessmentRadio, objectiveAssessmentRadio;
     private TextView textViewStartDate, textViewEndDate;
     private ImageView imageStartCalendar, imageStartClock,imageEndCalendar, imageEndClock;
+    //for holding dates and times for reminders
+    private int startDate, startMonth,startYear, startHour, startMinute;
+    private int endDate, endMonth,endYear, endHour, endMinute;
 
     //for date picker
     private int mDate, mMonth, mYear, mHour, mMinute;
-    private int nDate, nMonth, nYear, nHour, nMinute;
     private boolean dateSet;
     //listener
     private AddAssessmentDialogListener listener;
@@ -126,7 +128,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
 
         //set assessmentInfo
-        //assessmentInfo = "Funky Alert!";
+        assessmentInfo = "Funky Alert!";
         //set boolean for date picker
         dateSet = false;
         //create notification channel for assessment notifications
@@ -145,8 +147,12 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year); //jan month 0, so must add 1
+                        //set values for reminder
+                        startDate = dayOfMonth;
+                        startMonth = month;
+                        startYear = year;
                         //pass to notification
-                        assessmentInfo = textViewStartDate.getText().toString();
+                        //assessmentInfo = textViewStartDate.getText().toString();    //this is only set once when app starts
                     }
                 }, mYear, mMonth, mDate);
                 //set dateSet to true
@@ -167,6 +173,9 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
+                            //set values for reminder
+                            startHour = hourOfDay;
+                            startMinute = minute;
                         }
                     }, mHour, mMinute, false);
                     timePickerDialog.show();
@@ -182,15 +191,19 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
-                nDate = Cal.get(Calendar.DATE);
-                nMonth = Cal.get(Calendar.MONTH);
-                nYear = Cal.get(Calendar.YEAR);
+                mDate = Cal.get(Calendar.DATE);
+                mMonth = Cal.get(Calendar.MONTH);
+                mYear = Cal.get(Calendar.YEAR);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        //set values for reminder
+                        endDate = dayOfMonth;
+                        endMonth = month;
+                        endYear = year;
                     }
-                }, nYear, nMonth, nDate);
+                }, mYear, mMonth, mDate);
                 datePickerDialog.show();
             }
         });
@@ -199,15 +212,18 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             public void onClick(View v) {
                 if (dateSet) {
                     final Calendar Cal = Calendar.getInstance();
-                    nHour = Cal.get(Calendar.HOUR_OF_DAY);
-                    nMinute = Cal.get(Calendar.MINUTE);
+                    mHour = Cal.get(Calendar.HOUR_OF_DAY);
+                    mMinute = Cal.get(Calendar.MINUTE);
                     // Launch time picker dialog
                     TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                             textViewEndDate.setText((textViewEndDate.getText()) + " " + hourOfDay + ":" + minute);
+                            //set values for reminder
+                            endHour = hourOfDay;
+                            endMinute = minute;
                       }
-                    }, nHour, nMinute, false);
+                    }, mHour, mMinute, false);
                     timePickerDialog.show();
                 }
                 else{
@@ -247,8 +263,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         Calendar calendar1 = Calendar.getInstance();
         //test for if user wants an assessment start reminder
 
-        calendar1.set(2022,10,9,20,38, 0);
-        //calendar1.set(mYear,mMonth,mDate,mHour,mMinute,0);
+        //calendar1.set(2022,10,9,20,38, 0);
+        calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
 
         /*
