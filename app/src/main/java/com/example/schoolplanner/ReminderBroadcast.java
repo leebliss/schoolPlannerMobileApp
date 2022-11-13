@@ -7,6 +7,8 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import java.util.Random;
+
 public class ReminderBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
@@ -15,11 +17,13 @@ public class ReminderBroadcast extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "assessmentAlert")
                 .setSmallIcon(R.drawable.alert_png1)
                 .setContentTitle("Assessment Alert")
-                .setContentText("Alert "+notificationInfo+" has started.")
+                .setContentText(notificationInfo+" has started.")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        //need to use different IDs to have multiple notifications?
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-        notificationManager.notify(200, builder.build());
+        //random number for ID so that more than one notification will display at same time
+        Random r = new Random();
+        int randomID = r.nextInt(10000 - 1);
+        notificationManager.notify(randomID, builder.build());
     }
 }

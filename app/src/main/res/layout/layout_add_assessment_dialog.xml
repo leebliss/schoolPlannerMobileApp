@@ -30,7 +30,7 @@
 
         <ImageView
             android:id="@+id/assessmentStartCalendar"
-            android:layout_width="17dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:src="@drawable/calendar_7_32" />

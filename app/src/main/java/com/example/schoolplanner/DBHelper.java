@@ -19,7 +19,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DB.execSQL("create Table CourseInfo (courseID INTEGER primary key AUTOINCREMENT, courseName TEXT,startDate TEXT, endDate TEXT, status TEXT, professor TEXT, phone TEXT, email TEXT, termID INTEGER," +
                 "FOREIGN KEY(termID) REFERENCES TermInfo(termID))");
         //table for assessment info
-        DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert TEXT, endAlert TEXT, courseID INTEGER,"+
+        DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert INTEGER, endAlert TEXT, courseID INTEGER,"+
                 "FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
     }
 
@@ -47,7 +47,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //implementation for adding assessment data, takes 7 arguments
-    public Boolean insertUserData(String name, String startDate, String endDate, String type, String startAlert, String endAlert, int courseID){
+    public Boolean insertUserData(String name, String startDate, String endDate, String type, int startAlert, String endAlert, int courseID){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("assessmentName", name);
@@ -135,7 +135,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-    public Boolean updateAssessmentData(int assessmentID, String name,String start,String end,String type,String startAlert,String endAlert){
+    public Boolean updateAssessmentData(int assessmentID, String name,String start,String end,String type,int startAlert,String endAlert){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("assessmentName", name);

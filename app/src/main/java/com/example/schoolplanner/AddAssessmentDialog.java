@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import java.time.Clock;
 import java.util.Calendar;
+import java.util.Random;
 
 public class AddAssessmentDialog extends AppCompatDialogFragment {
 
@@ -44,10 +45,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     //for holding dates and times for reminders
     private int startDate, startMonth,startYear, startHour, startMinute;
     private int endDate, endMonth,endYear, endHour, endMinute;
-
     //for date picker
     private int mDate, mMonth, mYear, mHour, mMinute;
-    private boolean dateSet;
+    private boolean startDateSet;
+    private boolean endDateSet;
     //listener
     private AddAssessmentDialogListener listener;
     //for holding ID of course to save to new course when added
@@ -93,11 +94,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         //change boolean switch values to strings for storage
                         //for a start alert
                         Boolean switchState = switchStartAlert.isChecked();
-                        String startAlert = "false"; //default
-                        if(switchState) {startAlert = "true";
-                            //set a reminder
-                            setStartReminder();
-                        }
+                        int startAlert = 0; //default
+                        if(switchState) {startAlert = setStartReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
                         //for an end alert
                         switchState = switchEndAlert.isChecked();
                         String endAlert = "false"; //default
@@ -109,9 +107,6 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         listener.applyTexts(assessmentName,startDate,endDate,assessmentType,startAlert,endAlert,courseID);
                         //refresh list after adding data
                         ((CourseDetail)getActivity()).refreshList();
-                        //set up notifications from assessment start and stop times
-                        //setStartReminder();
-                        //setNotifications();
                     }
                 });
 
@@ -129,8 +124,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
 
         //set assessmentInfo
         assessmentInfo = "Funky Alert!";
+
         //set boolean for date picker
-        dateSet = false;
+        startDateSet = false;
+        endDateSet = true;
         //create notification channel for assessment notifications
         createNotificationChannel();
 
@@ -151,12 +148,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         startDate = dayOfMonth;
                         startMonth = month;
                         startYear = year;
-                        //pass to notification
-                        //assessmentInfo = textViewStartDate.getText().toString();    //this is only set once when app starts
                     }
                 }, mYear, mMonth, mDate);
                 //set dateSet to true
-                dateSet=true;
+                startDateSet=true;
                 datePickerDialog.show();
             }
         });
@@ -164,7 +159,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         imageStartClock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dateSet) {
+                if (startDateSet) { //date has already been chosen
                     final Calendar Cal = Calendar.getInstance();
                     mHour = Cal.get(Calendar.HOUR_OF_DAY);
                     mMinute = Cal.get(Calendar.MINUTE);
@@ -172,12 +167,20 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                     TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
+                            //parse date string, this will get rid of old time if it's there
+                            String stringToParse = textViewStartDate.getText().toString();
+                            String delims = "[ -]+"; //parse on hyphens and spaces
+                            String[] tokens = stringToParse.split(delims);
+                            //rebuild date string and add date
+                            textViewStartDate.setText(tokens[0] + "-"+ tokens[1] + "-"+ tokens[2] + " " + hourOfDay + ":" + minute);
+                            //textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
                             //set values for reminder
                             startHour = hourOfDay;
                             startMinute = minute;
                         }
                     }, mHour, mMinute, false);
+                    //set timeSet to true
+                    //timeSet=true;
                     timePickerDialog.show();
                 }
                 else{
@@ -194,23 +197,27 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                 mDate = Cal.get(Calendar.DATE);
                 mMonth = Cal.get(Calendar.MONTH);
                 mYear = Cal.get(Calendar.YEAR);
+                //launch date picker dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year); //jan month 0, so must add 1
                         //set values for reminder
                         endDate = dayOfMonth;
                         endMonth = month;
                         endYear = year;
                     }
                 }, mYear, mMonth, mDate);
+                //set dateSet to true
+                endDateSet=true;
                 datePickerDialog.show();
             }
         });
+        //listener for end time
         imageEndClock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dateSet) {
+                if (endDateSet) { //date has already been chosen
                     final Calendar Cal = Calendar.getInstance();
                     mHour = Cal.get(Calendar.HOUR_OF_DAY);
                     mMinute = Cal.get(Calendar.MINUTE);
@@ -218,12 +225,20 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                     TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                            textViewEndDate.setText((textViewEndDate.getText()) + " " + hourOfDay + ":" + minute);
+                            //parse date string, this will get rid of old time if it's there
+                            String stringToParse = textViewEndDate.getText().toString();
+                            String delims = "[ -]+"; //parse on hyphens and spaces
+                            String[] tokens = stringToParse.split(delims);
+                            //rebuild date string and add date
+                            textViewEndDate.setText(tokens[0] + "-"+ tokens[1] + "-"+ tokens[2] + " " + hourOfDay + ":" + minute);
+                            //textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
                             //set values for reminder
-                            endHour = hourOfDay;
-                            endMinute = minute;
-                      }
+                            startHour = hourOfDay;
+                            startMinute = minute;
+                        }
                     }, mHour, mMinute, false);
+                    //set timeSet to true
+                    //timeSet=true;
                     timePickerDialog.show();
                 }
                 else{
@@ -257,34 +272,49 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
-    private void setStartReminder(){
+    private int setStartReminder(){
 
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
-        //test for if user wants an assessment start reminder
-
-        //calendar1.set(2022,10,9,20,38, 0);
         calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
-
-        /*
-            calendar1.set(2022,9,30,12,42, 0);
-            long startConvertedToMillis = calendar1.getTimeInMillis();
-            long endConvertedToMillis = calendar1.getTimeInMillis();
-
-         */
-
+        //set value of assessmentInfo to be passed as intent extra
+        assessmentInfo = editTextName.getText().toString();
         Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
         intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),0,intent,0);
+        //random number for request code for intent
+        Random r = new Random();
+        int randomRequestCode = r.nextInt(10000 - 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),randomRequestCode,intent,0);
         AlarmManager alarmManager = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
-        //long timeWhenMethodCalled = System.currentTimeMillis();
-        //long tenSecondsInMillis = 1000*10;
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
-        //alarmManager.setExact(AlarmManager.RTC_WAKEUP, timeWhenMethodCalled + tenSecondsInMillis,pendingIntent);
 
         Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
 
+        //return the randomRequestCode to store for later deletion of intent
+        return randomRequestCode;
+    }
+    private int setEndReminder(){
+
+        //variables for calendar
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
+        long startConvertedToMillis = calendar1.getTimeInMillis();
+        //set value of assessmentInfo to be passed as intent extra
+        assessmentInfo = editTextName.getText().toString();
+        Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
+        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+        //random number for request code for intent
+        Random r = new Random();
+        int randomRequestCode = r.nextInt(10000 - 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),randomRequestCode,intent,0);
+        AlarmManager alarmManager = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
+
+        Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+
+        //return the randomRequestCode to store for later deletion of intent
+        return randomRequestCode;
     }
 
     private void setNotifications(){
@@ -305,6 +335,6 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     }
 
     public interface AddAssessmentDialogListener{
-        void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,String assessmentStartAlert,String assessmentEndAlert,int courseID);
+        void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,int assessmentStartAlert,String assessmentEndAlert,int courseID);
     }
 }

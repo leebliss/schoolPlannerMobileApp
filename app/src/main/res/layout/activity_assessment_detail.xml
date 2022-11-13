@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:padding="5dp"
+    android:padding="16dp"
     tools:context=".AssessmentDetail">
 
     <EditText
@@ -24,50 +24,63 @@
         android:gravity="center"
         />
     <LinearLayout
-        android:id="@+id/assessmentStartLayout"
+        android:id="@+id/startDateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
         android:layout_below="@id/textTitle"
         >
-        <TextView
-            android:id="@+id/assessmentStartDateTitle"
-            android:layout_width= "0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text ="Assessment Start Date"
-            android:textSize="18dp" />
+
         <TextView
             android:id="@+id/assessmentStartDate"
-            android:layout_width= "0dp"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
+            android:text="Start Date"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/assessmentStartCalendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/calendar_7_32" />
+        <ImageView
+            android:id="@+id/assessmentStartClock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/clock_7_32"/>
     </LinearLayout>
     <LinearLayout
-        android:id="@+id/assessmentEndLayout"
+        android:id="@+id/endDateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/assessmentStartLayout"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:layout_below="@id/startDateLayout"
         >
         <TextView
-            android:id="@+id/assessmentEndDateTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Assessment End Date"
-            android:textSize="18dp" />
-        <TextView
+            android:textSize="20dp"
+            android:text ="End Date"
             android:id="@+id/assessmentEndDate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+        <ImageView
+            android:id="@+id/assessmentEndCalendar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="variable text"
-            android:textSize="18dp" />
+            android:src="@drawable/calendar_7_32"/>
+        <ImageView
+            android:id="@+id/assessmentEndClock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/clock_7_32"/>
     </LinearLayout>
     <TextView
         android:textSize="18dp"
@@ -75,8 +88,7 @@
         android:id="@+id/assessmentTypeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/assessmentEndLayout"
-        android:layout_marginLeft="10dp"
+        android:layout_below="@id/endDateLayout"
         />
     <RadioGroup
         android:layout_width="wrap_content"
@@ -84,7 +96,6 @@
         android:text ="End Date"
         android:id="@+id/assessmentTypeRadioGroup"
         android:layout_below="@+id/assessmentTypeTitle"
-        android:layout_marginLeft="10dp"
         >
         <RadioButton
             android:id="@+id/assessmentPerformanceRadioButton"

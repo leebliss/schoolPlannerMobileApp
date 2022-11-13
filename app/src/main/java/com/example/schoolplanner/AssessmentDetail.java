@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Switch;
@@ -38,9 +39,13 @@ public class AssessmentDetail extends AppCompatActivity {
     private RadioButton performanceAssessmentRadio, objectiveAssessmentRadio;
     private Switch sAlert, eAlert;
     private TextView textViewStartDate, textViewEndDate;
+    private ImageView imageStartCalendar, imageStartClock,imageEndCalendar, imageEndClock;
+    //for holding dates and times for reminders
+    private int startDate, startMonth,startYear, startHour, startMinute;
+    private int endDate, endMonth,endYear, endHour, endMinute;
     //for date picker
     private int mDate, mMonth, mYear;
-    //TextView displayTermsText;
+    private boolean dateSet;
     //Button save;
     //for bottom navigation menu
     private BottomNavigationView bottomNavigationView;
@@ -59,7 +64,7 @@ public class AssessmentDetail extends AppCompatActivity {
     String assessmentStartDate;
     String assessmentEndDate;
     String assessmentType;
-    String startAlert;
+    int startAlert;
     String endAlert;
 
     @Override
@@ -87,7 +92,7 @@ public class AssessmentDetail extends AppCompatActivity {
                 assessmentStartDate = cursor.getString(2);
                 assessmentEndDate = cursor.getString(3);
                 assessmentType = cursor.getString(4);
-                startAlert = cursor.getString(5);
+                startAlert = cursor.getInt(5);
                 endAlert = cursor.getString(6);
             }
         }
@@ -98,12 +103,13 @@ public class AssessmentDetail extends AppCompatActivity {
 
         //set values in edit texts
         textViewStartDate = findViewById(R.id.assessmentStartDate);
-        //String startHolder = "Start Date: "+courseStartDate;
         textViewStartDate.setText(assessmentStartDate);
-
+        imageStartCalendar = findViewById(R.id.assessmentStartCalendar);
+        imageStartClock = findViewById(R.id.assessmentStartClock);
         textViewEndDate = findViewById(R.id.assessmentEndDate);
-        //String endHolder = "End Date: "+courseEndDate;
         textViewEndDate.setText(assessmentEndDate);
+        imageEndCalendar = findViewById(R.id.assessmentEndCalendar);
+        imageEndClock = findViewById(R.id.assessmentEndClock);
         //set radio buttons based on assessment type value from DB
         performanceAssessmentRadio = (RadioButton) findViewById(R.id.assessmentPerformanceRadioButton);
         if(assessmentType.equals("performance")){performanceAssessmentRadio.setChecked(true);}
@@ -113,8 +119,8 @@ public class AssessmentDetail extends AppCompatActivity {
         else{objectiveAssessmentRadio.setChecked(false);}
         //set value of start alert switch
         sAlert = (Switch) findViewById(R.id.setStartAlert);
-        if(startAlert.equals("true")){sAlert.setChecked(true);}
-        else{sAlert.setChecked(false);}
+        if(startAlert == 0){sAlert.setChecked(false);}
+        else{sAlert.setChecked(true);} //it's holding the request ID for the reminder intent
         //set value of end alert switch
         eAlert = (Switch) findViewById(R.id.setEndAlert);
         if(endAlert.equals("true")){eAlert.setChecked(true);}
@@ -126,25 +132,31 @@ public class AssessmentDetail extends AppCompatActivity {
 
         //set listeners
         //listener for start date
-        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
                 mDate = Cal.get(Calendar.DATE);
                 mMonth = Cal.get(Calendar.MONTH);
                 mYear = Cal.get(Calendar.YEAR);
-
+                //launch date picker dialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(AssessmentDetail.this, android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year); //jan month 0, so must add 1
+                        //set values for reminder
+                        startDate = dayOfMonth;
+                        startMonth = month;
+                        startYear = year;
                     }
                 }, mYear, mMonth, mDate);
+                //set dateSet to true
+                dateSet=true;
                 datePickerDialog.show();
             }
         });
         //listener for end date
-        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -181,8 +193,11 @@ public class AssessmentDetail extends AppCompatActivity {
                         //change boolean switch values to strings for storage
                         //for a start alert
                         Boolean switchState = sAlert.isChecked();
-                        String startAlert = "false"; //default
-                        if(switchState) {startAlert = "true";}
+                        int startAlert = 0; //default
+                        if(switchState) {
+                            //delete previous reminder and set new one
+
+                            startAlert = 1;}  //temp value
                         //for an end alert
                         switchState = eAlert.isChecked();
                         String endAlert = "false"; //default
@@ -206,49 +221,11 @@ public class AssessmentDetail extends AppCompatActivity {
                 return false;
             }
         });
-
-        /*
-        //this is for saving a detail screen when done with changes
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //get values to save changes
-                String assessmentName = titleText.getText().toString();
-                String assessmentStart = textViewStartDate.getText().toString();
-                String assessmentEnd = textViewEndDate.getText().toString();
-                //change boolean radiobutton values to strings for storage
-                //for the performance assessment radio
-                Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
-                String assessmentType = ""; //default
-                if(performanceRadioState) {assessmentType = "performance";}
-                //for the objective assessment radio
-                Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
-                if(objectiveRadioState) {assessmentType = "objective";}
-                //change boolean switch values to strings for storage
-                //for a start alert
-                Boolean switchState = sAlert.isChecked();
-                String startAlert = "false"; //default
-                if(switchState) {startAlert = "true";}
-                //for an end alert
-                switchState = eAlert.isChecked();
-                String endAlert = "false"; //default
-                if(switchState) {endAlert = "true";}
-                //save the changes
-                Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID,assessmentName,assessmentStart,assessmentEnd,assessmentType,startAlert,endAlert);
-                //test for success
-                if(checkSavedChanges) {
-                    Toast.makeText(AssessmentDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                    //refreshList();
-                }
-                else{
-                    Toast.makeText(AssessmentDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        */
-
     }
+
+    //methods
+
+
     public void goHome(){
         Intent intent =new Intent(this, MainActivity.class);
         startActivity(intent);
