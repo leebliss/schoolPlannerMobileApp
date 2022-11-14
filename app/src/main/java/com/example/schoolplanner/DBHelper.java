@@ -11,6 +11,7 @@ public class DBHelper extends SQLiteOpenHelper {
         super(context, "Userdata.db", null, 1);
     }
 
+    //create the databases
     @Override
     public void onCreate(SQLiteDatabase DB) {
         //table for term info
@@ -19,7 +20,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DB.execSQL("create Table CourseInfo (courseID INTEGER primary key AUTOINCREMENT, courseName TEXT,startDate TEXT, endDate TEXT, status TEXT, professor TEXT, phone TEXT, email TEXT, termID INTEGER," +
                 "FOREIGN KEY(termID) REFERENCES TermInfo(termID))");
         //table for assessment info
-        DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert INTEGER, endAlert TEXT, courseID INTEGER,"+
+        DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert INTEGER, endAlert INTEGER, courseID INTEGER,"+
                 "FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
     }
 
@@ -47,7 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //implementation for adding assessment data, takes 7 arguments
-    public Boolean insertUserData(String name, String startDate, String endDate, String type, int startAlert, String endAlert, int courseID){
+    public Boolean insertUserData(String name, String startDate, String endDate, String type, int startAlert, int endAlert, int courseID){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("assessmentName", name);

@@ -428,7 +428,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         addAssessmentDialog.show(getSupportFragmentManager(), "Add Assessment Dialog");
     }
     @Override
-    public void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,int assessmentStartAlert,String assessmentEndAlert,int courseID) {
+    public void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,int assessmentStartAlert,int assessmentEndAlert,int courseID) {
 
         Boolean checkInsertData = dbHelper.insertUserData(assessmentName,assessmentStartDate,assessmentEndDate,assessmentType, assessmentStartAlert,assessmentEndAlert,courseID);
         if(checkInsertData)

@@ -1,6 +1,7 @@
 package com.example.schoolplanner;
 
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -44,8 +46,8 @@ public class AssessmentDetail extends AppCompatActivity {
     private int startDate, startMonth,startYear, startHour, startMinute;
     private int endDate, endMonth,endYear, endHour, endMinute;
     //for date picker
-    private int mDate, mMonth, mYear;
-    private boolean dateSet;
+    private int mDate, mMonth, mYear, mHour, mMinute;
+    private boolean startDateSet, endDateSet;
     //Button save;
     //for bottom navigation menu
     private BottomNavigationView bottomNavigationView;
@@ -150,11 +152,48 @@ public class AssessmentDetail extends AppCompatActivity {
                         startYear = year;
                     }
                 }, mYear, mMonth, mDate);
-                //set dateSet to true
-                dateSet=true;
+                //set startDateSet to true
+                startDateSet=true;
                 datePickerDialog.show();
             }
         });
+        //listener for start time
+        imageStartClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (startDateSet) { //date has already been chosen
+                    final Calendar Cal = Calendar.getInstance();
+                    mHour = Cal.get(Calendar.HOUR_OF_DAY);
+                    mMinute = Cal.get(Calendar.MINUTE);
+                    // Launch time picker dialog
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(AssessmentDetail.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            //parse date string, this will get rid of old time if it's there
+                            String stringToParse = textViewStartDate.getText().toString();
+                            String delims = "[ -]+"; //parse on hyphens and spaces
+                            String[] tokens = stringToParse.split(delims);
+                            //rebuild date string and add date, also fix formatting issue with minutes not showing lead zeros when less than ten
+                            if (minute<10){
+                                textViewStartDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":0" + minute);
+                            }
+                            else {
+                                textViewStartDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":" + minute);
+                            }
+                            startHour = hourOfDay;
+                            startMinute = minute;
+                        }
+                    }, mHour, mMinute, false);
+                    //set timeSet to true
+                    //timeSet=true;
+                    timePickerDialog.show();
+                }
+                else{
+                    Toast.makeText(AssessmentDetail.this, "Please choose the date first.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         //listener for end date
         imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +208,45 @@ public class AssessmentDetail extends AppCompatActivity {
                         textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
                     }
                 }, mYear, mMonth, mDate);
+                //set endDateSet to true
+                endDateSet=true;
                 datePickerDialog.show();
+            }
+        });
+        //listener for end time
+        imageEndClock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (endDateSet) { //date has already been chosen
+                    final Calendar Cal = Calendar.getInstance();
+                    mHour = Cal.get(Calendar.HOUR_OF_DAY);
+                    mMinute = Cal.get(Calendar.MINUTE);
+                    // Launch time picker dialog
+                    TimePickerDialog timePickerDialog = new TimePickerDialog(AssessmentDetail.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                            //parse date string, this will get rid of old time if it's there
+                            String stringToParse = textViewEndDate.getText().toString();
+                            String delims = "[ -]+"; //parse on hyphens and spaces
+                            String[] tokens = stringToParse.split(delims);
+                            //rebuild date string and add date, also fix formatting issue with minutes not showing lead zeros when less than ten
+                            if (minute<10){
+                                textViewEndDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":0" + minute);
+                            }
+                            else {
+                                textViewEndDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":" + minute);
+                            }
+                            endHour = hourOfDay;
+                            endMinute = minute;
+                        }
+                    }, mHour, mMinute, false);
+                    //set timeSet to true
+                    //timeSet=true;
+                    timePickerDialog.show();
+                }
+                else{
+                    Toast.makeText(AssessmentDetail.this, "Please choose the date first.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

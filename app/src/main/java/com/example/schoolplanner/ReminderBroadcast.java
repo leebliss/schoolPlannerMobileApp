@@ -17,7 +17,7 @@ public class ReminderBroadcast extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "assessmentAlert")
                 .setSmallIcon(R.drawable.alert_png1)
                 .setContentTitle("Assessment Alert")
-                .setContentText(notificationInfo+" has started.")
+                .setContentText(notificationInfo)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

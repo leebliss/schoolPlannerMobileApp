@@ -98,8 +98,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         if(switchState) {startAlert = setStartReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
                         //for an end alert
                         switchState = switchEndAlert.isChecked();
-                        String endAlert = "false"; //default
-                        if(switchState) {endAlert = "true";}
+                        int endAlert = 0; //default
+                        if(switchState) {endAlert = setEndReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
                         //this is the foreign key for the assessmentInfo DB
                         int courseID = parentCourseID;
                         //do I still need this?
@@ -171,8 +171,13 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                             String stringToParse = textViewStartDate.getText().toString();
                             String delims = "[ -]+"; //parse on hyphens and spaces
                             String[] tokens = stringToParse.split(delims);
-                            //rebuild date string and add date
-                            textViewStartDate.setText(tokens[0] + "-"+ tokens[1] + "-"+ tokens[2] + " " + hourOfDay + ":" + minute);
+                            //rebuild date string and add date, also fix formatting issue with minutes not showing lead zeros when less than ten
+                            if (minute<10){
+                                textViewStartDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":0" + minute);
+                            }
+                            else {
+                                textViewStartDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":" + minute);
+                            }
                             //textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
                             //set values for reminder
                             startHour = hourOfDay;
@@ -229,12 +234,16 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                             String stringToParse = textViewEndDate.getText().toString();
                             String delims = "[ -]+"; //parse on hyphens and spaces
                             String[] tokens = stringToParse.split(delims);
-                            //rebuild date string and add date
-                            textViewEndDate.setText(tokens[0] + "-"+ tokens[1] + "-"+ tokens[2] + " " + hourOfDay + ":" + minute);
-                            //textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
+                            //rebuild date string and add date, also fix formatting issue with minutes not showing lead zeros when less than ten
+                            if (minute<10){
+                                textViewEndDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":0" + minute);
+                            }
+                            else {
+                                textViewEndDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":" + minute);
+                            }
                             //set values for reminder
-                            startHour = hourOfDay;
-                            startMinute = minute;
+                            endHour = hourOfDay;
+                            endMinute = minute;
                         }
                     }, mHour, mMinute, false);
                     //set timeSet to true
@@ -279,7 +288,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
         //set value of assessmentInfo to be passed as intent extra
-        assessmentInfo = editTextName.getText().toString();
+        assessmentInfo = "Assessment for "+ editTextName.getText().toString()+" has begun.";
         Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
         intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
         //random number for request code for intent
@@ -301,7 +310,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
         //set value of assessmentInfo to be passed as intent extra
-        assessmentInfo = editTextName.getText().toString();
+        assessmentInfo = "Assessment for "+ editTextName.getText().toString()+" has ended.";
         Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
         intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
         //random number for request code for intent
@@ -335,6 +344,6 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     }
 
     public interface AddAssessmentDialogListener{
-        void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,int assessmentStartAlert,String assessmentEndAlert,int courseID);
+        void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,int assessmentStartAlert,int assessmentEndAlert,int courseID);
     }
 }
