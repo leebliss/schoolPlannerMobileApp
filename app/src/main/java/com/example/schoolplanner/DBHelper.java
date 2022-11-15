@@ -136,7 +136,7 @@ public class DBHelper extends SQLiteOpenHelper {
             return false;
         }
     }
-    public Boolean updateAssessmentData(int assessmentID, String name,String start,String end,String type,int startAlert,String endAlert){
+    public Boolean updateAssessmentData(int assessmentID, String name,String start,String end,String type,int startAlert,int endAlert){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("assessmentName", name);

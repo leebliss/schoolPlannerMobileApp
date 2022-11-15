@@ -1,7 +1,10 @@
 package com.example.schoolplanner;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -34,8 +37,13 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 public class AssessmentDetail extends AppCompatActivity {
+
+    //for passing values to another activity
+    public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
+    String assessmentInfo;
 
     EditText titleText;
     private RadioButton performanceAssessmentRadio, objectiveAssessmentRadio;
@@ -66,8 +74,7 @@ public class AssessmentDetail extends AppCompatActivity {
     String assessmentStartDate;
     String assessmentEndDate;
     String assessmentType;
-    int startAlert;
-    String endAlert;
+    int startAlert, endAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +97,12 @@ public class AssessmentDetail extends AppCompatActivity {
             Toast.makeText(AssessmentDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
-                nameOfAssessmentSelected = cursor.getString(1); //this is the course featured in this term detail
+                nameOfAssessmentSelected = cursor.getString(1);
                 assessmentStartDate = cursor.getString(2);
                 assessmentEndDate = cursor.getString(3);
                 assessmentType = cursor.getString(4);
                 startAlert = cursor.getInt(5);
-                endAlert = cursor.getString(6);
+                endAlert = cursor.getInt(6);
             }
         }
 
@@ -125,12 +132,12 @@ public class AssessmentDetail extends AppCompatActivity {
         else{sAlert.setChecked(true);} //it's holding the request ID for the reminder intent
         //set value of end alert switch
         eAlert = (Switch) findViewById(R.id.setEndAlert);
-        if(endAlert.equals("true")){eAlert.setChecked(true);}
-        else{eAlert.setChecked(false);}
+        if(endAlert == 0){eAlert.setChecked(false);}
+        else{eAlert.setChecked(true);} //it's holding the request ID for the reminder intent
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        //buttons
-        //save = findViewById(R.id.btnSave);
+        //set assessmentInfo
+        assessmentInfo = "Default Alert";
 
         //set listeners
         //listener for start date
@@ -267,18 +274,19 @@ public class AssessmentDetail extends AppCompatActivity {
                         //for the objective assessment radio
                         Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
                         if(objectiveRadioState) {assessmentType = "objective";}
-                        //change boolean switch values to strings for storage
                         //for a start alert
                         Boolean switchState = sAlert.isChecked();
                         int startAlert = 0; //default
                         if(switchState) {
-                            //delete previous reminder and set new one
-
-                            startAlert = 1;}  //temp value
+                            //delete previous reminder and set new one anytime switchState is true on save
+                            //call deleteReminder
+                            //call setReminder
+                            startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            ;}
                         //for an end alert
                         switchState = eAlert.isChecked();
-                        String endAlert = "false"; //default
-                        if(switchState) {endAlert = "true";}
+                        int endAlert = 0; //default
+                        if(switchState) {endAlert = setEndReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
                         //save the changes
                         Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID,assessmentName,assessmentStart,assessmentEnd,assessmentType,startAlert,endAlert);
                         //test for success
@@ -302,6 +310,65 @@ public class AssessmentDetail extends AppCompatActivity {
 
     //methods
 
+    private int setStartReminder(){
+
+        //variables for calendar
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
+        long startConvertedToMillis = calendar1.getTimeInMillis();
+        //set value of assessmentInfo to be passed as intent extra
+        assessmentInfo = "Assessment for "+ titleText.getText().toString()+" has begun.";
+        Intent intent = new Intent(AssessmentDetail.this,ReminderBroadcast.class);
+        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+        //random number for request code for intent
+        Random r = new Random();
+        int randomRequestCode = r.nextInt(10000 - 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,0);
+        AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
+
+        Toast.makeText(AssessmentDetail.this, Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(AssessmentDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+
+        //return the randomRequestCode to store for later deletion of intent
+        return randomRequestCode;
+    }
+    private int setEndReminder(){
+
+        //variables for calendar
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
+        long startConvertedToMillis = calendar1.getTimeInMillis();
+        //set value of assessmentInfo to be passed as intent extra
+        assessmentInfo = "Assessment for "+ titleText.getText().toString()+" has ended.";
+        Intent intent = new Intent(AssessmentDetail.this,ReminderBroadcast.class);
+        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+        //random number for request code for intent
+        Random r = new Random();
+        int randomRequestCode = r.nextInt(10000 - 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,0);
+        AlarmManager alarmManager = (AlarmManager)(AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
+
+        Toast.makeText(AssessmentDetail.this, Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(AssessmentDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+
+        //return the randomRequestCode to store for later deletion of intent
+        return randomRequestCode;
+    }
+
+    /*
+    private void cancelReminder(){
+
+        AlarmManager alarmManager = (AlarmManager)((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent = new Intent(getActivity(), ReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 1, myIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
+    }
+
+     */
 
     public void goHome(){
         Intent intent =new Intent(this, MainActivity.class);

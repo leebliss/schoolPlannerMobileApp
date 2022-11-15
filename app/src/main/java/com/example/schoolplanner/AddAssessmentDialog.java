@@ -91,7 +91,6 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                         //for the objective assessment radio
                         Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
                         if(objectiveRadioState) {assessmentType = "objective";}
-                        //change boolean switch values to strings for storage
                         //for a start alert
                         Boolean switchState = switchStartAlert.isChecked();
                         int startAlert = 0; //default
@@ -123,7 +122,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
 
         //set assessmentInfo
-        assessmentInfo = "Funky Alert!";
+        assessmentInfo = "Default Alert";
 
         //set boolean for date picker
         startDateSet = false;
@@ -317,7 +316,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         Random r = new Random();
         int randomRequestCode = r.nextInt(10000 - 1);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),randomRequestCode,intent,0);
-        AlarmManager alarmManager = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager)((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
 
         Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
