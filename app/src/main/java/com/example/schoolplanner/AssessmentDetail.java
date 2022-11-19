@@ -286,6 +286,7 @@ public class AssessmentDetail extends AppCompatActivity {
                             cancelReminder("start");
                             startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
                             }
+                        else{} //cancel old reminder here since no longer checked
                         //for an end alert
                         Boolean endSwitchState = eAlert.isChecked();
                         int endAlert = 0; //default
@@ -315,26 +316,30 @@ public class AssessmentDetail extends AppCompatActivity {
 
     private int setStartReminder(){
 
+        //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
+        long presentTime= System.currentTimeMillis();
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
-        //set value of assessmentInfo to be passed as intent extra
-        assessmentInfo = "Assessment for "+ titleText.getText().toString()+" has begun.";
-        Intent intent = new Intent(AssessmentDetail.this,ReminderBroadcast.class);
-        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
-        //random number for request code for intent
-        Random r = new Random();
-        int randomRequestCode = r.nextInt(10000 - 1);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,0);
-        AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
-
-        Toast.makeText(AssessmentDetail.this, Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
-        //Toast.makeText(AssessmentDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
-
-        //return the randomRequestCode to store for later deletion of intent
-        return randomRequestCode;
+        //compare present millis to new reminder time
+        if(startConvertedToMillis>presentTime){
+            //set value of assessmentInfo to be passed as intent extra
+            assessmentInfo = "Assessment for "+ titleText.getText().toString()+" has begun.";
+            Intent intent = new Intent(AssessmentDetail.this,ReminderBroadcast.class);
+            intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+            //random number for request code for intent
+            Random r = new Random();
+            int randomRequestCode = r.nextInt(10000 - 1);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,0);
+            AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
+            //for testing
+            Toast.makeText(AssessmentDetail.this, Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            //return the randomRequestCode to store for later deletion of intent
+            return randomRequestCode;
+        }
+        else return 1; //indicates time was in the past, reminder not set
     }
     private int setEndReminder(){
 
@@ -371,12 +376,12 @@ public class AssessmentDetail extends AppCompatActivity {
         else {
             while (cursor.moveToNext()) {
                 if (reminderType.equals("start")) {
-                    requestCode = cursor.getInt(6); //6 is startAlert
+                    requestCode = cursor.getInt(5); //5 is startAlert
                     //for testing
                     Toast.makeText(AssessmentDetail.this, String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
                 if (reminderType.equals("end")) {
-                    requestCode = cursor.getInt(7); //6 is endAlert
+                    requestCode = cursor.getInt(6); //6 is endAlert
                 }
             }
         }
