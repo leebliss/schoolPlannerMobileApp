@@ -23,25 +23,42 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             >
-
-            <EditText
-                android:id="@+id/textTitle"
+            <LinearLayout
+                android:id="@+id/titleBarLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
                 android:background="@android:color/holo_blue_dark"
-                android:gravity="center"
-                android:hint="variable text"
-                android:padding="10dp"
-                android:textColor="@color/white"
-                android:textSize="22dp"
-                android:textStyle="bold" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
+                <EditText
+                    android:id="@+id/textTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:layout_marginBottom="3dp"
+                    android:gravity="center"
+                    android:hint="variable text"
+                    android:background="@android:color/holo_blue_dark"
+                    android:padding="10dp"
+                    android:textColor="@color/white"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
 
+                <ImageView
+                    android:id="@+id/courseNoteImage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_baseline_note_add_24"/>
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/courseStartLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/textTitle"
+                android:layout_below="@id/titleBarLayout"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp">
 

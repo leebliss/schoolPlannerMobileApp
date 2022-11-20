@@ -282,64 +282,57 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     }
     private int setStartReminder(){
 
+        //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
+        long presentTime= System.currentTimeMillis();
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
-        //set value of assessmentInfo to be passed as intent extra
-        assessmentInfo = "Assessment for "+ editTextName.getText().toString()+" has begun.";
-        Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
-        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
-        //random number for request code for intent
-        Random r = new Random();
-        int randomRequestCode = r.nextInt(10000 - 1);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),randomRequestCode,intent,0);
-        AlarmManager alarmManager = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
-
-        Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
-
-        //return the randomRequestCode to store for later deletion of intent
-        return randomRequestCode;
+        //compare present millis to new reminder time
+        if(startConvertedToMillis>presentTime) {
+            //set value of assessmentInfo to be passed as intent extra
+            assessmentInfo = "Assessment for " + editTextName.getText().toString() + " has begun.";
+            Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+            intent.putExtra(ASSESSMENT_INFO, assessmentInfo);
+            //random number for request code for intent
+            Random r = new Random();
+            int randomRequestCode = r.nextInt(10000 - 1);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), randomRequestCode, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) ((CourseDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            //for testing
+            Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //return the randomRequestCode to store for later deletion of intent
+            return randomRequestCode;
+        }
+        else return 1; //indicates time was in the past, reminder not set
     }
     private int setEndReminder(){
 
+        //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
+        long presentTime= System.currentTimeMillis();
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
         long startConvertedToMillis = calendar1.getTimeInMillis();
-        //set value of assessmentInfo to be passed as intent extra
-        assessmentInfo = "Assessment for "+ editTextName.getText().toString()+" has ended.";
-        Intent intent = new Intent(getActivity(),ReminderBroadcast.class);
-        intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
-        //random number for request code for intent
-        Random r = new Random();
-        int randomRequestCode = r.nextInt(10000 - 1);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),randomRequestCode,intent,0);
-        AlarmManager alarmManager = (AlarmManager)((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
-
-        Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
-
-        //return the randomRequestCode to store for later deletion of intent
-        return randomRequestCode;
-    }
-
-    private void setNotifications(){
-
-        Calendar sevendayalarm = Calendar.getInstance();
-
-        //sevendayalarm.add(Calendar.DATE, 7);
-        sevendayalarm.set(2022,9,29,19,42);
-
-        Intent intent = new Intent(getActivity(), AssessmentNotificationReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 001, intent, 0);
-
-        AlarmManager am = (AlarmManager) ((CourseDetail)getActivity()).getSystemService(Context.ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, sevendayalarm.getTimeInMillis(), pendingIntent);
-
-        Toast.makeText(getActivity(), String.valueOf(sevendayalarm.getTimeInMillis()), Toast.LENGTH_SHORT).show();
-
+        //compare present millis to new reminder time
+        if(startConvertedToMillis>presentTime) {
+            //set value of assessmentInfo to be passed as intent extra
+            assessmentInfo = "Assessment for " + editTextName.getText().toString() + " has ended.";
+            Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+            intent.putExtra(ASSESSMENT_INFO, assessmentInfo);
+            //random number for request code for intent
+            Random r = new Random();
+            int randomRequestCode = r.nextInt(10000 - 1);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), randomRequestCode, intent, 0);
+            AlarmManager alarmManager = (AlarmManager) ((CourseDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            //for tesing
+            Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //return the randomRequestCode to store for later deletion of intent
+            return randomRequestCode;
+        }
+        else return 1; //indicates time was in the past, reminder not set
     }
 
     public interface AddAssessmentDialogListener{

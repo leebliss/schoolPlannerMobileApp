@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -37,12 +38,12 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener {
+public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener,AddNoteDialog.AddNoteDialogListener  {
 
     //for passing values to another activity
     public static final String ASSESSMENT_ID = "com.example.schoolplanner.ASSESSMENT_ID";
-    //TextView titleText;
     EditText titleText, professor, professorPhone, professorEmail;
+    ImageView addNoteImage;
     private TextView textViewStartDate, textViewEndDate;
     //for course status
     private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
@@ -121,12 +122,12 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         //set name for this activity in title bar using value passed over by previous activity
         titleText = findViewById(R.id.textTitle);
         titleText.setText(nameOfCourseSelected);
-
+        //image button for opening note dialog
+        addNoteImage = findViewById(R.id.courseNoteImage);
         //set values in edit texts
         textViewStartDate = findViewById(R.id.courseStartDate);
         //String startHolder = "Start Date: "+courseStartDate;
         textViewStartDate.setText(courseStartDate);
-
         textViewEndDate = findViewById(R.id.courseEndDate);
         //String endHolder = "End Date: "+courseEndDate;
         textViewEndDate.setText(courseEndDate);
@@ -174,6 +175,14 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         viewData();
 
         //set listeners
+        addNoteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Open new dialog box for client to enter/edit note in
+                openAddNoteDialog();
+            }
+        });
+
         //listener for start date
         textViewStartDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,6 +358,12 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         AddAssessmentDialog addAssessmentDialog = new AddAssessmentDialog(nameOfCourseSelected, courseID);
         addAssessmentDialog.show(getSupportFragmentManager(), "Add Assessment Dialog");
     }
+    public void openAddNoteDialog(){
+        AddNoteDialog addNoteDialog = new AddNoteDialog();
+        addNoteDialog.show(getSupportFragmentManager(), "Add Note Dialog");
+    }
+
+    //for opening addAssessmentDialog, passes 7 arguments
     @Override
     public void applyTexts(String assessmentName, String assessmentStartDate,String assessmentEndDate,String assessmentType,int assessmentStartAlert,int assessmentEndAlert,int courseID) {
 
@@ -358,6 +373,17 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else
             Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
+    //for opening addNoteDialog, passes 3 arguments
+    @Override
+    public void applyTexts(String assessmentName, int shared) {
+
+        Boolean checkInsertData = dbHelper.insertUserData(assessmentName,shared);
+        if(checkInsertData)
+            Toast.makeText(CourseDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+    }
+
     public void openAssessmentDetailActivity(int ID){
         Intent intent =new Intent(this, AssessmentDetail.class);
         intent.putExtra(ASSESSMENT_ID, ID);
