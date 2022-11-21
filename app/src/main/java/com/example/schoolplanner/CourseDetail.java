@@ -359,7 +359,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         addAssessmentDialog.show(getSupportFragmentManager(), "Add Assessment Dialog");
     }
     public void openAddNoteDialog(){
-        AddNoteDialog addNoteDialog = new AddNoteDialog();
+        AddNoteDialog addNoteDialog = new AddNoteDialog(courseID);
         addNoteDialog.show(getSupportFragmentManager(), "Add Note Dialog");
     }
 
@@ -373,11 +373,11 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else
             Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
-    //for opening addNoteDialog, passes 3 arguments
+    //for opening addNoteDialog, passes 2 arguments
     @Override
-    public void applyTexts(String assessmentName, int shared) {
+    public void applyTexts(String courseNote, int shared) {
 
-        Boolean checkInsertData = dbHelper.insertUserData(assessmentName,shared);
+        Boolean checkInsertData = dbHelper.insertCourseNote(courseNote,shared, courseID);
         if(checkInsertData)
             Toast.makeText(CourseDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
         else

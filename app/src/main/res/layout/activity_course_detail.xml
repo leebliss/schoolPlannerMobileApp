@@ -8,9 +8,7 @@
         android:background="@color/white"
         android:padding="5dp"
         tools:context=".CourseDetail"
-        android:id="@+id/mainLayOut"
     >
-
     <ScrollView
         android:id="@+id/mainScrollView"
         android:layout_width="match_parent"
@@ -29,7 +27,9 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/holo_blue_dark"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_marginRight="10dp"
+                android:orientation="horizontal"
+                >
                 <EditText
                     android:id="@+id/textTitle"
                     android:layout_width="0dp"

@@ -22,6 +22,8 @@ public class DBHelper extends SQLiteOpenHelper {
         //table for assessment info
         DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert INTEGER, endAlert INTEGER, courseID INTEGER,"+
                 "FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
+        //table for course notes
+        DB.execSQL("create Table CourseNotes (courseNoteID INTEGER primary key AUTOINCREMENT, courseNote TEXT, shared INTEGER, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
     }
 
     @Override
@@ -29,6 +31,22 @@ public class DBHelper extends SQLiteOpenHelper {
         DB.execSQL("drop Table if exists TermInfo");
         DB.execSQL("drop Table if exists CourseInfo");
         DB.execSQL("drop Table if exists AssessmentInfo");
+        DB.execSQL("drop Table if exists CourseNotes");
+    }
+
+    public Boolean insertCourseNote(String courseNote, int shared, int courseID){
+        SQLiteDatabase DB = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("courseNote", courseNote);
+        contentValues.put("shared", shared);
+        contentValues.put("courseID", courseID);
+        long result = DB.insert("CourseNotes", null, contentValues);
+        if (result == -1){
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     //implementation for adding term data, takes 3 arguments
@@ -245,6 +263,10 @@ public class DBHelper extends SQLiteOpenHelper {
             case "AssessmentInfo":
                 tableName = "AssessmentInfo";
                 primaryID = "assessmentID";
+                break;
+            case "CourseNotes":
+                tableName = "CourseNotes";
+                primaryID = "courseID"; //searching the CourseNotes DB on foreign key courseID
                 break;
             default:
                 break;

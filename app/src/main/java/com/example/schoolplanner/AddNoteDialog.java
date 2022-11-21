@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -21,14 +23,20 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     //for user to enter values
     private EditText editTextNote;
     private Switch shareSwitch;
-    //private TextView textViewStartDate, textViewEndDate;
-    //for date picker
-    //private int mDate, mMonth, mYear;
+    //for db connectivity
+    DBHelper dbHelper;
     //listener
     private AddNoteDialogListener listener;
-
+    //for holding ID of course to get note info
+    private int parentCourseID=0;
+    //constructor for getting selected course from activity that launched this dialog
+    public AddNoteDialog(int courseIDThatOwnsMe) {
+        parentCourseID = courseIDThatOwnsMe;
+    }
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState) {
+        //database connection
+        dbHelper = new DBHelper(getActivity());
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -59,11 +67,26 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                     }
                 });
 
+        //use courseID to get corresponding data
+        String courseNoteContent="";
+        int toShareOrNotToShare=0;
+        Cursor cursor = dbHelper.getDataByID(parentCourseID, "CourseNotes");
+        if (cursor.getCount() == 0) {
+            Toast.makeText(getActivity(), "No matches found", Toast.LENGTH_SHORT).show();
+        } else {
+            while (cursor.moveToNext()) {
+                courseNoteContent = cursor.getString(1);
+                toShareOrNotToShare = cursor.getInt(2);
+            }
+            //for testing
+            //Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
+        }
+        //set values to items
         editTextNote = view.findViewById(R.id.noteEditText);
+        editTextNote.setText(courseNoteContent);
         shareSwitch = view.findViewById(R.id.sendToContactsSwitch);
-        //textViewStartDate = view.findViewById(R.id.termStartDate);
-        //textViewEndDate = view.findViewById(R.id.termEndDate);
-
+        if(toShareOrNotToShare==1)shareSwitch.setChecked(true);
+        else shareSwitch.setChecked(false);
 
         /*
         //listener for start date

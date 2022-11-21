@@ -51,7 +51,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     private boolean endDateSet;
     //listener
     private AddAssessmentDialogListener listener;
-    //for holding ID of course to save to new course when added
+    //for holding ID of course to save to new assessment when added
     private int parentCourseID=0;
     private String parentCourse="";
     //constructor for getting selected course from activity that launched this dialog

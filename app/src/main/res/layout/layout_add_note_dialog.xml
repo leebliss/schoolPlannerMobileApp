@@ -5,11 +5,22 @@
     android:padding="16dp">
 
     <EditText
-        android:textSize="20dp"
-        android:hint="Enter note here."
-        android:id="@+id/noteEditText"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/noteEditText"
+        android:enabled="true"
+        android:minLines="6"
+        android:maxLines="6"
+        android:isScrollContainer="true"
+        android:hint="Type your note here"
+        android:background="#fafafa"
+        android:textIsSelectable="true"
+        android:focusable="true"
+        android:gravity="top"
+        android:padding="24dp"
+        style="@style/Base.TextAppearance.AppCompat.Large"
         />
     <Switch
         android:id="@+id/sendToContactsSwitch"
