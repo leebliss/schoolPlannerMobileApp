@@ -247,7 +247,7 @@
                 <ListView
                     android:id="@+id/displayAssessmentNames"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="300dp"
                     android:layout_below="@id/assessmentListHeader"
                     android:textSize="16dp" />
                     />
