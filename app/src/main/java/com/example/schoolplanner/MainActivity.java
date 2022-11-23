@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -206,7 +207,33 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         finish();
         startActivity(getIntent());
     }
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.top_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
+        case R.id.add:
+            Toast.makeText(MainActivity.this, "add clicked.", Toast.LENGTH_SHORT).show();
+            //add the function to perform here
+            return(true);
+        case R.id.back:
+            //add the function to perform here
+            return(true);
+        case R.id.settings:
+            //add the function to perform here
+            return(true);
+        case R.id.about:
+            //add the function to perform here
+            return(true);
+        case R.id.exit:
+            //add the function to perform here
+            return(true);
+    }
+        return(super.onOptionsItemSelected(item));
+    }
     //methods
     //refresh the list after making changes to data
     public void refreshList(){
