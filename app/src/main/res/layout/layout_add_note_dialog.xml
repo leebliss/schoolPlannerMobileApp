@@ -30,5 +30,19 @@
         android:checked="false"
         android:text="Send To Contacts"
         android:textSize="20dp" />
+    <Button
+        android:id="@+id/addContactsButton"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sendToContactsSwitch"
+        android:layout_centerHorizontal="true"
+        android:text="Choose Contacts"
+        />
+    <TextView
+        android:id="@+id/phoneTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
 </RelativeLayout>

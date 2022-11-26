@@ -24,6 +24,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
         //table for course notes
         DB.execSQL("create Table CourseNotes (courseNoteID INTEGER primary key AUTOINCREMENT, courseNote TEXT, shared INTEGER, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
+        //table for contacts
+        DB.execSQL("create Table ContactInfo (ContactID INTEGER primary key AUTOINCREMENT, contactName TEXT, contactEmail TEXT)");
     }
 
     @Override
@@ -32,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
         DB.execSQL("drop Table if exists CourseInfo");
         DB.execSQL("drop Table if exists AssessmentInfo");
         DB.execSQL("drop Table if exists CourseNotes");
+        DB.execSQL("drop Table if exists ContactInfo");
     }
 
     public Boolean insertCourseNote(String courseNote, int shared, int courseID){
