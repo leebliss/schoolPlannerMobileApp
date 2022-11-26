@@ -23,141 +23,156 @@
         android:layout_marginBottom="3dp"
         android:gravity="center"
         />
-    <LinearLayout
-        android:id="@+id/startDateLayout"
+    <ScrollView
+        android:id="@+id/mainScrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
         android:layout_below="@id/textTitle"
-        >
+        android:layout_above="@id/bottom_navigation"
+        android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/assessmentStartDate"
-            android:layout_width="100dp"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Start Date"
-            android:textSize="20dp" />
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:id="@+id/startDateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:id="@+id/assessmentStartDate"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Start Date"
+                    android:textSize="20dp" />
 
-        <ImageView
-            android:id="@+id/assessmentStartCalendar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/calendar_7_32" />
-        <ImageView
-            android:id="@+id/assessmentStartClock"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/clock_7_32"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/endDateLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        android:layout_below="@id/startDateLayout"
-        >
-        <TextView
-            android:textSize="20dp"
-            android:text ="End Date"
-            android:id="@+id/assessmentEndDate"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
-        <ImageView
-            android:id="@+id/assessmentEndCalendar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/calendar_7_32"/>
-        <ImageView
-            android:id="@+id/assessmentEndClock"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/clock_7_32"/>
-    </LinearLayout>
-    <TextView
-        android:textSize="18dp"
-        android:text ="Assessment Type"
-        android:id="@+id/assessmentTypeTitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/endDateLayout"
-        />
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text ="End Date"
-        android:id="@+id/assessmentTypeRadioGroup"
-        android:layout_below="@+id/assessmentTypeTitle"
-        >
-        <RadioButton
-            android:id="@+id/assessmentPerformanceRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text ="Performance"
-            />
-        <RadioButton
-            android:id="@+id/assessmentObjectiveRadioButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text ="Objective"
-            />
-    </RadioGroup>
-    <LinearLayout
-        android:id="@+id/setStartAlertLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/assessmentTypeRadioGroup"
-        >
-        <TextView
-            android:id="@+id/setStartAlertTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Start Alert"
-            android:textSize="18dp" />
-        <Switch
-            android:id="@+id/setStartAlert"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18dp" />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/setEndAlertLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_below="@id/setStartAlertLayout"
-        >
-        <TextView
-            android:id="@+id/setEndAlertTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="End Alert"
-            android:textSize="18dp" />
-        <Switch
-            android:id="@+id/setEndAlert"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="18dp" />
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/assessmentStartCalendar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/calendar_7_32" />
+                <ImageView
+                    android:id="@+id/assessmentStartClock"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/clock_7_32"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/endDateLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:layout_below="@id/startDateLayout"
+                >
+                <TextView
+                    android:textSize="20dp"
+                    android:text ="End Date"
+                    android:id="@+id/assessmentEndDate"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    />
+                <ImageView
+                    android:id="@+id/assessmentEndCalendar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/calendar_7_32"/>
+                <ImageView
+                    android:id="@+id/assessmentEndClock"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/clock_7_32"/>
+            </LinearLayout>
+            <TextView
+                android:textSize="18dp"
+                android:text ="Assessment Type"
+                android:id="@+id/assessmentTypeTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/endDateLayout"
+                />
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text ="End Date"
+                android:id="@+id/assessmentTypeRadioGroup"
+                android:layout_below="@+id/assessmentTypeTitle"
+                >
+                <RadioButton
+                    android:id="@+id/assessmentPerformanceRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text ="Performance"
+                    />
+                <RadioButton
+                    android:id="@+id/assessmentObjectiveRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text ="Objective"
+                    />
+            </RadioGroup>
+            <LinearLayout
+                android:id="@+id/setStartAlertLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_below="@id/assessmentTypeRadioGroup"
+                >
+                <TextView
+                    android:id="@+id/setStartAlertTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Start Alert"
+                    android:textSize="18dp" />
+                <Switch
+                    android:id="@+id/setStartAlert"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/setEndAlertLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_below="@id/setStartAlertLayout"
+                >
+                <TextView
+                    android:id="@+id/setEndAlertTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="End Alert"
+                    android:textSize="18dp" />
+                <Switch
+                    android:id="@+id/setEndAlert"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18dp" />
+            </LinearLayout>
+        </RelativeLayout>
+    </ScrollView>
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_nav_menu_assessment_detail" />
+        app:menu="@menu/bottom_nav_menu_assessment_detail"
+        app:labelVisibilityMode="labeled"
+        />
 </RelativeLayout>

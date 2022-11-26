@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">School Planner</string>
-    <string name="add">add</string>
-    <string name="reset">reset</string>
+    <string name="home">home</string>
+    <string name="back">back</string>
+    <string name="settings">settings</string>
     <string name="about">about</string>
     <string name="exit">exit</string>
 </resources>

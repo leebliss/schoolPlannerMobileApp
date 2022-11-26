@@ -8,6 +8,7 @@
     android:padding="5dp"
     tools:context=".MainActivity">
     >
+
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="match_parent"
@@ -45,5 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_nav_menu_main" />
+        app:menu="@menu/bottom_nav_menu_main"
+        app:labelVisibilityMode="labeled"
+        />
 </RelativeLayout>

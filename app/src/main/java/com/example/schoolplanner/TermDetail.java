@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -232,10 +233,6 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                             Toast.makeText(TermDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
                         }
                         return true;
-
-                    case R.id.home:
-                        goHome();
-                        return true;
                 }
                 return false;
             }
@@ -311,8 +308,36 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         finish();
         startActivity(getIntent());
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.top_menu, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
+        case R.id.home:
+            goHome();
+            return(true);
+        case R.id.back:
+            finish();
+            return(true);
+        case R.id.settings:
+            //add the function to perform here
+            return(true);
+        case R.id.about:
+            //add the function to perform here
+            return(true);
+        case R.id.exit:
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+            return(true);
+    }
+        return(super.onOptionsItemSelected(item));
+    }
 
-    //methods
+    ////////////////////////////////////methods/////////////////////////////////////
     //refresh the list after making changes to data
     public void refreshList(){
         listItem.clear();

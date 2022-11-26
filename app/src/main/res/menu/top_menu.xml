@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
 
     <item
-        android:id="@+id/add" android:icon="@drawable/ic_baseline_home_24" app:showAsAction="always"   android:title="@string/add"/>
+        android:id="@+id/home" android:icon="@drawable/ic_baseline_home_24" app:showAsAction="always"   android:title="@string/home"/>
     <item
-        android:id="@+id/back" android:icon="@drawable/ic_baseline_arrow_back_24" app:showAsAction="always|withText" android:title="@string/reset"/>
+        android:id="@+id/back" android:icon="@drawable/ic_baseline_arrow_back_24" app:showAsAction="always" android:title="@string/back"/>
     <item
-        android:id="@+id/settings" android:icon="@drawable/ic_baseline_settings_24" app:showAsAction="always|withText" android:title="@string/reset"/>
+        android:id="@+id/settings" android:icon="@drawable/ic_baseline_settings_24" app:showAsAction="always" android:title="@string/settings"/>
     <item
         android:id="@+id/about" android:icon="@android:drawable/ic_dialog_info" app:showAsAction="never" android:title="@string/about">
     </item>

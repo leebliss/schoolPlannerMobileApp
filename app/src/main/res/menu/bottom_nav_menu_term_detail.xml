@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item android:id ="@+id/addNew"
         android:title="Add New"
-        android:icon="@drawable/ic_baseline_add_24"/>
+        android:icon="@drawable/ic_baseline_add_24"
+        />
     <item android:id ="@+id/open"
         android:title="Open"
-        android:icon="@drawable/ic_baseline_open_in_new_24"/>
+        android:icon="@drawable/ic_baseline_open_in_new_24"
+        />
     <item android:id ="@+id/delete"
         android:title="Delete"
-        android:icon="@drawable/ic_baseline_delete_24"/>
+        android:icon="@drawable/ic_baseline_delete_24"
+        />
     <item android:id ="@+id/save"
         android:title="Save"
-        android:icon="@drawable/ic_baseline_save_24"/>
-    <item android:id ="@+id/home"
-        android:title="Home"
-        android:icon="@drawable/ic_baseline_home_24"/>
+        android:icon="@drawable/ic_baseline_save_24"
+        />
 </menu>

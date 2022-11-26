@@ -149,10 +149,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                             }
                         }
                         return true;
-
-                    case R.id.home:
-                        //code to return home coming soon
-                        return true;
                 }
                 return false;
             }
@@ -215,12 +211,12 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
-        case R.id.add:
-            Toast.makeText(MainActivity.this, "add clicked.", Toast.LENGTH_SHORT).show();
+        case R.id.home:
+            Toast.makeText(MainActivity.this, "This is the home screen.", Toast.LENGTH_SHORT).show();
             //add the function to perform here
             return(true);
         case R.id.back:
-            //add the function to perform here
+            Toast.makeText(MainActivity.this, "This is the home screen.", Toast.LENGTH_SHORT).show();
             return(true);
         case R.id.settings:
             //add the function to perform here
@@ -229,12 +225,15 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
             //add the function to perform here
             return(true);
         case R.id.exit:
-            //add the function to perform here
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
             return(true);
     }
         return(super.onOptionsItemSelected(item));
     }
-    //methods
+
+    ///////////////////methods/////////////////////////////////////////////////////
     //refresh the list after making changes to data
     public void refreshList(){
         listItem.clear();
