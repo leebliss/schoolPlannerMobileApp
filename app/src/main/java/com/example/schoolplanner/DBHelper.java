@@ -25,7 +25,7 @@ public class DBHelper extends SQLiteOpenHelper {
         //table for course notes
         DB.execSQL("create Table CourseNotes (courseNoteID INTEGER primary key AUTOINCREMENT, courseNote TEXT, shared INTEGER, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
         //table for contacts
-        DB.execSQL("create Table ContactInfo (ContactID INTEGER primary key AUTOINCREMENT, contactName TEXT, contactEmail TEXT)");
+        DB.execSQL("create Table ContactInfo (ContactID INTEGER primary key AUTOINCREMENT, contactName TEXT, contactPhone TEXT, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
     }
 
     @Override
@@ -42,6 +42,21 @@ public class DBHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put("courseNote", courseNote);
         contentValues.put("shared", shared);
+        contentValues.put("courseID", courseID);
+        long result = DB.insert("CourseNotes", null, contentValues);
+        if (result == -1){
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    public Boolean insertContact(String contactName, String contactPhone, int courseID){
+        SQLiteDatabase DB = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("contactName", contactName);
+        contentValues.put("contactPhone", contactPhone);
         contentValues.put("courseID", courseID);
         long result = DB.insert("CourseNotes", null, contentValues);
         if (result == -1){
@@ -271,6 +286,10 @@ public class DBHelper extends SQLiteOpenHelper {
                 tableName = "CourseNotes";
                 primaryID = "courseID"; //searching the CourseNotes DB on foreign key courseID
                 break;
+            case "ContactInfo":
+                tableName = "ContactInfo";
+                primaryID = "courseID"; //searching the CourseNotes DB on foreign key courseID
+                break;
             default:
                 break;
         }
@@ -292,6 +311,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 break;
             case "assessment":
                 query = "Select * from AssessmentInfo";
+                break;
+            case "contacts":
+                query = "Select * from ContactInfo";
                 break;
             default:
                 break;

@@ -399,11 +399,21 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else
             Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
-    //for opening addNoteDialog, passes 2 arguments
+    //this is called when the add note dialog closes, saves note to DB
     @Override
     public void applyTexts(String courseNote, int shared) {
 
         Boolean checkInsertData = dbHelper.insertCourseNote(courseNote,shared, courseID);
+        if(checkInsertData)
+            Toast.makeText(CourseDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+    }
+    //this is called when the add note dialog closes, saves contact info to DB
+    @Override
+    public void applyTexts(String contactName, String contactPhone) {
+
+        Boolean checkInsertData = dbHelper.insertContact(contactName,contactPhone, courseID);
         if(checkInsertData)
             Toast.makeText(CourseDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
         else

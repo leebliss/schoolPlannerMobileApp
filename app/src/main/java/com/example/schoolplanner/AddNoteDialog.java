@@ -1,11 +1,13 @@
 package com.example.schoolplanner;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,8 +15,10 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,17 +29,29 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AddNoteDialog extends AppCompatDialogFragment {
     //for user to enter values
     private EditText editTextNote;
     private Switch shareSwitch;
-    private Button addContactsButton;
     private static final int RESULT_PICK_CONTACT =1;
-    private TextView showPhoneNumber;
-
     //for db connectivity
     DBHelper dbHelper;
+    //for displaying school planner contacts in a list
+    ArrayList<String> listItem;
+    ArrayAdapter adapter;
+    ListView userList;
+    //for displaying all of user's contacts in a list to choose from
+    ArrayList<String> allContactslistItem;
+    ArrayAdapter allContactsAdapter;
+    ListView allContactsUserList;
     //listener
     private AddNoteDialogListener listener;
     //for holding ID of course to get note info
@@ -48,6 +64,11 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     public Dialog onCreateDialog( Bundle savedInstanceState) {
         //database connection
         dbHelper = new DBHelper(getActivity());
+        //for displaying school planner contacts in a list
+        listItem = new ArrayList<>();
+        //for displaying all of user's contacts in a list to choose from
+        allContactslistItem = new ArrayList<>();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -94,16 +115,13 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         shareSwitch = view.findViewById(R.id.sendToContactsSwitch);
         if(toShareOrNotToShare==1)shareSwitch.setChecked(true);
         else shareSwitch.setChecked(false);
-        addContactsButton = view.findViewById(R.id.addContactsButton);
+        userList = view.findViewById(R.id.displayContactNames);
+        allContactsUserList = view.findViewById(R.id.displayAllContactNames);
 
-        //listener for button to add contacts
-        addContactsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent (Intent.ACTION_PICK, ContactsContract.CommonDataKinds.Phone.CONTENT_URI);
-                someActivityResultLauncher.launch(intent);
-            }
-        });
+        //get list of all contacts from user's phone
+        getContactsList();
+        //show contacts that are already saved to database
+        viewData();
 
         return builder.create();
     }
@@ -119,6 +137,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         }
     }
 
+    /*
     // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
     ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -138,6 +157,9 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                     }
                 }
             });
+
+     */
+
     /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
@@ -157,6 +179,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
 
      */
 
+    /*
     private void contactPicked(Intent data) {
         Cursor cursor = null;
         ContentResolver contentResolver = getActivity().getContentResolver();
@@ -177,8 +200,119 @@ public class AddNoteDialog extends AppCompatDialogFragment {
             e.printStackTrace ();
         }
     }
+    */
+    //////////////////////////////methods////////////////////
+    /*
+    public void getContacts(){
+        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_CONTACTS}, 0);
+        }
+        else {
+            //get contacts
+            ContentResolver contentResolver = getActivity().getContentResolver();
+            Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+            Cursor contactsCursor = contentResolver.query(uri,new String[]{
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, null);
+            if(contactsCursor != null){
+                while(contactsCursor.moveToNext()){
+                    long contactId = contactsCursor.getLong(0);
+                    String phone = contactsCursor.getString(1);
+                    List<String> list;
+                    if(phone.conta)
+                }
 
+            }
+            Log.i("************Contact_Provider_Demo", "Total Number of contacts::: " + Integer.toString(contactsCursor.getCount()));
+            String contactNumber = contactsCursor.getString(contactsCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+    }
+    */
+    private void getContactsList() {
+        //check permissions
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_CONTACTS}, 0);
+        //get contacts and safe to list
+        } else {
+            ContentResolver resolver = getActivity().getContentResolver();
+            Map<Long, List<String>> phones = new HashMap<>();
+            Cursor getContactsCursor = resolver.query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    new String[]{
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                            ContactsContract.CommonDataKinds.Phone.NUMBER},
+                    null, null, null);
+
+            if (getContactsCursor != null) {
+                while (getContactsCursor.moveToNext()) {
+                    long contactId = getContactsCursor.getLong(0);
+                    String phone = getContactsCursor.getString(1);
+                    List<String> list;
+                    if (phones.containsKey(contactId)) {
+                        list = phones.get(contactId);
+                    } else {
+                        list = new ArrayList<>();
+                        phones.put(contactId, list);
+                    }
+                    list.add(phone);
+                }
+                getContactsCursor.close();
+            }
+            getContactsCursor = resolver.query(
+                    ContactsContract.Contacts.CONTENT_URI,
+                    new String[]{
+                            ContactsContract.Contacts._ID,
+                            ContactsContract.Contacts.DISPLAY_NAME,
+                            ContactsContract.CommonDataKinds.Phone.PHOTO_URI},
+                    null, null, null);
+            while (getContactsCursor != null &&
+                    getContactsCursor.moveToNext()) {
+                long contactId = getContactsCursor.getLong(0);
+                String name = getContactsCursor.getString(1);
+                String photo = getContactsCursor.getString(2);
+                List<String> contactPhones = phones.get(contactId);
+                if (contactPhones != null) {
+                    for (String phone :
+                            contactPhones) {
+                        //show list of contacts so use can make multiple selections
+                        String nameAndPhone = name +" "+ phone;
+                        allContactslistItem.add(nameAndPhone);
+                        //addContact(contactId, name, phone, photo);
+                        //for testing
+                        Log.i("************Contact_Provider_Demo",phone);
+                    }
+                }
+            }
+            allContactsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, allContactslistItem);
+            allContactsUserList.setAdapter(allContactsAdapter);
+            //programatically reset height of listview each time viewData is called
+            ListViewHelper.setListViewHeightBasedOnChildren(allContactsUserList);
+        }
+    }
+
+    private void viewData(){
+        Cursor cursor = dbHelper.viewData("contacts");
+        if(cursor.getCount() == 0)
+            Toast.makeText(getActivity(), "No data to show", Toast.LENGTH_SHORT).show();
+        else{
+            //display name and phone number
+            while (cursor.moveToNext()) {
+                if(cursor.getInt(3)==parentCourseID) { //index 3 is the courseID foreign key for ContactInfo DB
+                    String nameAndPhone = ( (cursor.getString(1)) + "\n" + (cursor.getString(2)) );
+                    listItem.add(nameAndPhone);
+                    //listItem.add(cursor.getString(0)); //index 0 is name
+                }
+            }
+            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listItem);
+            userList.setAdapter(adapter);
+            //programatically reset height of listview each time viewData is called
+            ListViewHelper.setListViewHeightBasedOnChildren(userList);
+        }
+    }
     public interface AddNoteDialogListener{
         void applyTexts(String courseNote, int shared);
+        void applyTexts(String contactName, String contactPhone);
     }
 }

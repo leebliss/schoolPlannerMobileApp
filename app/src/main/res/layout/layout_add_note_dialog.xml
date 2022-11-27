@@ -11,38 +11,85 @@
         android:ems="10"
         android:id="@+id/noteEditText"
         android:enabled="true"
-        android:minLines="6"
-        android:maxLines="6"
+        android:minLines="5"
+        android:maxLines="5"
         android:isScrollContainer="true"
         android:hint="Type your note here"
         android:background="#fafafa"
         android:textIsSelectable="true"
+        android:textSize="16dp"
         android:focusable="true"
         android:gravity="top"
         android:padding="24dp"
         style="@style/Base.TextAppearance.AppCompat.Large"
         />
+    <RelativeLayout
+        android:id="@+id/assessmentListViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_below="@id/noteEditText"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/contactListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="School Planner Contacts"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <ListView
+            android:id="@+id/displayContactNames"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/contactListHeader"
+            android:textSize="16dp" />
+        />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/allContactsViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="125dp"
+        android:layout_below="@id/assessmentListViewLayout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/allContactsListHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="5dp"
+            android:text="Choose Contacts From Here"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <ListView
+            android:id="@+id/displayAllContactNames"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/allContactsListHeader"
+            android:textSize="16dp" />
+        />
+    </RelativeLayout>
+
     <Switch
         android:id="@+id/sendToContactsSwitch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/noteEditText"
+        android:layout_below="@+id/allContactsViewLayout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
         android:checked="false"
         android:text="Send To Contacts"
         android:textSize="20dp" />
-    <Button
-        android:id="@+id/addContactsButton"
-        android:layout_marginTop="15dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/sendToContactsSwitch"
-        android:layout_centerHorizontal="true"
-        android:text="Choose Contacts"
-        />
-    <TextView
-        android:id="@+id/phoneTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
 
 </RelativeLayout>
