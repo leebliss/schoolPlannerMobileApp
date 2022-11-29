@@ -9,15 +9,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -48,10 +51,17 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     ArrayList<String> listItem;
     ArrayAdapter adapter;
     ListView userList;
+    //for holding index of selected item
+    int currentlySelectedItem;
+    //for parsing name of selected item
+    String nameOfSelectedItem;
+    String courseNameOnly;
+    int courseID;
     //for displaying all of user's contacts in a list to choose from
     ArrayList<String> allContactslistItem;
     ArrayAdapter allContactsAdapter;
     ListView allContactsUserList;
+    ImageButton upButton, downButton;
     //listener
     private AddNoteDialogListener listener;
     //for holding ID of course to get note info
@@ -61,18 +71,120 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         parentCourseID = courseIDThatOwnsMe;
     }
     @Override
-    public Dialog onCreateDialog( Bundle savedInstanceState) {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         //database connection
         dbHelper = new DBHelper(getActivity());
         //for displaying school planner contacts in a list
         listItem = new ArrayList<>();
         //for displaying all of user's contacts in a list to choose from
         allContactslistItem = new ArrayList<>();
+        //for holding index and name of selected items
+        currentlySelectedItem = -1;
+        nameOfSelectedItem = "";
+        courseNameOnly = "";
+        //for holding course ID
+        courseID = 0;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_note_dialog, null);
+
+        //////////////////TEST VERSION/////////////////////////////
+
+        // add listeners for up and down buttons
+        upButton = view.findViewById(R.id.upButton);
+        upButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //For testing
+                Toast.makeText(getActivity(), "up button pressed", Toast.LENGTH_SHORT).show();
+            }
+        });
+        downButton = view.findViewById(R.id.downButton);
+        downButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //For testing
+                Toast.makeText(getActivity(), "down button pressed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //build the dialog
+        builder.setView(view)
+                .setTitle("Add/Edit Note")
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        //nothing needed here, only closing the dialog
+                    }
+                })
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        String courseNote = editTextNote.getText().toString();
+                        int shareBinarySwitch=0;
+                        //set to 1 if switch is on
+                        if(shareSwitch.isChecked()){
+                            shareBinarySwitch=1;
+                        }
+                        listener.applyTexts(courseNote,shareBinarySwitch);
+                    }
+                });
+
+        //for clicking on list items in all contacts list
+        allContactsUserList = view.findViewById(R.id.displayAllContactNames);
+        allContactsUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                nameOfSelectedItem = allContactsUserList.getItemAtPosition(i).toString();
+                //highlight item when clicked
+                //For testing
+                Toast.makeText(getActivity(), ""+i, Toast.LENGTH_SHORT).show();
+
+                parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
+
+                //reset previously selected item to transparent when clicked
+                if (currentlySelectedItem != -1 && currentlySelectedItem != i){
+                    parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
+                }
+                currentlySelectedItem = i;
+            }
+        });
+
+        //use courseID to get corresponding data
+        String courseNoteContent="";
+        int toShareOrNotToShare=0;
+        Cursor cursor = dbHelper.getDataByID(parentCourseID, "CourseNotes");
+        if (cursor.getCount() == 0) {
+            Toast.makeText(getActivity(), "No matches found", Toast.LENGTH_SHORT).show();
+        } else {
+            while (cursor.moveToNext()) {
+                courseNoteContent = cursor.getString(1);
+                toShareOrNotToShare = cursor.getInt(2);
+            }
+            //for testing
+            //Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
+        }
+        //set values to items
+        editTextNote = view.findViewById(R.id.noteEditText);
+        editTextNote.setText(courseNoteContent);
+        shareSwitch = view.findViewById(R.id.sendToContactsSwitch);
+        if(toShareOrNotToShare==1)shareSwitch.setChecked(true);
+        else shareSwitch.setChecked(false);
+        userList = view.findViewById(R.id.displayContactNames);
+        //get list of all contacts from user's phone
+        getContactsList();
+        //show contacts that are already saved to database
+        viewData();
+
+        return builder.create();
+    }
+
+    ////////////////////////original/////////////////////////
+        /*
         //build the dialog
         builder.setView(view)
                 .setTitle("Add/Edit Note")
@@ -125,7 +237,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
 
         return builder.create();
     }
-
+*/
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -287,7 +399,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
             }
             allContactsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, allContactslistItem);
             allContactsUserList.setAdapter(allContactsAdapter);
-            //programatically reset height of listview each time viewData is called
+            //programatically reset height of listview
             ListViewHelper.setListViewHeightBasedOnChildren(allContactsUserList);
         }
     }
