@@ -10,26 +10,23 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.core.app.ActivityCompat;
@@ -37,6 +34,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -49,6 +47,8 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     DBHelper dbHelper;
     //for displaying school planner contacts in a list
     ArrayList<String> listItem;
+    ArrayList<Integer> selectedItems; //to tack selected items
+
     ArrayAdapter adapter;
     ListView userList;
     //for holding index of selected item
@@ -59,13 +59,22 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     int courseID;
     //for displaying all of user's contacts in a list to choose from
     ArrayList<String> allContactslistItem;
+    String[] allContactItem;
     ArrayAdapter allContactsAdapter;
+    //ListView allContactsUserList;
     ListView allContactsUserList;
     ImageButton upButton, downButton;
+    //for changing size of view accordingly
+    int viewSize;
     //listener
     private AddNoteDialogListener listener;
     //for holding ID of course to get note info
     private int parentCourseID=0;
+    //forManaging scroll of listView, which item is selected
+    int firstVisible;
+    int lastVisible;
+    ArrayList<Integer> selectedContacts;
+
     //constructor for getting selected course from activity that launched this dialog
     public AddNoteDialog(int courseIDThatOwnsMe) {
         parentCourseID = courseIDThatOwnsMe;
@@ -84,6 +93,9 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         courseNameOnly = "";
         //for holding course ID
         courseID = 0;
+        //selectedItems = new ArrayList();  // to track the selected items
+        //ArrayList<int> currentColor = "transparent";
+        selectedContacts = new ArrayList<Integer>();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
@@ -112,6 +124,81 @@ public class AddNoteDialog extends AppCompatDialogFragment {
             }
         });
 
+        //for clicking on list items in all contacts list
+        allContactsUserList = view.findViewById(R.id.displayAllContactNames);
+        allContactsUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
+                nameOfSelectedItem = allContactsUserList.getItemAtPosition(i).toString();
+                int test1 = parent.getChildCount();
+                //highlight item when clicked
+                //For testing
+                Toast.makeText(getActivity(), i+" "+ test1, Toast.LENGTH_SHORT).show();
+                int stepper;
+                //adjust position relative to visible scroll space
+                for (stepper=0;firstVisible+stepper<=lastVisible; stepper++) {
+                    //System.out.println(n);
+                    if (firstVisible + stepper == i) {
+                        parent.getChildAt(stepper).setBackgroundColor(Color.YELLOW);
+
+                        /*
+                        //check to see if already selected
+                        Iterator<Integer> iterator = selectedContacts.iterator();
+                        while (iterator.hasNext()) {
+                            if (iterator.next() == i) {
+                                //remove this position from selected items array list, set to transparent
+                                selectedContacts.remove(i);
+                                parent.getChildAt(stepper).setBackgroundColor(Color.TRANSPARENT);
+                            /*code here to remove this position value i from an int array list of
+                            selected items. This will be used for putting selected items into
+                            the userList from the allContactsList.
+
+                            } else { //add to list and set color to yellow
+                                selectedContacts.add(i);
+                                parent.getChildAt(stepper).setBackgroundColor(Color.YELLOW);
+                            }
+
+                         */
+                            break;
+                        }
+                    }
+                }
+                /*
+                parent.getChildCount();
+                parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
+                */
+                /*
+                //reset previously selected item to transparent when clicked
+                if (currentlySelectedItem != -1 && currentlySelectedItem != stepper){
+                    parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
+                }
+                currentlySelectedItem = stepper;
+                 */
+
+        });
+        allContactsUserList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                   firstVisible = view.getFirstVisiblePosition();
+                   lastVisible = view.getLastVisiblePosition();
+
+                /*
+                for (int i = 0; i < size; i++) {
+                    View v = view.getChildAt(i);
+                    if (v instanceof CheckedTextView)
+                        ((CheckedTextView) v).refreshDrawableState();
+                }
+                */
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
+
+
         //build the dialog
         builder.setView(view)
                 .setTitle("Add/Edit Note")
@@ -132,27 +219,13 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                         }
                         listener.applyTexts(courseNote,shareBinarySwitch);
                     }
+                })
+                .setMultiChoiceItems(allContactItem, null, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        // user checked or unchecked a box
+                    }
                 });
-
-        //for clicking on list items in all contacts list
-        allContactsUserList = view.findViewById(R.id.displayAllContactNames);
-        allContactsUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                nameOfSelectedItem = allContactsUserList.getItemAtPosition(i).toString();
-                //highlight item when clicked
-                //For testing
-                Toast.makeText(getActivity(), ""+i, Toast.LENGTH_SHORT).show();
-
-                parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
-
-                //reset previously selected item to transparent when clicked
-                if (currentlySelectedItem != -1 && currentlySelectedItem != i){
-                    parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
-                }
-                currentlySelectedItem = i;
-            }
-        });
 
         //use courseID to get corresponding data
         String courseNoteContent="";
@@ -175,6 +248,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         if(toShareOrNotToShare==1)shareSwitch.setChecked(true);
         else shareSwitch.setChecked(false);
         userList = view.findViewById(R.id.displayContactNames);
+        //allContactsUserList = view.findViewById(R.id.displayAllContactNames);
         //get list of all contacts from user's phone
         getContactsList();
         //show contacts that are already saved to database
@@ -249,98 +323,8 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         }
     }
 
-    /*
-    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
-                        // There are no request codes
-                        Intent data = result.getData();
-                        contactPicked (data);
-                        //Toast.makeText (getActivity(), data.toString(), Toast.LENGTH_SHORT).show ();
-                        Log.i("***********************************",data.toString());
-                    }
-                    else
-                    {
-                        Toast.makeText (getActivity(), "Failed To pick contact", Toast.LENGTH_SHORT).show ();
-                    }
-                }
-            });
+    //////////////////////methods////////////////////////////
 
-     */
-
-    /*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
-        if(resultCode==RESULT_OK)
-        {
-            switch (requestCode) {
-                case RESULT_PICK_CONTACT:
-                    contactPicked (data);
-                    break;
-            }
-        }
-        else
-        {
-            Toast.makeText (getActivity(), "Failed To pick contact", Toast.LENGTH_SHORT).show ();
-        }
-    }
-
-     */
-
-    /*
-    private void contactPicked(Intent data) {
-        Cursor cursor = null;
-        ContentResolver contentResolver = getActivity().getContentResolver();
-
-        try {
-            String phoneNo = "";
-            int phoneIndex = 0;
-            Uri uri = data.getData ();
-            cursor = contentResolver.query (uri, null, null,null,null);
-            cursor.moveToFirst ();
-            phoneIndex = cursor.getColumnIndex (ContactsContract.CommonDataKinds.Phone.NUMBER);
-
-            phoneNo = cursor.getString (phoneIndex);
-            showPhoneNumber.setText (phoneNo);
-            Toast.makeText (getActivity(), phoneNo, Toast.LENGTH_SHORT).show ();
-
-        } catch (Exception e) {
-            e.printStackTrace ();
-        }
-    }
-    */
-    //////////////////////////////methods////////////////////
-    /*
-    public void getContacts(){
-        if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.READ_CONTACTS}, 0);
-        }
-        else {
-            //get contacts
-            ContentResolver contentResolver = getActivity().getContentResolver();
-            Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-            Cursor contactsCursor = contentResolver.query(uri,new String[]{
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                    ContactsContract.CommonDataKinds.Phone.NUMBER}, null, null, null);
-            if(contactsCursor != null){
-                while(contactsCursor.moveToNext()){
-                    long contactId = contactsCursor.getLong(0);
-                    String phone = contactsCursor.getString(1);
-                    List<String> list;
-                    if(phone.conta)
-                }
-
-            }
-            Log.i("************Contact_Provider_Demo", "Total Number of contacts::: " + Integer.toString(contactsCursor.getCount()));
-            String contactNumber = contactsCursor.getString(contactsCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-        }
-    }
-    */
     private void getContactsList() {
         //check permissions
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
@@ -395,11 +379,14 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                         //for testing
                         Log.i("************Contact_Provider_Demo",phone);
                     }
+                    //for passing into checkBoxBuilder, needs a String array to convert to charSequence array
+                    allContactItem = new String[allContactslistItem.size()];
+                    allContactslistItem.toArray(allContactItem);
                 }
             }
             allContactsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, allContactslistItem);
             allContactsUserList.setAdapter(allContactsAdapter);
-            //programatically reset height of listview
+            //programmatically reset height of listview
             ListViewHelper.setListViewHeightBasedOnChildren(allContactsUserList);
         }
     }
