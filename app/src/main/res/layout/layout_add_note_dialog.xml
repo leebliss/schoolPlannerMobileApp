@@ -86,7 +86,7 @@
     <RelativeLayout
         android:id="@+id/allContactsViewLayout"
         android:layout_width="match_parent"
-        android:layout_height="170dp"
+        android:layout_height="125dp"
         android:layout_below="@id/moveContactButtons"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"

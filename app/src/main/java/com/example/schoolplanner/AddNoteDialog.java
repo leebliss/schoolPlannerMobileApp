@@ -94,8 +94,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         //for holding course ID
         courseID = 0;
         //selectedItems = new ArrayList();  // to track the selected items
-        //ArrayList<int> currentColor = "transparent";
-        selectedContacts = new ArrayList<Integer>();
+        selectedContacts = new ArrayList();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
@@ -129,75 +128,38 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         allContactsUserList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int i, long l) {
-                nameOfSelectedItem = allContactsUserList.getItemAtPosition(i).toString();
+
+                parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
+/*
+                int firstVisible = parent.getFirstVisiblePosition();
+                int lastVisible = parent.getLastVisiblePosition();
+
                 int test1 = parent.getChildCount();
-                //highlight item when clicked
                 //For testing
-                Toast.makeText(getActivity(), i+" "+ test1, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), i + " " + test1, Toast.LENGTH_SHORT).show();
+
                 int stepper;
                 //adjust position relative to visible scroll space
-                for (stepper=0;firstVisible+stepper<=lastVisible; stepper++) {
+                for (stepper = 0; firstVisible + stepper <= lastVisible; stepper++) {
                     //System.out.println(n);
-                    if (firstVisible + stepper == i) {
-                        parent.getChildAt(stepper).setBackgroundColor(Color.YELLOW);
-
-                        /*
-                        //check to see if already selected
-                        Iterator<Integer> iterator = selectedContacts.iterator();
-                        while (iterator.hasNext()) {
-                            if (iterator.next() == i) {
-                                //remove this position from selected items array list, set to transparent
-                                selectedContacts.remove(i);
-                                parent.getChildAt(stepper).setBackgroundColor(Color.TRANSPARENT);
-                            /*code here to remove this position value i from an int array list of
-                            selected items. This will be used for putting selected items into
-                            the userList from the allContactsList.
-
-                            } else { //add to list and set color to yellow
-                                selectedContacts.add(i);
-                                parent.getChildAt(stepper).setBackgroundColor(Color.YELLOW);
-                            }
-
-                         */
+                    if (firstVisible + stepper == i) { //the latter avoids out of index flukes
+                        //Toast.makeText(getActivity(), ""+parent.getPositionForView(i), Toast.LENGTH_SHORT).show();
+                        //test to see if already selected
+                        if (selectedContacts.contains(i)) {
+                            selectedContacts.remove(selectedContacts.indexOf(i));
+                            parent.getChildAt(stepper).setBackgroundColor(Color.TRANSPARENT);
+                            break;
+                        }
+                        else {
+                            selectedContacts.add(i);
+                            parent.getChildAt(stepper).setBackgroundColor(Color.YELLOW);
                             break;
                         }
                     }
                 }
-                /*
-                parent.getChildCount();
-                parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
-                */
-                /*
-                //reset previously selected item to transparent when clicked
-                if (currentlySelectedItem != -1 && currentlySelectedItem != stepper){
-                    parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
-                }
-                currentlySelectedItem = stepper;
-                 */
-
-        });
-        allContactsUserList.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                   firstVisible = view.getFirstVisiblePosition();
-                   lastVisible = view.getLastVisiblePosition();
-
-                /*
-                for (int i = 0; i < size; i++) {
-                    View v = view.getChildAt(i);
-                    if (v instanceof CheckedTextView)
-                        ((CheckedTextView) v).refreshDrawableState();
-                }
                 */
             }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
         });
-
 
         //build the dialog
         builder.setView(view)
