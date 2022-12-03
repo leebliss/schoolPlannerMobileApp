@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Telephony;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +49,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     //for parsing name of selected item
     String nameOfSelectedItem;
     String courseNameOnly;
-    int courseID;
+    //int courseID;
 
     ////////////////for displaying all of user's contacts in a list to choose from///////////
     ArrayList<String> allContactslistItem;
@@ -94,7 +96,7 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         nameOfSelectedItem = "";
         courseNameOnly = "";
         //for holding course ID
-        courseID = 0;
+        //courseID = 0;
         //selectedItems = new ArrayList();  // to track the selected items
         selectedContacts = new ArrayList();
 
@@ -116,7 +118,12 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                 }
                 else { //add from all contacts to contacts
                     contactListAdapter.add(selectedListItem);
-                    contactListAdapter.notifyDataSetChanged();
+                    //contactListAdapter.notifyDataSetChanged();
+                    //rebuild adapter and call ListViewHelper bc list is now bigger
+                    contactListAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, contactListItem);
+                    contactList.setAdapter(contactListAdapter);
+                    //programatically reset height of listview each time viewData is called
+                    ListViewHelper.setListViewHeightBasedOnChildren(contactList);
                 }
             }
         });
@@ -127,7 +134,6 @@ public class AddNoteDialog extends AppCompatDialogFragment {
 
                 String selectedListItem =  parent.getItemAtPosition(i).toString();  //get the string from the selected list item
                 contactListAdapter.remove(selectedListItem);
-                contactListAdapter.notifyDataSetChanged();
             }
         });
 
@@ -146,17 +152,29 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                         String courseNote = editTextNote.getText().toString();
                         int shareBinarySwitch=0;
                         //set to 1 if switch is on
-                        if(shareSwitch.isChecked()){
-                            shareBinarySwitch=1;
-                        }
-                        listener.applyTexts(courseNote,shareBinarySwitch);
+                        if(shareSwitch.isChecked()) {
+                            shareBinarySwitch = 1;
+                            //send SMS to contacts
+                            //check SMS permissions
+                            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.SEND_SMS)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.SEND_SMS}, 0);
+                            }
+                            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_PHONE_STATE}, 0);
+                            }
+                            else {
+                                //send SMS containing course notes
+                                SmsManager mySmsManager = SmsManager.getDefault();
+                                //send course note to all chosen contacts using loop
+
+                                mySmsManager.sendTextMessage("15555215554",null,courseNote,null,null);
+                            }
+
+                        listener.applyTexts(courseNote, shareBinarySwitch);
                         addContactsToDatabase();
-                    }
-                })
-                .setMultiChoiceItems(allContactItem, null, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        // user checked or unchecked a box
+                        }
                     }
                 });
 
@@ -270,10 +288,13 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     }
     private void addContactsToDatabase(){
 
-        //dbHelper needs a method to delete all with a certain courseID, call that here
-
-        //parse name and phone number so they can be added to db separately
+        //clear all contact records for this course
+        boolean cleared = dbHelper.deleteContactsByCourseID(parentCourseID);
+        if (cleared) Toast.makeText(getActivity(), "Old Contacts Cleared", Toast.LENGTH_SHORT).show();
+        else Toast.makeText(getActivity(), "Failed To Clear Contacts", Toast.LENGTH_SHORT).show();
+        //add new contact list for this course to db
         for(int i = 0; i < contactListItem.size();i++) {
+            //parse name and phone number so they can be added to db separately
             String nameAndPhone = contactListItem.get(i);
             String[] separated = nameAndPhone.split(": ");
             String name = separated[0];
@@ -296,7 +317,6 @@ public class AddNoteDialog extends AppCompatDialogFragment {
             }
             contactListAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, contactListItem);
             contactList.setAdapter(contactListAdapter);
-            //contactListAdapter.notifyDataSetChanged();
             //programatically reset height of listview each time viewData is called
             ListViewHelper.setListViewHeightBasedOnChildren(contactList);
         }

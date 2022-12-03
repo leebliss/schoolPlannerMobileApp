@@ -162,7 +162,6 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor cursor = DB.rawQuery("Select * from CourseInfo where courseID = ?", new String[]{String.valueOf(courseID)} );
         if(cursor.getCount()>0) {
             long result = DB.update("CourseInfo", contentValues, "courseID=?", new String[]{String.valueOf(courseID)} );
-
             if (result == -1) {
                 return false;
             } else {
@@ -187,6 +186,22 @@ public class DBHelper extends SQLiteOpenHelper {
         if(cursor.getCount()>0) {
             long result = DB.update("AssessmentInfo", contentValues, "assessmentID=?", new String[]{String.valueOf(assessmentID)} );
 
+            if (result == -1) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    public Boolean deleteContactsByCourseID(int courseID) {
+        SQLiteDatabase DB = this.getWritableDatabase();
+        Cursor cursor = DB.rawQuery("Select * from ContactInfo where courseID = ?", new String[]{String.valueOf(courseID)} );
+        if(cursor.getCount()>0) {
+            long result = DB.delete("ContactInfo", "courseID=?", new String[]{String.valueOf(courseID)} );
             if (result == -1) {
                 return false;
             } else {
