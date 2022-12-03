@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +23,15 @@ import java.util.Calendar;
 public class AddCourseDialog extends AppCompatDialogFragment {
     //for user to enter values
     private EditText editTextName, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
+    //start and end dates
     private TextView textViewStartDate, textViewEndDate;
-    //for course status
-    private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
+    private ImageView imageStartCalendar, imageEndCalendar;
     //for date picker
     private int mDate, mMonth, mYear;
+    //for course status
+    private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
+    //for choosing alerts on or off
+    private Switch switchStartAlert, switchEndAlert;
     //listener
     private AddCourseDialogListener listener;
     //for holding name of term to save to new course when added
@@ -90,18 +96,21 @@ public class AddCourseDialog extends AppCompatDialogFragment {
 
         editTextName = view.findViewById(R.id.courseName);
         textViewStartDate = view.findViewById(R.id.courseStartDate);
+        imageStartCalendar = view.findViewById(R.id.courseStartCalendar);
         textViewEndDate = view.findViewById(R.id.courseEndDate);
+        imageEndCalendar = view.findViewById(R.id.courseEndCalendar);
         inProgressRadio = (RadioButton) view.findViewById(R.id.inProgressRadioButton);
         completedRadio = (RadioButton) view.findViewById(R.id.completedRadioButton);
         droppedRadio = (RadioButton) view.findViewById(R.id.droppedRadioButton);
         planToTakeRadio = (RadioButton) view.findViewById(R.id.planToTakeRadioButton);
-        //editTextCourseStatus = view.findViewById(R.id.courseStatus);
+        switchStartAlert = (Switch) view.findViewById(R.id.courseStartAlert);
+        switchEndAlert = (Switch) view.findViewById(R.id.courseEndAlert);
         editTextCourseProfessor = view.findViewById(R.id.courseProfessor);
         editTextCourseProfessorPhone = view.findViewById(R.id.courseProfessorPhone);
         editTextCourseProfessorEmail = view.findViewById(R.id.courseProfessorEmail);
 
         //listener for start date
-        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -118,7 +127,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             }
         });
         //listener for end date
-        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
