@@ -58,7 +58,8 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put("contactName", contactName);
         contentValues.put("contactPhone", contactPhone);
         contentValues.put("courseID", courseID);
-        long result = DB.insert("CourseNotes", null, contentValues);
+        //insert new contact values
+        long result = DB.insert("ContactInfo", null, contentValues);
         if (result == -1){
             return false;
         }
@@ -254,6 +255,10 @@ public class DBHelper extends SQLiteOpenHelper {
             case "AssessmentInfo":
                 tableName = "AssessmentInfo";
                 primaryName = "assessmentName";
+                break;
+            case "ContactInfo":
+                tableName = "ContactInfo";
+                primaryName = "contactName";
                 break;
             default:
                 break;

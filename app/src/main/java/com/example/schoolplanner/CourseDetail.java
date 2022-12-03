@@ -405,9 +405,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
 
         Boolean checkInsertData = dbHelper.insertCourseNote(courseNote,shared, courseID);
         if(checkInsertData)
-            Toast.makeText(CourseDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, "New Note Inserted", Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, "New Note Not Inserted", Toast.LENGTH_SHORT).show();
     }
     //this is called when the add note dialog closes, saves contact info to DB
     @Override
@@ -415,9 +415,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
 
         Boolean checkInsertData = dbHelper.insertContact(contactName,contactPhone, courseID);
         if(checkInsertData)
-            Toast.makeText(CourseDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, "New Contact Inserted", Toast.LENGTH_SHORT).show();
         else
-            Toast.makeText(CourseDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, "New Contact Not Inserted", Toast.LENGTH_SHORT).show();
     }
 
     public void openAssessmentDetailActivity(int ID){
