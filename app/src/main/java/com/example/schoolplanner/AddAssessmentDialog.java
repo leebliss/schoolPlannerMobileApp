@@ -32,8 +32,8 @@ import java.util.Random;
 public class AddAssessmentDialog extends AppCompatDialogFragment {
 
     //for passing values to another activity
-    public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
-    String assessmentInfo;
+    public static final String ASSESSMENT_NOTIFICATION_INFO = "com.example.schoolplanner.ASSESSMENT_NOTIFICATION_INFO";
+    String notificationInfo;
     //for db connectivity
     DBHelper dbHelper;
     //for user to enter values
@@ -121,8 +121,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         switchStartAlert = (Switch) view.findViewById(R.id.assessmentStartAlert);
         switchEndAlert = (Switch) view.findViewById(R.id.assessmentEndAlert);
 
-        //set assessmentInfo
-        assessmentInfo = "Default Alert";
+        notificationInfo = "Default Alert";
 
         //set boolean for date picker
         startDateSet = false;
@@ -271,10 +270,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
 
     private void createNotificationChannel() {
 
-        CharSequence name = "AssessmentReminderChannel";
-        String description = "Channel for assessment reminder";
+        CharSequence name = "ReminderChannel";
+        String description = "Channel for reminders";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel("assessmentAlert", name, importance);
+        NotificationChannel channel = new NotificationChannel("dueAlert", name, importance);
         channel.setDescription(description);
 
         NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
@@ -291,9 +290,9 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            assessmentInfo = "Assessment for " + editTextName.getText().toString() + " has begun.";
+            notificationInfo = "Assessment for " + editTextName.getText().toString() + " has begun.";
             Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-            intent.putExtra(ASSESSMENT_INFO, assessmentInfo);
+            intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
@@ -318,9 +317,9 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            assessmentInfo = "Assessment for " + editTextName.getText().toString() + " has ended.";
+            notificationInfo = "Assessment for " + editTextName.getText().toString() + " has ended.";
             Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
-            intent.putExtra(ASSESSMENT_INFO, assessmentInfo);
+            intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);

@@ -17,8 +17,8 @@ public class DBHelper extends SQLiteOpenHelper {
         //table for term info
         DB.execSQL("create Table TermInfo (termID INTEGER primary key AUTOINCREMENT, termName TEXT, startDate TEXT, endDate TEXT)");
         //table for course info
-        DB.execSQL("create Table CourseInfo (courseID INTEGER primary key AUTOINCREMENT, courseName TEXT,startDate TEXT, endDate TEXT, status TEXT, professor TEXT, phone TEXT, email TEXT, termID INTEGER," +
-                "FOREIGN KEY(termID) REFERENCES TermInfo(termID))");
+        DB.execSQL("create Table CourseInfo (courseID INTEGER primary key AUTOINCREMENT, courseName TEXT,startDate TEXT, endDate TEXT, status TEXT, startAlert INTEGER, endAlert INTEGER," +
+                "professor TEXT, phone TEXT, email TEXT, termID INTEGER,FOREIGN KEY(termID) REFERENCES TermInfo(termID))");
         //table for assessment info
         DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert INTEGER, endAlert INTEGER, courseID INTEGER,"+
                 "FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
@@ -105,14 +105,16 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    //implementation for adding course data, takes 8 arguments
-    public Boolean insertUserData(String name, String startDate, String endDate, String status, String professor, String phone, String email, int termID){
+    //implementation for adding course data, takes 10 arguments
+    public Boolean insertUserData(String name, String startDate, String endDate, String status, int startAlert, int endAlert, String professor, String phone, String email, int termID){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("courseName", name);
         contentValues.put("startDate", startDate);
         contentValues.put("endDate", endDate);
         contentValues.put("status", status);
+        contentValues.put("startAlert", startAlert);
+        contentValues.put("endAlert", endAlert);
         contentValues.put("professor", professor);
         contentValues.put("phone", phone);
         contentValues.put("email", email);

@@ -351,7 +351,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             //get name and start/end dates, add to list, also get course ID for passing to assessment detail activity
             while (cursor.moveToNext()) {
                 //courseID = cursor.getInt(0);
-                if(cursor.getInt(8)==termID) { //index 8 is the termID foreign key for CourseInfo DB
+                if(cursor.getInt(10)==termID) { //index 10 is the termID foreign key for CourseInfo DB
                     String nameAndDates = (cursor.getString(1)) + "\n" + (cursor.getString(2)) + " to " + (cursor.getString(3));
                     listItem.add(nameAndDates); //index 1 is the name
                 }
@@ -367,9 +367,9 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         addCourseDialog.show(getSupportFragmentManager(), "Add Course Dialog");
     }
     @Override
-    public void applyTexts(String courseName, String startDate, String endDate, String status, String professor, String phone, String email, int termID) {
+    public void applyTexts(String courseName, String startDate, String endDate, String status, int startAlert, int endAlert, String professor, String phone, String email, int termID) {
 
-        Boolean checkInsertData = dbHelper.insertUserData(courseName, startDate, endDate, status, professor, phone, email, termID);
+        Boolean checkInsertData = dbHelper.insertUserData(courseName, startDate, endDate, status, startAlert, endAlert, professor, phone, email, termID);
         if(checkInsertData)
             Toast.makeText(TermDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
         else
