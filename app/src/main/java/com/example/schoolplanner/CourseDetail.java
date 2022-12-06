@@ -1,6 +1,11 @@
 package com.example.schoolplanner;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -38,14 +43,22 @@ import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener,AddNoteDialog.AddNoteDialogListener  {
 
     //for passing values to another activity
     public static final String ASSESSMENT_ID = "com.example.schoolplanner.ASSESSMENT_ID";
+    public static final String COURSE_NOTIFICATION_INFO = "com.example.schoolplanner.COURSE_DIALOG_NOTIFICATION_INFO";
+
+    String notificationInfo;
+
     EditText titleText, professor, professorPhone, professorEmail;
     ImageView addNoteImage;
     private TextView textViewStartDate, textViewEndDate;
+    //for holding dates and times for reminders
+    private int startDate, startMonth,startYear, startHour, startMinute;
+    private int endDate, endMonth,endYear, endHour, endMinute;
     //for course status
     private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
     //for date picker
@@ -164,14 +177,15 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         mainScrollView = findViewById(R.id.mainScrollView);
         //mainScrollView.(new ScrollingMovementMethod());
 
-        //buttons
-        /*
-        addNew = findViewById(R.id.btnInsert);
-        update = findViewById(R.id.btnUpdate);
-        save = findViewById(R.id.btnSave);
-        delete = findViewById(R.id.btnDelete);
-         */
+        notificationInfo = "Default Alert";
+        //create notification channel for assessment notifications
+        createNotificationChannel();
 
+        //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
+        startHour = 8;
+        startMinute = 0;
+        endHour = 20;
+        endMinute = 0;
         //call local viewData method
         viewData();
 
@@ -419,11 +433,76 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else
             Toast.makeText(CourseDetail.this, "New Contact Not Inserted", Toast.LENGTH_SHORT).show();
     }
-
     public void openAssessmentDetailActivity(int ID){
         Intent intent =new Intent(this, AssessmentDetail.class);
         intent.putExtra(ASSESSMENT_ID, ID);
         startActivity(intent);
+    }
+    //////////////for notifications//////////////////
+    private void createNotificationChannel() {
+
+        CharSequence name = "ReminderChannel";
+        String description = "Channel for reminders";
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel("dueAlert", name, importance);
+        channel.setDescription(description);
+
+        NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+    private int setStartReminder(){
+
+        //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
+        long presentTime= System.currentTimeMillis();
+        //variables for calendar
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
+        long startConvertedToMillis = calendar1.getTimeInMillis();
+        //compare present millis to new reminder time
+        if(startConvertedToMillis>presentTime) {
+            //set value of assessmentInfo to be passed as intent extra
+            notificationInfo = "The course named " + titleText.getText().toString() + " has begun.";
+            Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
+            intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
+            //random number for request code for intent
+            Random r = new Random();
+            int randomRequestCode = r.nextInt(10000 - 1);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, randomRequestCode, intent, 0);
+            AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            //for testing
+            Toast.makeText(this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //return the randomRequestCode to store for later deletion of intent
+            return randomRequestCode;
+        }
+        else return 1; //indicates time was in the past, reminder not set
+    }
+    private int setEndReminder(){
+
+        //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
+        long presentTime= System.currentTimeMillis();
+        //variables for calendar
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
+        long startConvertedToMillis = calendar1.getTimeInMillis();
+        //compare present millis to new reminder time
+        if(startConvertedToMillis>presentTime) {
+            //set value of assessmentInfo to be passed as intent extra
+            notificationInfo = "Your course '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
+            Intent intent = new Intent(this, CourseReminderBroadcast.class);
+            intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
+            //random number for request code for intent
+            Random r = new Random();
+            int randomRequestCode = r.nextInt(10000 - 1);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, randomRequestCode, intent, 0);
+            AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            //for testing
+            Toast.makeText(this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //return the randomRequestCode to store for later deletion of intent
+            return randomRequestCode;
+        }
+        else return 1; //indicates time was in the past, reminder not set
     }
     public void goHome(){
         Intent intent =new Intent(this, MainActivity.class);

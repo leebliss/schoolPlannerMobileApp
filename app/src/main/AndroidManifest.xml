@@ -38,7 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".ReminderBroadcast"/>
+        <receiver android:name=".AssessmentReminderBroadcast"/>
+        <receiver android:name=".CourseReminderBroadcast"/>
+
     </application>
 
 </manifest>

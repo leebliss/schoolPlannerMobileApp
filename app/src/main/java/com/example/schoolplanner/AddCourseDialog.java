@@ -29,7 +29,7 @@ import java.util.Random;
 public class AddCourseDialog extends AppCompatDialogFragment {
 
     //for passing values to another activity
-    public static final String COURSE_NOTIFICATION_INFO = "com.example.schoolplanner.COURSE_NOTIFICATION_INFO";
+    public static final String COURSE_NOTIFICATION_INFO = "com.example.schoolplanner.COURSE_DIALOG_NOTIFICATION_INFO";
     String notificationInfo;
     //for user to enter values
     private EditText editTextName, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
@@ -134,7 +134,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         //create notification channel for assessment notifications
         createNotificationChannel();
 
-        //preset start times to 8AM, end times to 8PM, no need for user to set start times for courses
+        //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
         startHour = 8;
         startMinute = 0;
         endHour = 20;
@@ -224,7 +224,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "The course named " + editTextName.getText().toString() + " has begun.";
-            Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+            Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             //random number for request code for intent
             Random r = new Random();
@@ -250,8 +250,8 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "The course named " + editTextName.getText().toString() + " has ended.";
-            Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+            notificationInfo = "Your course '" + (editTextName.getText().toString()).toUpperCase() + "' has ended.";
+            Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             //random number for request code for intent
             Random r = new Random();

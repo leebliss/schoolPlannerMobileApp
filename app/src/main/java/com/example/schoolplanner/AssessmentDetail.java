@@ -43,7 +43,7 @@ import java.util.Random;
 public class AssessmentDetail extends AppCompatActivity {
 
     //for passing values to another activity
-    public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
+    public static final String ASSESSMENT_NOTIFICATION_INFO = "com.example.schoolplanner.ASSESSMENT_DETAIL_NOTIFICATION_INFO";
     String assessmentInfo;
 
     EditText titleText;
@@ -359,9 +359,10 @@ public class AssessmentDetail extends AppCompatActivity {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime){
             //set value of assessmentInfo to be passed as intent extra
-            assessmentInfo = "Assessment for "+ titleText.getText().toString()+" has begun.";
-            Intent intent = new Intent(AssessmentDetail.this,ReminderBroadcast.class);
-            intent.putExtra(ASSESSMENT_INFO, assessmentInfo );
+            assessmentInfo = "Assessment '"+ titleText.getText().toString()+"' has begun.";
+            Intent intent = new Intent(AssessmentDetail.this,AssessmentReminderBroadcast.class);
+            intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, assessmentInfo );
+            intent.setAction("detailReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
@@ -385,9 +386,10 @@ public class AssessmentDetail extends AppCompatActivity {
         long startConvertedToMillis = calendar1.getTimeInMillis();
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            assessmentInfo = "Assessment for " + titleText.getText().toString() + " has ended.";
-            Intent intent = new Intent(AssessmentDetail.this, ReminderBroadcast.class);
-            intent.putExtra(ASSESSMENT_INFO, assessmentInfo);
+            assessmentInfo = "Assessment '" + titleText.getText().toString() + "' has ended.";
+            Intent intent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
+            intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, assessmentInfo);
+            intent.setAction("detailReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
@@ -426,7 +428,7 @@ public class AssessmentDetail extends AppCompatActivity {
         }
         //use request code to cancel reminder
         AlarmManager alarmManager = (AlarmManager)(AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
-        Intent myIntent = new Intent(AssessmentDetail.this, ReminderBroadcast.class);
+        Intent myIntent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, requestCode, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         pendingIntent.cancel();
         alarmManager.cancel(pendingIntent);

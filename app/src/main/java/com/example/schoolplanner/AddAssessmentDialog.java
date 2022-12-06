@@ -32,7 +32,7 @@ import java.util.Random;
 public class AddAssessmentDialog extends AppCompatDialogFragment {
 
     //for passing values to another activity
-    public static final String ASSESSMENT_NOTIFICATION_INFO = "com.example.schoolplanner.ASSESSMENT_NOTIFICATION_INFO";
+    public static final String ASSESSMENT_NOTIFICATION_INFO = "com.example.schoolplanner.ASSESSMENT_DIALOG_NOTIFICATION_INFO";
     String notificationInfo;
     //for db connectivity
     DBHelper dbHelper;
@@ -290,9 +290,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "Assessment for " + editTextName.getText().toString() + " has begun.";
-            Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+            notificationInfo = "Assessment " + (editTextName.getText().toString()) + "has begun.";
+            Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
+            intent.setAction("dialogReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
@@ -317,9 +318,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "Assessment for " + editTextName.getText().toString() + " has ended.";
-            Intent intent = new Intent(getActivity(), ReminderBroadcast.class);
+            notificationInfo = "Assessment '" + (editTextName.getText().toString()) + "' has ended.";
+            Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
+            intent.setAction("dialogReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);

@@ -9,10 +9,14 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.util.Random;
 
-public class ReminderBroadcast extends BroadcastReceiver {
+public class AssessmentReminderBroadcast extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent){
-        try {  //is this an assessment reminder?
+
+        //test for whether detail or dialog is setting a reminder
+        String action = intent.getAction();
+
+        if(action.equals("dialogReminder")) {  //this is dialog calling
             String notificationInfo = intent.getExtras().getString(AddAssessmentDialog.ASSESSMENT_NOTIFICATION_INFO, "Hubba Wubs");
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "dueAlert")
                     .setSmallIcon(R.drawable.alert_png1)
@@ -25,8 +29,8 @@ public class ReminderBroadcast extends BroadcastReceiver {
             int randomID = r.nextInt(10000 - 1);
             notificationManager.notify(randomID, builder.build());
         }
-        catch (Exception e){  //if we're here, it must be a course reminder
-            String notificationInfo = intent.getExtras().getString(AddCourseDialog.COURSE_NOTIFICATION_INFO, "Hubba Wubs");
+        else if(action.equals("detailReminder")){  //must be detail calling
+            String notificationInfo = intent.getExtras().getString(AssessmentDetail.ASSESSMENT_NOTIFICATION_INFO, "Chubba Wubs");
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "dueAlert")
                     .setSmallIcon(R.drawable.alert_png1)
                     .setContentTitle("Alert!")
