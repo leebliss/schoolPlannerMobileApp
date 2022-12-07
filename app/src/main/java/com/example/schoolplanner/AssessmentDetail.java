@@ -406,7 +406,6 @@ public class AssessmentDetail extends AppCompatActivity {
         else return 1; //indicates time was in the past, reminder not set
     }
 
-
     private void cancelReminder(String reminderType){
 
         int requestCode = 0; //for holding code stored in startAlert or endAlert

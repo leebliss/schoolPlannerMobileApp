@@ -100,7 +100,6 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                         switchState = switchEndAlert.isChecked();
                         int endAlert = 0; //default
                         if(switchState) {endAlert = setEndReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        //String status = editTextCourseStatus.getText().toString();
                         String professor = editTextCourseProfessor.getText().toString();
                         String phone = editTextCourseProfessorPhone.getText().toString();
                         String email = editTextCourseProfessorEmail.getText().toString();
@@ -226,6 +225,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             notificationInfo = "The course named " + editTextName.getText().toString() + " has begun.";
             Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
+            intent.setAction("dialogReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
@@ -253,6 +253,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             notificationInfo = "Your course '" + (editTextName.getText().toString()).toUpperCase() + "' has ended.";
             Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
+            intent.setAction("dialogReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);

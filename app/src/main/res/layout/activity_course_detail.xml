@@ -104,55 +104,117 @@
                             android:textSize="18dp" />
                     </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/courseStatusTitle"
+                    <LinearLayout
+                        android:id="@+id/statusAndAlertHeadings"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/courseEndLayout"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:text="Status:"
-                        android:textSize="18dp" />
+                        android:layout_marginTop="10dp"
+                        android:layout_below="@+id/courseEndLayout"
+                        >
+                        <TextView
+                            android:textSize="20dp"
+                            android:text="Status"
+                            android:id="@+id/courseStatusTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            />
+                        <TextView
+                            android:textSize="20dp"
+                            android:text="Alerts"
+                            android:id="@+id/alertTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_below="@id/courseStatusTitle"
+                            />
+                    </LinearLayout>
 
-                    <RadioGroup
-                        android:id="@+id/courseStatusRadioGroup"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/radioAndSwitchLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/courseStatusTitle"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
-                        android:text="End Date">
-
-                        <RadioButton
-                            android:id="@+id/inProgressRadioButton"
-                            android:layout_width="wrap_content"
+                        android:layout_below="@+id/statusAndAlertHeadings"
+                        >
+                        <LinearLayout
+                            android:id="@+id/radioGroupLayout"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="In Progress" />
-
-                        <RadioButton
-                            android:id="@+id/completedRadioButton"
-                            android:layout_width="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_below="@+id/courseStatusTitle"
+                            >
+                            <RadioGroup
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text ="End Date"
+                                android:id="@+id/courseStatusRadioGroup"
+                                >
+                                <RadioButton
+                                    android:id="@+id/inProgressRadioButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text ="In Progress"
+                                    />
+                                <RadioButton
+                                    android:id="@+id/completedRadioButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text ="Completed"
+                                    />
+                                <RadioButton
+                                    android:id="@+id/droppedRadioButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text ="Dropped"
+                                    />
+                                <RadioButton
+                                    android:id="@+id/planToTakeRadioButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text ="Plan to Take"
+                                    />
+                            </RadioGroup>
+                        </LinearLayout>
+                        <RelativeLayout
+                            android:id="@+id/switchLayout"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Completed" />
-
-                        <RadioButton
-                            android:id="@+id/droppedRadioButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Dropped" />
-
-                        <RadioButton
-                            android:id="@+id/planToTakeRadioButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Plan to Take" />
-                    </RadioGroup>
+                            android:layout_weight="1"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="20dp"
+                            >
+                            <Switch
+                                android:id="@+id/courseStartAlert"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:text="Start Alert"
+                                android:textSize="15dp" />
+                            <Switch
+                                android:textSize="15dp"
+                                android:text="End Alert"
+                                android:checked="false"
+                                android:id="@+id/courseEndAlert"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/courseStartAlert"
+                                android:layout_marginTop="20dp"
+                                />
+                        </RelativeLayout>
+                    </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/courseProfessorLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/courseStatusRadioGroup"
+                        android:layout_below="@id/radioAndSwitchLayout"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp">
 

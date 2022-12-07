@@ -28,6 +28,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.database.sqlite.SQLiteDatabase;
@@ -61,6 +62,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     private int endDate, endMonth,endYear, endHour, endMinute;
     //for course status
     private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
+    //for choosing alerts on or off
+    private Switch sAlert, eAlert;
     //for date picker
     private int mDate, mMonth, mYear;
     //TextView displayTermsText;
@@ -89,6 +92,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     String courseStartDate;
     String courseEndDate;
     String courseStatus;
+    int startAlert, endAlert;
     String courseProfessor;
     String courseProfessorPhone;
     String courseProfessorEmail;
@@ -125,9 +129,11 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 courseStartDate = cursor.getString(2);
                 courseEndDate = cursor.getString(3);
                 courseStatus = cursor.getString(4);
-                courseProfessor = cursor.getString(5);
-                courseProfessorPhone = cursor.getString(6);
-                courseProfessorEmail = cursor.getString(7);
+                startAlert = cursor.getInt(5);
+                endAlert = cursor.getInt(6);
+                courseProfessor = cursor.getString(7);
+                courseProfessorPhone = cursor.getString(8);
+                courseProfessorEmail = cursor.getString(9);
             }
             //toast item
             //Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
@@ -145,21 +151,27 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         textViewEndDate = findViewById(R.id.courseEndDate);
         //String endHolder = "End Date: "+courseEndDate;
         textViewEndDate.setText(courseEndDate);
-
-        //set radio buttons based on assessment type value from DB
-        inProgressRadio = (RadioButton) findViewById(R.id.inProgressRadioButton);
+        //set radio buttons from DB
+        inProgressRadio = (RadioButton)findViewById(R.id.inProgressRadioButton);
         if(courseStatus.equals("in progress")){inProgressRadio.setChecked(true);}
         else{inProgressRadio.setChecked(false);}
-        completedRadio = (RadioButton) findViewById(R.id.completedRadioButton);
+        completedRadio = (RadioButton)findViewById(R.id.completedRadioButton);
         if(courseStatus.equals("completed")){completedRadio.setChecked(true);}
         else{completedRadio.setChecked(false);}
-        droppedRadio = (RadioButton) findViewById(R.id.droppedRadioButton);
+        droppedRadio = (RadioButton)findViewById(R.id.droppedRadioButton);
         if(courseStatus.equals("dropped")){droppedRadio.setChecked(true);}
         else{droppedRadio.setChecked(false);}
-        planToTakeRadio = (RadioButton) findViewById(R.id.planToTakeRadioButton);
+        planToTakeRadio = (RadioButton)findViewById(R.id.planToTakeRadioButton);
         if(courseStatus.equals("plan to take")){planToTakeRadio.setChecked(true);}
         else{planToTakeRadio.setChecked(false);}
-
+        //set value of start alert switch
+        sAlert = (Switch)findViewById(R.id.courseStartAlert);
+        if(startAlert == 0){sAlert.setChecked(false);}
+        else{sAlert.setChecked(true);} //it's holding the request ID for the reminder intent
+        //set value of end alert switch
+        eAlert = (Switch) findViewById(R.id.courseEndAlert);
+        if(endAlert == 0){eAlert.setChecked(false);}
+        else{eAlert.setChecked(true);} //it's holding the request ID for the reminder intent
         professor = findViewById(R.id.courseProfessor);
         //String professorHolder = "Professor: "+courseProfessor;
         professor.setText(courseProfessor);
@@ -185,7 +197,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         startHour = 8;
         startMinute = 0;
         endHour = 20;
-        endMinute = 0;
+        endMinute = 2;
         //call local viewData method
         viewData();
 
@@ -311,12 +323,34 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                         //for the planToTake radio
                         Boolean planToTakeRadioState = planToTakeRadio.isChecked();
                         if(planToTakeRadioState) {status = "plan to take";}
+                        //for a start alert
+                        Boolean startSwitchState = sAlert.isChecked();
+                        int startAlert = 0; //default
+                        if(startSwitchState) {
+                            //delete previous reminder and set new one anytime switchState is true on save
+                            cancelReminder("start");
+                            startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                        }
+                        else{  //cancel old reminder since no longer checked
+                            cancelReminder("start");
+                        }
+                        //for an end alert
+                        Boolean endSwitchState = eAlert.isChecked();
+                        int endAlert = 0; //default
+                        if(endSwitchState) {
+                            //delete previous reminder and set new one anytime switchState is true on save
+                            cancelReminder("stop");
+                            endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                        }
+                        else{  //cancel old reminder since no longer checked
+                            cancelReminder("stop");
+                        }
                         String courseProfessor = professor.getText().toString();
                         String courseProfessorPhone = professorPhone.getText().toString();
                         String courseProfessorEmail = professorEmail.getText().toString();
 
                         //save the changes
-                        Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,status,courseProfessor,courseProfessorPhone,courseProfessorEmail);
+                        Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,status,startAlert,endAlert,courseProfessor,courseProfessorPhone,courseProfessorEmail);
                         //test for success
                         if(checkSavedChanges) {
                             Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
@@ -438,9 +472,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         intent.putExtra(ASSESSMENT_ID, ID);
         startActivity(intent);
     }
+
     //////////////for notifications//////////////////
     private void createNotificationChannel() {
-
         CharSequence name = "ReminderChannel";
         String description = "Channel for reminders";
         int importance = NotificationManager.IMPORTANCE_DEFAULT;
@@ -450,8 +484,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         NotificationManager notificationManager = this.getSystemService(NotificationManager.class);
         notificationManager.createNotificationChannel(channel);
     }
-    private int setStartReminder(){
 
+    private int setStartReminder(){
         //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
         long presentTime= System.currentTimeMillis();
         //variables for calendar
@@ -464,21 +498,22 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             notificationInfo = "The course named " + titleText.getText().toString() + " has begun.";
             Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
+            intent.setAction("detailReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, randomRequestCode, intent, 0);
-            AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(CourseDetail.this, randomRequestCode, intent, 0);
+            AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
         else return 1; //indicates time was in the past, reminder not set
     }
-    private int setEndReminder(){
 
+    private int setEndReminder(){
         //get present time for testing that reminder time is in the future, alarms set for the past will go off immediately
         long presentTime= System.currentTimeMillis();
         //variables for calendar
@@ -489,21 +524,49 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
-            Intent intent = new Intent(this, CourseReminderBroadcast.class);
+            Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
+            intent.setAction("detailReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(this, randomRequestCode, intent, 0);
-            AlarmManager alarmManager = (AlarmManager)this.getSystemService(Context.ALARM_SERVICE);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(CourseDetail.this, randomRequestCode, intent, 0);
+            AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
         else return 1; //indicates time was in the past, reminder not set
     }
+
+    private void cancelReminder(String reminderType){
+        int requestCode = 0; //for holding code stored in startAlert or endAlert
+        Cursor cursor = dbHelper.getDataByName(nameOfCourseSelected, "CourseInfo");
+        if (cursor.getCount() == 0) {
+            Toast.makeText(CourseDetail.this, "Request Code Error.", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            while (cursor.moveToNext()) {
+                if (reminderType.equals("start")) {
+                    requestCode = cursor.getInt(5); //5 is startAlert
+                    //for testing
+                    Toast.makeText(CourseDetail.this, String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                }
+                if (reminderType.equals("end")) {
+                    requestCode = cursor.getInt(6); //6 is endAlert
+                }
+            }
+        }
+        //use request code to cancel reminder
+        AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
+        Intent myIntent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(CourseDetail.this, requestCode, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        pendingIntent.cancel();
+        alarmManager.cancel(pendingIntent);
+    }
+
     public void goHome(){
         Intent intent =new Intent(this, MainActivity.class);
         startActivity(intent);

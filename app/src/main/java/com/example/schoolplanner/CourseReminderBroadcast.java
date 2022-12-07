@@ -29,7 +29,7 @@ public class CourseReminderBroadcast extends BroadcastReceiver {
             int randomID = r.nextInt(10000 - 1);
             notificationManager.notify(randomID, builder.build());
         }
-        else if(action.equals("detailReminder")) {  //must be detail calling
+        else if(action.equals("detailReminder")){  //must be detail calling
             String notificationInfo = intent.getExtras().getString(CourseDetail.COURSE_NOTIFICATION_INFO, "Chubba Wubs");
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "dueAlert")
                     .setSmallIcon(R.drawable.alert_png1)

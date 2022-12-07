@@ -150,13 +150,15 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Boolean updateCourseData(int courseID, String name, String start, String end, String status, String professor, String phone, String email){
+    public Boolean updateCourseData(int courseID, String name, String start, String end, String status, int startAlert, int endAlert, String professor, String phone, String email){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put("courseName", name);
         contentValues.put("startDate", start);
         contentValues.put("endDate", end);
         contentValues.put("status", status);
+        contentValues.put("startAlert", startAlert);
+        contentValues.put("endAlert", endAlert);
         contentValues.put("professor", professor);
         contentValues.put("phone", phone);
         contentValues.put("email", email);
