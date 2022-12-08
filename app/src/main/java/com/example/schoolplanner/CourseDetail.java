@@ -56,7 +56,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
 
     EditText titleText, professor, professorPhone, professorEmail;
     ImageView addNoteImage;
+    //start and end dates
     private TextView textViewStartDate, textViewEndDate;
+    private ImageView imageStartCalendar, imageEndCalendar;
     //for holding dates and times for reminders
     private int startDate, startMonth,startYear, startHour, startMinute;
     private int endDate, endMonth,endYear, endHour, endMinute;
@@ -146,6 +148,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         addNoteImage = findViewById(R.id.courseNoteImage);
         //set values in edit texts
         textViewStartDate = findViewById(R.id.courseStartDate);
+        imageStartCalendar = findViewById(R.id.courseStartCalendar);
+        imageEndCalendar = findViewById(R.id.courseEndCalendar);
         //String startHolder = "Start Date: "+courseStartDate;
         textViewStartDate.setText(courseStartDate);
         textViewEndDate = findViewById(R.id.courseEndDate);
@@ -197,7 +201,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         startHour = 8;
         startMinute = 0;
         endHour = 20;
-        endMinute = 2;
+        endMinute = 0;
         //call local viewData method
         viewData();
 
@@ -211,7 +215,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         });
 
         //listener for start date
-        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -223,13 +227,17 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        //set values for reminder
+                        startDate = dayOfMonth;
+                        startMonth = month;
+                        startYear = year;
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
             }
         });
         //listener for end date
-        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -240,7 +248,12 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        //set values for reminder
+                        endDate = dayOfMonth;
+                        endMonth = month;
+                        endYear = year;
                     }
+
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
             }

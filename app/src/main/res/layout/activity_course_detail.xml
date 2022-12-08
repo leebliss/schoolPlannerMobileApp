@@ -56,52 +56,51 @@
                     android:orientation="vertical"
                     >
                     <LinearLayout
-                        android:id="@+id/courseStartLayout"
+                        android:id="@+id/startDateLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp">
-
-                        <TextView
-                            android:id="@+id/courseStartDateTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Course Start Date: "
-                            android:textSize="18dp" />
-
+                        android:orientation="horizontal"
+                        >
                         <TextView
                             android:id="@+id/courseStartDate"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Start Date"
+                            android:textSize="20dp" />
+
+                        <ImageView
+                            android:id="@+id/courseStartCalendar"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="variable text"
-                            android:textSize="18dp" />
+                            android:src="@drawable/calendar_7_32" />
                     </LinearLayout>
-
                     <LinearLayout
-                        android:id="@+id/courseEndLayout"
+                        android:id="@+id/endDateLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/courseStartLayout"
+                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp">
-
-                        <TextView
-                            android:id="@+id/courseEndDateTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Course End Date: "
-                            android:textSize="18dp" />
-
+                        android:orientation="horizontal"
+                        android:layout_below="@id/startDateLayout"
+                        >
                         <TextView
                             android:id="@+id/courseEndDate"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="End Date"
+                            android:textSize="20dp" />
+
+                        <ImageView
+                            android:id="@+id/courseEndCalendar"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:hint="variable text"
-                            android:textSize="18dp" />
+                            android:src="@drawable/calendar_7_32" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -111,7 +110,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="10dp"
-                        android:layout_below="@+id/courseEndLayout"
+                        android:layout_below="@+id/endDateLayout"
                         >
                         <TextView
                             android:textSize="20dp"
