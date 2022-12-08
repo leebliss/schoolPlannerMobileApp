@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
 
     EditText titleText;
     private TextView textViewStartDate, textViewEndDate;
+    private ImageView imageStartCalendar, imageEndCalendar;
     //for date picker
     private int mDate, mMonth, mYear;
     //for bottom navigation menu
@@ -102,9 +104,11 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         titleText.setText(nameOfTermSelected);
         //set start date and end date for term in textviews
         textViewStartDate = findViewById(R.id.termStartDate);
+        imageStartCalendar = findViewById(R.id.termStartCalendar);
         String startHolder = termStartDate;
         textViewStartDate.setText(startHolder);
         textViewEndDate = findViewById(R.id.termEndDate);
+        imageEndCalendar = findViewById(R.id.termEndCalendar);
         String endHolder = termEndDate;
         textViewEndDate.setText(endHolder);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -123,7 +127,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
 
         //set listeners
         //listener for start date
-        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -141,7 +145,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             }
         });
         //listener for end date
-        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();

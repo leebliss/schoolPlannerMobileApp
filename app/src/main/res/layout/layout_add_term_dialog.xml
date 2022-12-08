@@ -10,22 +10,54 @@
         android:id="@+id/termName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLength="25"
         />
-    <TextView
-        android:textSize="20dp"
-        android:hint="Start Date"
-        android:id="@+id/termStartDate"
+    <LinearLayout
+        android:id="@+id/startDateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_below="@id/termName"
-        />
-    <TextView
-        android:textSize="20dp"
-        android:hint="End Date"
-        android:id="@+id/termEndDate"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/termStartDate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Start Date"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/termStartCalendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/calendar_7_32" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/endDateLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/termStartDate"
-        />
+        android:layout_below="@id/startDateLayout"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/termEndDate"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="End Date"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/termEndCalendar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/calendar_7_32" />
+    </LinearLayout>
 
 </RelativeLayout>

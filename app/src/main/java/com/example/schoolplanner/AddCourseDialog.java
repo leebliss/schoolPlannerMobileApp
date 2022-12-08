@@ -41,6 +41,9 @@ public class AddCourseDialog extends AppCompatDialogFragment {
     private int endDate, endMonth,endYear, endHour, endMinute;
     //for date picker
     private int mDate, mMonth, mYear;
+    //for holding start and end times in millis
+    long startConvertedToMillis;
+    long endConvertedToMillis;
     //for course status
     private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
     //for choosing alerts on or off
@@ -75,42 +78,59 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        String courseName = editTextName.getText().toString();
-                        String startDate = textViewStartDate.getText().toString();
-                        String endDate = textViewEndDate.getText().toString();
-                        //change boolean radiobutton values to strings for storage
-                        //for the inProgress radio
-                        Boolean inProgressRadioState = inProgressRadio.isChecked();
-                        String status = ""; //default
-                        if(inProgressRadioState) {status = "in progress";}
-                        //for the completed radio
-                        Boolean completedRadioState = completedRadio.isChecked();
-                        if(completedRadioState) {status = "completed";}
-                        //for the dropped radio
-                        Boolean droppedRadioState = droppedRadio.isChecked();
-                        if(droppedRadioState) {status = "dropped";}
-                        //for the planToTake radio
-                        Boolean planToTakeRadioState = planToTakeRadio.isChecked();
-                        if(planToTakeRadioState) {status = "plan to take";}
-                        //for a start alert
-                        Boolean switchState = switchStartAlert.isChecked();
-                        int startAlert = 0; //default
-                        if(switchState) {startAlert = setStartReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        //for an end alert
-                        switchState = switchEndAlert.isChecked();
-                        int endAlert = 0; //default
-                        if(switchState) {endAlert = setEndReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        String professor = editTextCourseProfessor.getText().toString();
-                        String phone = editTextCourseProfessorPhone.getText().toString();
-                        String email = editTextCourseProfessorEmail.getText().toString();
-                        //this is the foreign key for the courseInfo DB
-                        int termID = parentTermID;
-                        //do I still need this?
-                        //String termName = parentTerm;
+                        if(StartBeforeEndChecker.isStartBeforeEnd(startConvertedToMillis,endConvertedToMillis,getActivity().getApplicationContext())) {
+                            String courseName = editTextName.getText().toString();
+                            String startDate = textViewStartDate.getText().toString();
+                            String endDate = textViewEndDate.getText().toString();
+                            //change boolean radiobutton values to strings for storage
+                            //for the inProgress radio
+                            Boolean inProgressRadioState = inProgressRadio.isChecked();
+                            String status = ""; //default
+                            if (inProgressRadioState) {
+                                status = "in progress";
+                            }
+                            //for the completed radio
+                            Boolean completedRadioState = completedRadio.isChecked();
+                            if (completedRadioState) {
+                                status = "completed";
+                            }
+                            //for the dropped radio
+                            Boolean droppedRadioState = droppedRadio.isChecked();
+                            if (droppedRadioState) {
+                                status = "dropped";
+                            }
+                            //for the planToTake radio
+                            Boolean planToTakeRadioState = planToTakeRadio.isChecked();
+                            if (planToTakeRadioState) {
+                                status = "plan to take";
+                            }
+                            //for a start alert
+                            Boolean switchState = switchStartAlert.isChecked();
+                            int startAlert = 0; //default
+                            if (switchState) {
+                                startAlert = setStartReminder();
+                            } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            //for an end alert
+                            switchState = switchEndAlert.isChecked();
+                            int endAlert = 0; //default
+                            if (switchState) {
+                                endAlert = setEndReminder();
+                            } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            String professor = editTextCourseProfessor.getText().toString();
+                            String phone = editTextCourseProfessorPhone.getText().toString();
+                            String email = editTextCourseProfessorEmail.getText().toString();
+                            //this is the foreign key for the courseInfo DB
+                            int termID = parentTermID;
+                            //do I still need this?
+                            //String termName = parentTerm;
 
-                        listener.applyTexts(courseName,startDate,endDate,status,startAlert,endAlert,professor,phone,email,termID);
-                        //refresh list after adding data
-                        ((TermDetail)getActivity()).refreshList();
+                            listener.applyTexts(courseName, startDate, endDate, status, startAlert, endAlert, professor, phone, email, termID);
+                            //refresh list after adding data
+                            ((TermDetail) getActivity()).refreshList();
+                        }
+                        else{
+                            //do nothing, toast comes from checker method
+                        }
                     }
                 });
 
@@ -139,6 +159,10 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         endHour = 20;
         endMinute = 0;
 
+        //initialize start and end millis
+        startConvertedToMillis=0;
+        endConvertedToMillis=0;
+
         ////////////////////listeners////////////////////////////////////////
 
         //listener for start date
@@ -158,6 +182,11 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                         startDate = dayOfMonth;
                         startMonth = month;
                         startYear = year;
+                        //get start time in millis to confirm start is before end
+                        Calendar calendar1 = Calendar.getInstance();
+                        calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
+                        startConvertedToMillis = calendar1.getTimeInMillis();
+
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
@@ -179,6 +208,10 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                         endDate = dayOfMonth;
                         endMonth = month;
                         endYear = year;
+                        //get end time in millis to confirm start is before end
+                        Calendar calendar1 = Calendar.getInstance();
+                        calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
+                        endConvertedToMillis = calendar1.getTimeInMillis();
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
@@ -246,9 +279,9 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
-        long startConvertedToMillis = calendar1.getTimeInMillis();
+        long endConvertedToMillis = calendar1.getTimeInMillis();
         //compare present millis to new reminder time
-        if(startConvertedToMillis>presentTime) {
+        if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (editTextName.getText().toString()).toUpperCase() + "' has ended.";
             Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
@@ -259,9 +292,9 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             int randomRequestCode = r.nextInt(10000 - 1);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), randomRequestCode, intent, 0);
             AlarmManager alarmManager = (AlarmManager) ((TermDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, endConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), String.valueOf(endConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }

@@ -23,9 +23,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:maxLength="25"
                     android:layout_marginBottom="3dp"
                     android:gravity="center"
-                    android:hint="variable text"
+                    android:hint="Course Name"
                     android:background="@android:color/holo_blue_dark"
                     android:padding="10dp"
                     android:textColor="@color/white"
@@ -230,6 +231,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:maxLength="25"
                             android:hint="variable text"
                             android:textSize="18dp" />
                     </LinearLayout>
@@ -255,6 +257,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:maxLength="25"
                             android:hint="variable text"
                             android:textSize="18dp" />
                     </LinearLayout>
@@ -280,6 +283,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:maxLength="25"
                             android:hint="variable text"
                             android:textSize="18dp" />
                     </LinearLayout>

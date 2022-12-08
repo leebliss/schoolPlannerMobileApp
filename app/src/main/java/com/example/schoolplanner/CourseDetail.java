@@ -149,11 +149,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         //set values in edit texts
         textViewStartDate = findViewById(R.id.courseStartDate);
         imageStartCalendar = findViewById(R.id.courseStartCalendar);
-        imageEndCalendar = findViewById(R.id.courseEndCalendar);
-        //String startHolder = "Start Date: "+courseStartDate;
         textViewStartDate.setText(courseStartDate);
         textViewEndDate = findViewById(R.id.courseEndDate);
-        //String endHolder = "End Date: "+courseEndDate;
+        imageEndCalendar = findViewById(R.id.courseEndCalendar);
         textViewEndDate.setText(courseEndDate);
         //set radio buttons from DB
         inProgressRadio = (RadioButton)findViewById(R.id.inProgressRadioButton);

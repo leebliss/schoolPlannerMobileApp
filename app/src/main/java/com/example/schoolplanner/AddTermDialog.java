@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -20,6 +21,7 @@ public class AddTermDialog extends AppCompatDialogFragment {
     //for user to enter values
     private EditText editTextName;
     private TextView textViewStartDate, textViewEndDate;
+    private ImageView imageStartCalendar, imageEndCalendar;
     //for date picker
     private int mDate, mMonth, mYear;
     //listener
@@ -54,10 +56,12 @@ public class AddTermDialog extends AppCompatDialogFragment {
 
         editTextName = view.findViewById(R.id.termName);
         textViewStartDate = view.findViewById(R.id.termStartDate);
+        imageStartCalendar = view.findViewById(R.id.termStartCalendar);
         textViewEndDate = view.findViewById(R.id.termEndDate);
+        imageEndCalendar = view.findViewById(R.id.termEndCalendar);
 
         //listener for start date
-        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();
@@ -74,7 +78,7 @@ public class AddTermDialog extends AppCompatDialogFragment {
             }
         });
         //listener for end date
-        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar Cal = Calendar.getInstance();

@@ -19,6 +19,7 @@
                 android:textSize="20dp"
                 android:hint="Course Name"
                 android:id="@+id/courseName"
+                android:maxLength="25"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
@@ -173,12 +174,13 @@
                         />
                 </RelativeLayout>
             </LinearLayout>
-                    <EditText
+            <EditText
                 android:textSize="20dp"
                 android:hint="Professor"
                 android:id="@+id/courseProfessor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="25"
                 android:layout_below="@id/radioAndSwitchLayout"
                 />
             <EditText
@@ -187,6 +189,7 @@
                 android:id="@+id/courseProfessorPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="25"
                 android:layout_below="@id/courseProfessor"
                 />
             <EditText
@@ -195,6 +198,7 @@
                 android:id="@+id/courseProfessorEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:maxLength="25"
                 android:layout_below="@id/courseProfessorPhone"
                 />
         </RelativeLayout>
