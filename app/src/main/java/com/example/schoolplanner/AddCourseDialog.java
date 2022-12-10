@@ -40,11 +40,11 @@ public class AddCourseDialog extends AppCompatDialogFragment {
     //for holding dates and times for reminders
     private int startDate, startMonth,startYear, startHour, startMinute;
     private int endDate, endMonth,endYear, endHour, endMinute;
-    //for date picker
-    private int mDate, mMonth, mYear;
     //for holding start and end times in millis
     long startConvertedToMillis;
     long endConvertedToMillis;
+    //for date picker
+    private int mDate, mMonth, mYear;
     //for course status
     private RadioButton inProgressRadio, completedRadio, droppedRadio,planToTakeRadio;
     //for choosing alerts on or off
@@ -107,7 +107,6 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         startMinute = 0;
         endHour = 20;
         endMinute = 0;
-
         //initialize start and end millis
         startConvertedToMillis=0;
         endConvertedToMillis=0;
@@ -135,7 +134,6 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                         Calendar calendar1 = Calendar.getInstance();
                         calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
                         startConvertedToMillis = calendar1.getTimeInMillis();
-
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();

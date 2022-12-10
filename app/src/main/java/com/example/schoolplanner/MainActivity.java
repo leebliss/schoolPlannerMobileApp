@@ -140,6 +140,20 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                         if(nameOfSelectedItem == ""){
                             Toast.makeText(MainActivity.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
                         }
+                        else if (dbHelper.getRecordCount("CourseInfo",termID)>0){
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Cannot Delete")
+                                    .setMessage("Term '"+separated[0]+"' cannot be deleted because it contains courses.")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Toast.makeText(MainActivity.this, "Entry not deleted.", Toast.LENGTH_SHORT).show();
+                                            nameOfSelectedItem = "";
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null) //does nothing
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
+                        }
                         else {
                             new AlertDialog.Builder(MainActivity.this)
                                     .setTitle("Delete Entry?")

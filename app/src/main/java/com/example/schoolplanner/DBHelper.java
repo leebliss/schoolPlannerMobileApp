@@ -37,6 +37,15 @@ public class DBHelper extends SQLiteOpenHelper {
         DB.execSQL("drop Table if exists ContactInfo");
     }
 
+    public int getRecordCount(String tableName, int ID) {
+        String countQuery = "SELECT  * FROM "+ tableName+ " WHERE termID = "+ID;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
+    }
+
     public Boolean insertCourseNote(String courseNote, int shared, int courseID){
         SQLiteDatabase DB = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -201,6 +202,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         startMinute = 0;
         endHour = 20;
         endMinute = 0;
+
         //call local viewData method
         viewData();
 
@@ -328,61 +330,92 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                         return true;
 
                     case R.id.save:
-                        //get values to save changes
-                        String courseName = titleText.getText().toString();
+
+                        //get these values ahead of the rest for comparison
                         String courseStart = textViewStartDate.getText().toString();
                         String courseEnd = textViewEndDate.getText().toString();
-                        //change boolean radiobutton values to strings for storage
-                        //for the inProgress radio
-                        Boolean inProgressRadioState = inProgressRadio.isChecked();
-                        String status = ""; //default
-                        if(inProgressRadioState) {status = "in progress";}
-                        //for the completed radio
-                        Boolean completedRadioState = completedRadio.isChecked();
-                        if(completedRadioState) {status = "completed";}
-                        //for the dropped radio
-                        Boolean droppedRadioState = droppedRadio.isChecked();
-                        if(droppedRadioState) {status = "dropped";}
-                        //for the planToTake radio
-                        Boolean planToTakeRadioState = planToTakeRadio.isChecked();
-                        if(planToTakeRadioState) {status = "plan to take";}
-                        //for a start alert
-                        Boolean startSwitchState = sAlert.isChecked();
-                        int startAlert = 0; //default
-                        if(startSwitchState) {
-                            //delete previous reminder and set new one anytime switchState is true on save
-                            cancelReminder("start");
-                            startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        }
-                        else{  //cancel old reminder since no longer checked
-                            cancelReminder("start");
-                        }
-                        //for an end alert
-                        Boolean endSwitchState = eAlert.isChecked();
-                        int endAlert = 0; //default
-                        if(endSwitchState) {
-                            //delete previous reminder and set new one anytime switchState is true on save
-                            cancelReminder("stop");
-                            endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        }
-                        else{  //cancel old reminder since no longer checked
-                            cancelReminder("stop");
-                        }
-                        String courseProfessor = professor.getText().toString();
-                        String courseProfessorPhone = professorPhone.getText().toString();
-                        String courseProfessorEmail = professorEmail.getText().toString();
+                        //parse start and end for comparison
+                        String[] ssd = courseStart.split("-");
+                        String[] sed = courseEnd.split("-");
+                        Log.d("split values", ssd[2]+","+sed[2]);
 
-                        //save the changes
-                        Boolean checkSavedChanges = dbHelper.updateCourseData(courseID,courseName,courseStart,courseEnd,status,startAlert,endAlert,courseProfessor,courseProfessorPhone,courseProfessorEmail);
-                        //test for success
-                        if(checkSavedChanges) {
-                            Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                            refreshList();
+                        //compare start and end
+                        boolean startLessThanEnd = false; //default
+                        if( Integer.parseInt(ssd[2])<(Integer.parseInt(sed[2])) )
+                            {startLessThanEnd = true;}
+                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
+                                && Integer.parseInt(ssd[0])<(Integer.parseInt(sed[0])) )
+                                {startLessThanEnd = true;}
+                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
+                                && Integer.parseInt(ssd[0])==(Integer.parseInt(sed[0]))
+                                && Integer.parseInt(ssd[1])<=(Integer.parseInt(sed[1])) )
+                                {startLessThanEnd = true;}
+                        //use startLessThanEnd to determine next
+                        if(startLessThanEnd) {
+                            //get values to save changes
+                            String courseName = titleText.getText().toString();
+                            //courseStart = textViewStartDate.getText().toString();
+                            //courseEnd = textViewEndDate.getText().toString();
+                            //change boolean radiobutton values to strings for storage
+                            //for the inProgress radio
+                            Boolean inProgressRadioState = inProgressRadio.isChecked();
+                            String status = ""; //default
+                            if (inProgressRadioState) {
+                                status = "in progress";
+                            }
+                            //for the completed radio
+                            Boolean completedRadioState = completedRadio.isChecked();
+                            if (completedRadioState) {
+                                status = "completed";
+                            }
+                            //for the dropped radio
+                            Boolean droppedRadioState = droppedRadio.isChecked();
+                            if (droppedRadioState) {
+                                status = "dropped";
+                            }
+                            //for the planToTake radio
+                            Boolean planToTakeRadioState = planToTakeRadio.isChecked();
+                            if (planToTakeRadioState) {
+                                status = "plan to take";
+                            }
+                            //for a start alert
+                            Boolean startSwitchState = sAlert.isChecked();
+                            int startAlert = 0; //default
+                            if (startSwitchState) {
+                                //delete previous reminder and set new one anytime switchState is true on save
+                                cancelReminder("start");
+                                startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            } else {  //cancel old reminder since no longer checked
+                                cancelReminder("start");
+                            }
+                            //for an end alert
+                            Boolean endSwitchState = eAlert.isChecked();
+                            int endAlert = 0; //default
+                            if (endSwitchState) {
+                                //delete previous reminder and set new one anytime switchState is true on save
+                                cancelReminder("stop");
+                                endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            } else {  //cancel old reminder since no longer checked
+                                cancelReminder("stop");
+                            }
+                            String courseProfessor = professor.getText().toString();
+                            String courseProfessorPhone = professorPhone.getText().toString();
+                            String courseProfessorEmail = professorEmail.getText().toString();
+
+                            //save the changes
+                            Boolean checkSavedChanges = dbHelper.updateCourseData(courseID, courseName, courseStart, courseEnd, status, startAlert, endAlert, courseProfessor, courseProfessorPhone, courseProfessorEmail);
+                            //test for success
+                            if (checkSavedChanges) {
+                                Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                                refreshList();
+                            } else {
+                                Toast.makeText(CourseDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
                         }
                         else{
-                            Toast.makeText(CourseDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CourseDetail.this, "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
                         }
-                        return true;
                 }
                 return false;
             }

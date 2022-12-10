@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -268,50 +269,92 @@ public class AssessmentDetail extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.save:
                         //get values to save changes
-                        String assessmentName = titleText.getText().toString();
+                        //get these values ahead of the rest for comparison
                         String assessmentStart = textViewStartDate.getText().toString();
                         String assessmentEnd = textViewEndDate.getText().toString();
-                        //change boolean radiobutton values to strings for storage
-                        //for the performance assessment radio
-                        Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
-                        String assessmentType = ""; //default
-                        if(performanceRadioState) {assessmentType = "performance";}
-                        //for the objective assessment radio
-                        Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
-                        if(objectiveRadioState) {assessmentType = "objective";}
-                        //for a start alert
-                        Boolean startSwitchState = sAlert.isChecked();
-                        int startAlert = 0; //default
-                        if(startSwitchState) {
-                            //delete previous reminder and set new one anytime switchState is true on save
-                            cancelReminder("start");
-                            startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        }
-                        else{  //cancel old reminder since no longer checked
-                            cancelReminder("start");
-                        }
-                        //for an end alert
-                        Boolean endSwitchState = eAlert.isChecked();
-                        int endAlert = 0; //default
-                        if(endSwitchState) {
-                            //delete previous reminder and set new one anytime switchState is true on save
-                            cancelReminder("stop");
-                            endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        }
-                        else{  //cancel old reminder since no longer checked
-                            cancelReminder("stop");
-                        }
-                        //save the changes
-                        Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID,assessmentName,assessmentStart,assessmentEnd,assessmentType,startAlert,endAlert);
-                        //test for success
-                        if(checkSavedChanges) {
-                            Toast.makeText(AssessmentDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                            //refreshList();
+                        //parse start and end for comparison
+                        String[] ssd = assessmentStart.split("[-: ]");
+                        String[] sed = assessmentEnd.split("[-: ]");
+                        Log.d("split values", ssd[2]+","+sed[2]);
+
+                        //compare start and end
+                        boolean startLessThanEnd = false; //default
+                        //compare year
+                        if( Integer.parseInt(ssd[2])<(Integer.parseInt(sed[2])) )
+                        {startLessThanEnd = true;}
+                        //compare month
+                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
+                                && Integer.parseInt(ssd[0])<(Integer.parseInt(sed[0])) )
+                        {startLessThanEnd = true;}
+                        //compare day
+                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
+                                && Integer.parseInt(ssd[0])==(Integer.parseInt(sed[0]))
+                                && Integer.parseInt(ssd[1])<(Integer.parseInt(sed[1])) )
+                        {startLessThanEnd = true;}
+                        //compare hour
+                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
+                                && Integer.parseInt(ssd[0])==(Integer.parseInt(sed[0]))
+                                && Integer.parseInt(ssd[1])==(Integer.parseInt(sed[1]))
+                                && Integer.parseInt(ssd[3])<(Integer.parseInt(sed[3])) )
+                        {startLessThanEnd = true;}
+                        //compare minute
+                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
+                                && Integer.parseInt(ssd[0])==(Integer.parseInt(sed[0]))
+                                && Integer.parseInt(ssd[1])==(Integer.parseInt(sed[1]))
+                                && Integer.parseInt(ssd[3])==(Integer.parseInt(sed[3]))
+                                && Integer.parseInt(ssd[4])<=(Integer.parseInt(sed[4])) )
+                        {startLessThanEnd = true;}
+                        //use startLessThanEnd to determine next
+                        if(startLessThanEnd) {
+                            String assessmentName = titleText.getText().toString();
+                            //String assessmentStart = textViewStartDate.getText().toString();
+                            //String assessmentEnd = textViewEndDate.getText().toString();
+                            //change boolean radiobutton values to strings for storage
+                            //for the performance assessment radio
+                            Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
+                            String assessmentType = ""; //default
+                            if (performanceRadioState) {
+                                assessmentType = "performance";
+                            }
+                            //for the objective assessment radio
+                            Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
+                            if (objectiveRadioState) {
+                                assessmentType = "objective";
+                            }
+                            //for a start alert
+                            Boolean startSwitchState = sAlert.isChecked();
+                            int startAlert = 0; //default
+                            if (startSwitchState) {
+                                //delete previous reminder and set new one anytime switchState is true on save
+                                cancelReminder("start");
+                                startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            } else {  //cancel old reminder since no longer checked
+                                cancelReminder("start");
+                            }
+                            //for an end alert
+                            Boolean endSwitchState = eAlert.isChecked();
+                            int endAlert = 0; //default
+                            if (endSwitchState) {
+                                //delete previous reminder and set new one anytime switchState is true on save
+                                cancelReminder("stop");
+                                endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                            } else {  //cancel old reminder since no longer checked
+                                cancelReminder("stop");
+                            }
+                            //save the changes
+                            Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID, assessmentName, assessmentStart, assessmentEnd, assessmentType, startAlert, endAlert);
+                            //test for success
+                            if (checkSavedChanges) {
+                                Toast.makeText(AssessmentDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                                //refreshList();
+                            } else {
+                                Toast.makeText(AssessmentDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                            }
+                            return true;
                         }
                         else{
-                            Toast.makeText(AssessmentDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AssessmentDetail.this, "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
                         }
-                        return true;
                 }
                 return false;
             }

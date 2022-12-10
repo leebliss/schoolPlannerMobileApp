@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -45,6 +46,9 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     //for holding dates and times for reminders
     private int startDate, startMonth,startYear, startHour, startMinute;
     private int endDate, endMonth,endYear, endHour, endMinute;
+    //for holding start and end times in millis
+    long startConvertedToMillis;
+    long endConvertedToMillis;
     //for date picker
     private int mDate, mMonth, mYear, mHour, mMinute;
     private boolean startDateSet;
@@ -80,32 +84,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        String assessmentName = editTextName.getText().toString();
-                        String startDate = textViewStartDate.getText().toString();
-                        String endDate = textViewEndDate.getText().toString();
-                        //change boolean radiobutton values to strings for storage
-                        //for the performance assessment radio
-                        Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
-                        String assessmentType = ""; //default
-                        if(performanceRadioState) {assessmentType = "performance";}
-                        //for the objective assessment radio
-                        Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
-                        if(objectiveRadioState) {assessmentType = "objective";}
-                        //for a start alert
-                        Boolean switchState = switchStartAlert.isChecked();
-                        int startAlert = 0; //default
-                        if(switchState) {startAlert = setStartReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        //for an end alert
-                        switchState = switchEndAlert.isChecked();
-                        int endAlert = 0; //default
-                        if(switchState) {endAlert = setEndReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                        //this is the foreign key for the assessmentInfo DB
-                        int courseID = parentCourseID;
-                        //do I still need this?
-                        String courseName = parentCourse;
-                        listener.applyTexts(assessmentName,startDate,endDate,assessmentType,startAlert,endAlert,courseID);
-                        //refresh list after adding data
-                        ((CourseDetail)getActivity()).refreshList();
+                        //overriding this in onResume()
                     }
                 });
 
@@ -128,6 +107,9 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         endDateSet = true;
         //create notification channel for assessment notifications
         createNotificationChannel();
+        //initialize start and end millis
+        startConvertedToMillis=0;
+        endConvertedToMillis=0;
 
         //listener for start date
         imageStartCalendar.setOnClickListener(new View.OnClickListener() {
@@ -176,14 +158,16 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                             else {
                                 textViewStartDate.setText(tokens[0] + "-" + tokens[1] + "-" + tokens[2] + " " + hourOfDay + ":" + minute);
                             }
-                            //textViewStartDate.setText((textViewStartDate.getText()) + " " + hourOfDay + ":" + minute);
                             //set values for reminder
                             startHour = hourOfDay;
                             startMinute = minute;
+                            //get start time in millis to confirm start is before end
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.set(startYear,startMonth,startDate,startHour,startMinute,0);
+                            startConvertedToMillis = calendar1.getTimeInMillis();
                         }
                     }, mHour, mMinute, false);
-                    //set timeSet to true
-                    //timeSet=true;
+
                     timePickerDialog.show();
                 }
                 else{
@@ -242,6 +226,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
                             //set values for reminder
                             endHour = hourOfDay;
                             endMinute = minute;
+                            //get end time in millis to confirm start is before end
+                            Calendar calendar1 = Calendar.getInstance();
+                            calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
+                            endConvertedToMillis = calendar1.getTimeInMillis();
                         }
                     }, mHour, mMinute, false);
                     //set timeSet to true
@@ -265,6 +253,58 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             listener = (AddAssessmentDialogListener)context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement SchoolPlannerDialogListener");
+        }
+    }
+
+    //override pos button to control when dialog closes
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        AlertDialog alertDialog = (AlertDialog) getDialog();
+        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                performOkButtonAction();
+            }
+        });
+    }
+
+    private void performOkButtonAction() {
+        if(startConvertedToMillis < endConvertedToMillis) {
+            String assessmentName = editTextName.getText().toString();
+            String startDate = textViewStartDate.getText().toString();
+            String endDate = textViewEndDate.getText().toString();
+            //change boolean radiobutton values to strings for storage
+            //for the performance assessment radio
+            Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
+            String assessmentType = ""; //default
+            if(performanceRadioState) {assessmentType = "performance";}
+            //for the objective assessment radio
+            Boolean objectiveRadioState = objectiveAssessmentRadio.isChecked();
+            if(objectiveRadioState) {assessmentType = "objective";}
+            //for a start alert
+            Boolean switchState = switchStartAlert.isChecked();
+            int startAlert = 0; //default
+            if(switchState) {startAlert = setStartReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+            //for an end alert
+            switchState = switchEndAlert.isChecked();
+            int endAlert = 0; //default
+            if(switchState) {endAlert = setEndReminder();} //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+            //this is the foreign key for the assessmentInfo DB
+            int courseID = parentCourseID;
+            //do I still need this?
+            String courseName = parentCourse;
+            listener.applyTexts(assessmentName,startDate,endDate,assessmentType,startAlert,endAlert,courseID);
+            //refresh list after adding data
+            ((CourseDetail)getActivity()).refreshList();
+            //close dialog
+            dismiss();
+        }
+        else{
+            Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
         }
     }
 
