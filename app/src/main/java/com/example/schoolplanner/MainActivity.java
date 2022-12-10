@@ -181,46 +181,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                 return false;
             }
         });
-    /*
-        addNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialog();
-            }
-        });
-
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //pass name of selected term next activity
-                openTermDetailActivity(termID, termNameOnly,termStartDate,termEndDate);
-            }
-        });
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //parse name off of listItem
-                String[] separated = nameOfSelectedItem.split("\n");
-                Boolean checkDeleteData = dbHelper.deleteData(separated[0],"TermInfo");
-                //Boolean checkDeleteData = dbHelper.deleteData(nameOfSelectedItem);
-                if(checkDeleteData) {
-                    Toast.makeText(MainActivity.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
-                    nameOfSelectedItem = "";
-                    refreshList();
-                }
-                else{
-                    if(nameOfSelectedItem == ""){
-                        Toast.makeText(MainActivity.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(MainActivity.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-
-     */
     }
 
     //this causes everything to reload so the data is up to date when the back arrow is used

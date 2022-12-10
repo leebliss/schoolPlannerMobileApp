@@ -354,8 +354,6 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                         if(startLessThanEnd) {
                             //get values to save changes
                             String courseName = titleText.getText().toString();
-                            //courseStart = textViewStartDate.getText().toString();
-                            //courseEnd = textViewEndDate.getText().toString();
                             //change boolean radiobutton values to strings for storage
                             //for the inProgress radio
                             Boolean inProgressRadioState = inProgressRadio.isChecked();
@@ -402,16 +400,23 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                             String courseProfessorPhone = professorPhone.getText().toString();
                             String courseProfessorEmail = professorEmail.getText().toString();
 
-                            //save the changes
-                            Boolean checkSavedChanges = dbHelper.updateCourseData(courseID, courseName, courseStart, courseEnd, status, startAlert, endAlert, courseProfessor, courseProfessorPhone, courseProfessorEmail);
-                            //test for success
-                            if (checkSavedChanges) {
-                                Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                                refreshList();
-                            } else {
-                                Toast.makeText(CourseDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                            //test for all fields filled
+                            if(courseName.equals("")||courseStart.equals("")||courseEnd.equals("")||status.equals("")||courseProfessor.equals("")||courseProfessorPhone.equals("")
+                                    ||courseProfessorEmail.equals("")) {
+                                Toast.makeText(CourseDetail.this, "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
                             }
-                            return true;
+                            else {
+                                //save the changes
+                                Boolean checkSavedChanges = dbHelper.updateCourseData(courseID, courseName, courseStart, courseEnd, status, startAlert, endAlert, courseProfessor, courseProfessorPhone, courseProfessorEmail);
+                                //test for success
+                                if (checkSavedChanges) {
+                                    Toast.makeText(CourseDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                                    refreshList();
+                                } else {
+                                    Toast.makeText(CourseDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                                }
+                                return true;
+                            }
                         }
                         else{
                             Toast.makeText(CourseDetail.this, "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();

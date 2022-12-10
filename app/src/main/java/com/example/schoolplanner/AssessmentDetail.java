@@ -307,8 +307,6 @@ public class AssessmentDetail extends AppCompatActivity {
                         //use startLessThanEnd to determine next
                         if(startLessThanEnd) {
                             String assessmentName = titleText.getText().toString();
-                            //String assessmentStart = textViewStartDate.getText().toString();
-                            //String assessmentEnd = textViewEndDate.getText().toString();
                             //change boolean radiobutton values to strings for storage
                             //for the performance assessment radio
                             Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
@@ -341,16 +339,22 @@ public class AssessmentDetail extends AppCompatActivity {
                             } else {  //cancel old reminder since no longer checked
                                 cancelReminder("stop");
                             }
-                            //save the changes
-                            Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID, assessmentName, assessmentStart, assessmentEnd, assessmentType, startAlert, endAlert);
-                            //test for success
-                            if (checkSavedChanges) {
-                                Toast.makeText(AssessmentDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                                //refreshList();
-                            } else {
-                                Toast.makeText(AssessmentDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                            //test for all fields filled
+                            if(assessmentName.equals("")||assessmentStart.equals("")||assessmentEnd.equals("")||(performanceRadioState==false && objectiveRadioState==false)) {
+                                Toast.makeText(AssessmentDetail.this, "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
                             }
-                            return true;
+                            else{
+                                //save the changes
+                                Boolean checkSavedChanges = dbHelper.updateAssessmentData(assessmentID, assessmentName, assessmentStart, assessmentEnd, assessmentType, startAlert, endAlert);
+                                //test for success
+                                if (checkSavedChanges) {
+                                    Toast.makeText(AssessmentDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                                    //refreshList();
+                                } else {
+                                    Toast.makeText(AssessmentDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                                }
+                                return true;
+                            }
                         }
                         else{
                             Toast.makeText(AssessmentDetail.this, "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();

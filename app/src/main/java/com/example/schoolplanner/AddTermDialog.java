@@ -150,15 +150,21 @@ public class AddTermDialog extends AppCompatDialogFragment {
     }
 
     private void performOkButtonAction() {
-        if (startConvertedToMillis < endConvertedToMillis) {
+        if (startConvertedToMillis <= endConvertedToMillis) {
             String termName = editTextName.getText().toString();
-            String termContact = textViewStartDate.getText().toString();
-            String termDOB = textViewEndDate.getText().toString();
-            listener.applyTexts(termName,termContact,termDOB);
-            //refresh list after adding data
-            ((MainActivity)getActivity()).refreshList();
-            //close dialog
-            dismiss();
+            String termStart = textViewStartDate.getText().toString();
+            String termEnd = textViewEndDate.getText().toString();
+            //test for all fields being filled
+            if(termName.equals("") || termStart.equals("") || termEnd.equals("")){
+                Toast.makeText(getActivity(), "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                listener.applyTexts(termName, termStart, termEnd);
+                //refresh list after adding data
+                ((MainActivity) getActivity()).refreshList();
+                //close dialog
+                dismiss();
+            }
         }
         else{
             Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();

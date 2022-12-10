@@ -236,41 +236,47 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
 
                     case R.id.save:
                         //get values to save changes
-                        //get these values ahead of the rest for comparison
+                        String termName = titleText.getText().toString();
                         String termStart = textViewStartDate.getText().toString();
                         String termEnd = textViewEndDate.getText().toString();
-                        //parse start and end for comparison
-                        String[] ssd = termStart.split("-");
-                        String[] sed = termEnd.split("-");
-                        Log.d("split values", ssd[2]+","+sed[2]);
 
-                        //compare start and end
-                        boolean startLessThanEnd = false; //default
-                        if( Integer.parseInt(ssd[2])<(Integer.parseInt(sed[2])) )
-                        {startLessThanEnd = true;}
-                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
-                                && Integer.parseInt(ssd[0])<(Integer.parseInt(sed[0])) )
-                        {startLessThanEnd = true;}
-                        else if ( Integer.parseInt(ssd[2])==(Integer.parseInt(sed[2]))
-                                && Integer.parseInt(ssd[0])==(Integer.parseInt(sed[0]))
-                                && Integer.parseInt(ssd[1])<=(Integer.parseInt(sed[1])) )
-                        {startLessThanEnd = true;}
-                        //use startLessThanEnd to determine next
-                        if(startLessThanEnd) {
-                            String termName = titleText.getText().toString();
-                            //save the changes
-                            Boolean checkSavedChanges = dbHelper.updateTermData(termID, termName, termStart, termEnd);
-                            //test for success
-                            if (checkSavedChanges) {
-                                Toast.makeText(TermDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                                refreshList();
-                            } else {
-                                Toast.makeText(TermDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
-                            }
-                            return true;
+                        //test for all fields being filled
+                        if(termName.equals("") || termStart.equals("") || termEnd.equals("")){
+                            Toast.makeText(TermDetail.this, "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
                         }
-                        else{
-                            Toast.makeText(TermDetail.this, "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
+                        else {
+                            //parse start and end for comparison
+                            String[] ssd = termStart.split("-");
+                            String[] sed = termEnd.split("-");
+                            Log.d("split values", ssd[2] + "," + sed[2]);
+
+                            //compare start and end
+                            boolean startLessThanEnd = false; //default
+                            if (Integer.parseInt(ssd[2]) < (Integer.parseInt(sed[2]))) {
+                                startLessThanEnd = true;
+                            } else if (Integer.parseInt(ssd[2]) == (Integer.parseInt(sed[2]))
+                                    && Integer.parseInt(ssd[0]) < (Integer.parseInt(sed[0]))) {
+                                startLessThanEnd = true;
+                            } else if (Integer.parseInt(ssd[2]) == (Integer.parseInt(sed[2]))
+                                    && Integer.parseInt(ssd[0]) == (Integer.parseInt(sed[0]))
+                                    && Integer.parseInt(ssd[1]) <= (Integer.parseInt(sed[1]))) {
+                                startLessThanEnd = true;
+                            }
+                            //use startLessThanEnd to determine next
+                            if (startLessThanEnd) {
+                                //save the changes
+                                Boolean checkSavedChanges = dbHelper.updateTermData(termID, termName, termStart, termEnd);
+                                //test for success
+                                if (checkSavedChanges) {
+                                    Toast.makeText(TermDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
+                                    refreshList();
+                                } else {
+                                    Toast.makeText(TermDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
+                                }
+                                return true;
+                            } else {
+                                Toast.makeText(TermDetail.this, "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                 }
                 return false;

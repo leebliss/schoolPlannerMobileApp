@@ -195,10 +195,10 @@ public class AddCourseDialog extends AppCompatDialogFragment {
     }
 
     private void performOkButtonAction() {
-        if(startConvertedToMillis < endConvertedToMillis) {
+        if(startConvertedToMillis <= endConvertedToMillis) {
             String courseName = editTextName.getText().toString();
-            String startDate = textViewStartDate.getText().toString();
-            String endDate = textViewEndDate.getText().toString();
+            String courseStart = textViewStartDate.getText().toString();
+            String courseEnd = textViewEndDate.getText().toString();
             //change boolean radiobutton values to strings for storage
             //for the inProgress radio
             Boolean inProgressRadioState = inProgressRadio.isChecked();
@@ -233,19 +233,23 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             if (switchState) {
                 endAlert = setEndReminder();
             } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-            String professor = editTextCourseProfessor.getText().toString();
-            String phone = editTextCourseProfessorPhone.getText().toString();
-            String email = editTextCourseProfessorEmail.getText().toString();
+            String courseProfessor = editTextCourseProfessor.getText().toString();
+            String courseProfessorPhone = editTextCourseProfessorPhone.getText().toString();
+            String courseProfessorEmail = editTextCourseProfessorEmail.getText().toString();
             //this is the foreign key for the courseInfo DB
             int termID = parentTermID;
-            //do I still need this?
-            //String termName = parentTerm;
-
-            listener.applyTexts(courseName, startDate, endDate, status, startAlert, endAlert, professor, phone, email, termID);
-            //refresh list after adding data
-            ((TermDetail) getActivity()).refreshList();
-            //close dialog
-            dismiss();
+            //test for all fields filled
+            if(courseName.equals("")||courseStart.equals("")||courseEnd.equals("")||status.equals("")||courseProfessor.equals("")||courseProfessorPhone.equals("")
+                    ||courseProfessorEmail.equals("")) {
+                Toast.makeText(getActivity(), "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                listener.applyTexts(courseName, courseStart, courseEnd, status, startAlert, endAlert, courseProfessor, courseProfessorPhone, courseProfessorEmail, termID);
+                //refresh list after adding data
+                ((TermDetail) getActivity()).refreshList();
+                //close dialog
+                dismiss();
+            }
         }
         else{
             Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
