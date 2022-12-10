@@ -273,10 +273,10 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     }
 
     private void performOkButtonAction() {
-        if(startConvertedToMillis < endConvertedToMillis) {
+        if(startConvertedToMillis <= endConvertedToMillis) {
             String assessmentName = editTextName.getText().toString();
-            String startDate = textViewStartDate.getText().toString();
-            String endDate = textViewEndDate.getText().toString();
+            String assessmentStart = textViewStartDate.getText().toString();
+            String assessmentEnd = textViewEndDate.getText().toString();
             //change boolean radiobutton values to strings for storage
             //for the performance assessment radio
             Boolean performanceRadioState = performanceAssessmentRadio.isChecked();
@@ -296,12 +296,19 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             //this is the foreign key for the assessmentInfo DB
             int courseID = parentCourseID;
             //do I still need this?
-            String courseName = parentCourse;
-            listener.applyTexts(assessmentName,startDate,endDate,assessmentType,startAlert,endAlert,courseID);
-            //refresh list after adding data
-            ((CourseDetail)getActivity()).refreshList();
-            //close dialog
-            dismiss();
+            //String courseName = parentCourse;
+            //test for all fields filled
+            //test for all fields filled
+            if(assessmentName.equals("")||assessmentStart.equals("")||assessmentEnd.equals("")||(performanceRadioState==false && objectiveRadioState==false)) {
+                Toast.makeText(getActivity(), "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                listener.applyTexts(assessmentName, assessmentStart, assessmentEnd, assessmentType, startAlert, endAlert, courseID);
+                //refresh list after adding data
+                ((CourseDetail) getActivity()).refreshList();
+                //close dialog
+                dismiss();
+            }
         }
         else{
             Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();

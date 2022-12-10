@@ -201,14 +201,20 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                         openDialog();
                         return true;
                     case R.id.open:
-                        openCourseDetailActivity(courseID);
-                        return true;
+                        if(courseID==0){
+                            Toast.makeText(TermDetail.this, "ERROR: Please select a course.", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        else {
+                            openCourseDetailActivity(courseID);
+                            return true;
+                        }
 
                     case R.id.delete:
                         //parse name off of listItem
                         String[] separated = nameOfSelectedItem.split("\n");
                         if(nameOfSelectedItem == ""){
-                            Toast.makeText(TermDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TermDetail.this, "ERROR: Please select a course.", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             new AlertDialog.Builder(TermDetail.this)

@@ -296,14 +296,20 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                         openDialog();
                         return true;
                     case R.id.open:
-                        openAssessmentDetailActivity(assessmentID);
-                        return true;
+                        if(assessmentID==0){
+                            Toast.makeText(CourseDetail.this, "ERROR: Please select an assessment.", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        else {
+                            openAssessmentDetailActivity(assessmentID);
+                            return true;
+                        }
 
                     case R.id.delete:
                         //parse name off of listItem
                         String[] separated = nameOfSelectedItem.split("\n");
                         if(nameOfSelectedItem == ""){
-                            Toast.makeText(CourseDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CourseDetail.this, "ERROR: Please select an assessment.", Toast.LENGTH_SHORT).show();
                         }
                         else {
                             new AlertDialog.Builder(CourseDetail.this)

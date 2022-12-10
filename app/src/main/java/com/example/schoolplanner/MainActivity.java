@@ -131,14 +131,19 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                         openDialog();
                         return true;
                     case R.id.open:
-                        openTermDetailActivity(termID);
-                        return true;
-
+                        if(termID==0){
+                            Toast.makeText(MainActivity.this, "ERROR: Please select a term.", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        else {
+                            openTermDetailActivity(termID);
+                            return true;
+                        }
                     case R.id.delete:
                         //parse name off of listItem
                         String[] separated = nameOfSelectedItem.split("\n");
                         if(nameOfSelectedItem == ""){
-                            Toast.makeText(MainActivity.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "ERROR: Please select a Term.", Toast.LENGTH_SHORT).show();
                         }
                         else if (dbHelper.getRecordCount("CourseInfo",termID)>0){
                             new AlertDialog.Builder(MainActivity.this)
