@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -18,6 +19,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -134,19 +137,30 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                     case R.id.delete:
                         //parse name off of listItem
                         String[] separated = nameOfSelectedItem.split("\n");
-                        Boolean checkDeleteData = dbHelper.deleteData(separated[0],"TermInfo");
-                        if(checkDeleteData) {
-                            Toast.makeText(MainActivity.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
-                            nameOfSelectedItem = "";
-                            refreshList();
+                        if(nameOfSelectedItem == ""){
+                            Toast.makeText(MainActivity.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
                         }
-                        else{
-                            if(nameOfSelectedItem == ""){
-                                Toast.makeText(MainActivity.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(MainActivity.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
-                            }
+                        else {
+                            new AlertDialog.Builder(MainActivity.this)
+                                    .setTitle("Delete Entry?")
+                                    .setMessage("Are you sure you want to delete '"+separated[0]+"'?")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //delete item
+                                            Boolean checkDeleteData = dbHelper.deleteData(separated[0], "TermInfo");
+                                            if (checkDeleteData) {
+                                                Toast.makeText(MainActivity.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
+                                                nameOfSelectedItem = "";
+                                                refreshList();
+                                            }
+                                            else {
+                                                Toast.makeText(MainActivity.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null) //does nothing
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
                         }
                         return true;
                 }

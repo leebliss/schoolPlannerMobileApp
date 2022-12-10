@@ -1,6 +1,7 @@
 package com.example.schoolplanner;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -205,20 +206,31 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                     case R.id.delete:
                         //parse name off of listItem
                         String[] separated = nameOfSelectedItem.split("\n");
-                        Boolean checkDeleteData = dbHelper.deleteData(separated[0],"CourseInfo");
-                        if(checkDeleteData) {
-                            Toast.makeText(TermDetail.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
-                            nameOfSelectedItem = "";
-                            refreshList();
+                        if(nameOfSelectedItem == ""){
+                            Toast.makeText(TermDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
                         }
-                        else{
-                            if(nameOfSelectedItem == ""){
-                                Toast.makeText(TermDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
+                        else {
+                            new AlertDialog.Builder(TermDetail.this)
+                                    .setTitle("Delete Entry?")
+                                    .setMessage("Are you sure you want to delete '"+separated[0]+"'?")
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            //delete item
+                                            Boolean checkDeleteData = dbHelper.deleteData(separated[0], "CourseInfo");
+                                            if (checkDeleteData) {
+                                                Toast.makeText(TermDetail.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
+                                                nameOfSelectedItem = "";
+                                                refreshList();
+                                            }
+                                            else {
+                                                Toast.makeText(TermDetail.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    })
+                                    .setNegativeButton(android.R.string.no, null) //does nothing
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .show();
                             }
-                            else {
-                                Toast.makeText(TermDetail.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
                         return true;
 
                     case R.id.save:
@@ -241,67 +253,6 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 return false;
             }
         });
-
-        /*
-        addNew.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDialog();
-            }
-        });
-
-        update.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                openCourseDetailActivity(courseNameOnly, courseID);
-            }
-        });
-
-        //this is for saving a detail screen when done with changes
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //get values to save changes
-                String termName = titleText.getText().toString();
-                String termStart = textViewStartDate.getText().toString();
-                String termEnd = textViewEndDate.getText().toString();
-                //save the changes
-                Boolean checkSavedChanges = dbHelper.updateTermData(termID,termName,termStart,termEnd);
-                //test for success
-                if(checkSavedChanges) {
-                    Toast.makeText(TermDetail.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                    refreshList();
-                }
-                else{
-                    Toast.makeText(TermDetail.this, "Error, changes not saved.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //parse name off of listItem
-                String[] separated = nameOfSelectedItem.split("\n");
-                Boolean checkDeleteData = dbHelper.deleteData(separated[0],"CourseInfo");
-                if(checkDeleteData) {
-                    Toast.makeText(TermDetail.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
-                    nameOfSelectedItem = "";
-                    refreshList();
-                }
-                else{
-                    if(nameOfSelectedItem == ""){
-                        Toast.makeText(TermDetail.this, "Please make a selection.", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        Toast.makeText(TermDetail.this, "Error, entry not deleted.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        });
-         */
     }
 
     //this causes everything to reload so the data is up to date when back arrow is used

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -78,59 +79,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        if(StartBeforeEndChecker.isStartBeforeEnd(startConvertedToMillis,endConvertedToMillis,getActivity().getApplicationContext())) {
-                            String courseName = editTextName.getText().toString();
-                            String startDate = textViewStartDate.getText().toString();
-                            String endDate = textViewEndDate.getText().toString();
-                            //change boolean radiobutton values to strings for storage
-                            //for the inProgress radio
-                            Boolean inProgressRadioState = inProgressRadio.isChecked();
-                            String status = ""; //default
-                            if (inProgressRadioState) {
-                                status = "in progress";
-                            }
-                            //for the completed radio
-                            Boolean completedRadioState = completedRadio.isChecked();
-                            if (completedRadioState) {
-                                status = "completed";
-                            }
-                            //for the dropped radio
-                            Boolean droppedRadioState = droppedRadio.isChecked();
-                            if (droppedRadioState) {
-                                status = "dropped";
-                            }
-                            //for the planToTake radio
-                            Boolean planToTakeRadioState = planToTakeRadio.isChecked();
-                            if (planToTakeRadioState) {
-                                status = "plan to take";
-                            }
-                            //for a start alert
-                            Boolean switchState = switchStartAlert.isChecked();
-                            int startAlert = 0; //default
-                            if (switchState) {
-                                startAlert = setStartReminder();
-                            } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                            //for an end alert
-                            switchState = switchEndAlert.isChecked();
-                            int endAlert = 0; //default
-                            if (switchState) {
-                                endAlert = setEndReminder();
-                            } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                            String professor = editTextCourseProfessor.getText().toString();
-                            String phone = editTextCourseProfessorPhone.getText().toString();
-                            String email = editTextCourseProfessorEmail.getText().toString();
-                            //this is the foreign key for the courseInfo DB
-                            int termID = parentTermID;
-                            //do I still need this?
-                            //String termName = parentTerm;
-
-                            listener.applyTexts(courseName, startDate, endDate, status, startAlert, endAlert, professor, phone, email, termID);
-                            //refresh list after adding data
-                            ((TermDetail) getActivity()).refreshList();
-                        }
-                        else{
-                            //do nothing, toast comes from checker method
-                        }
+                        //overriding this in onResume()
                     }
                 });
 
@@ -218,7 +167,6 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             }
         });
 
-
         return builder.create();
     }
 
@@ -230,6 +178,79 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             listener = (AddCourseDialogListener)context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement SchoolPlannerDialogListener");
+        }
+    }
+    //override pos button to control when dialog closes
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        AlertDialog alertDialog = (AlertDialog) getDialog();
+        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                performOkButtonAction();
+            }
+        });
+    }
+
+    private void performOkButtonAction() {
+        if(startConvertedToMillis < endConvertedToMillis) {
+            String courseName = editTextName.getText().toString();
+            String startDate = textViewStartDate.getText().toString();
+            String endDate = textViewEndDate.getText().toString();
+            //change boolean radiobutton values to strings for storage
+            //for the inProgress radio
+            Boolean inProgressRadioState = inProgressRadio.isChecked();
+            String status = ""; //default
+            if (inProgressRadioState) {
+                status = "in progress";
+            }
+            //for the completed radio
+            Boolean completedRadioState = completedRadio.isChecked();
+            if (completedRadioState) {
+                status = "completed";
+            }
+            //for the dropped radio
+            Boolean droppedRadioState = droppedRadio.isChecked();
+            if (droppedRadioState) {
+                status = "dropped";
+            }
+            //for the planToTake radio
+            Boolean planToTakeRadioState = planToTakeRadio.isChecked();
+            if (planToTakeRadioState) {
+                status = "plan to take";
+            }
+            //for a start alert
+            Boolean switchState = switchStartAlert.isChecked();
+            int startAlert = 0; //default
+            if (switchState) {
+                startAlert = setStartReminder();
+            } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+            //for an end alert
+            switchState = switchEndAlert.isChecked();
+            int endAlert = 0; //default
+            if (switchState) {
+                endAlert = setEndReminder();
+            } //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+            String professor = editTextCourseProfessor.getText().toString();
+            String phone = editTextCourseProfessorPhone.getText().toString();
+            String email = editTextCourseProfessorEmail.getText().toString();
+            //this is the foreign key for the courseInfo DB
+            int termID = parentTermID;
+            //do I still need this?
+            //String termName = parentTerm;
+
+            listener.applyTexts(courseName, startDate, endDate, status, startAlert, endAlert, professor, phone, email, termID);
+            //refresh list after adding data
+            ((TermDetail) getActivity()).refreshList();
+            //close dialog
+            dismiss();
+        }
+        else{
+            Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
         }
     }
 

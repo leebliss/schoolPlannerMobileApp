@@ -7,10 +7,12 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -22,6 +24,13 @@ public class AddTermDialog extends AppCompatDialogFragment {
     private EditText editTextName;
     private TextView textViewStartDate, textViewEndDate;
     private ImageView imageStartCalendar, imageEndCalendar;
+    //for holding dates and times for comparing start and end
+    private int startDate, startMonth,startYear;
+    private int endDate, endMonth,endYear;
+
+    //for holding start and end times in millis
+    long startConvertedToMillis;
+    long endConvertedToMillis;
     //for date picker
     private int mDate, mMonth, mYear;
     //listener
@@ -45,12 +54,7 @@ public class AddTermDialog extends AppCompatDialogFragment {
                 .setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        String termName = editTextName.getText().toString();
-                        String termContact = textViewStartDate.getText().toString();
-                        String termDOB = textViewEndDate.getText().toString();
-                        listener.applyTexts(termName,termContact,termDOB);
-                        //refresh list after adding data
-                        ((MainActivity)getActivity()).refreshList();
+                        //overriding this in onResume()
                     }
                 });
 
@@ -59,6 +63,10 @@ public class AddTermDialog extends AppCompatDialogFragment {
         imageStartCalendar = view.findViewById(R.id.termStartCalendar);
         textViewEndDate = view.findViewById(R.id.termEndDate);
         imageEndCalendar = view.findViewById(R.id.termEndCalendar);
+
+        //initialize start and end millis
+        startConvertedToMillis=0;
+        endConvertedToMillis=0;
 
         //listener for start date
         imageStartCalendar.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +80,14 @@ public class AddTermDialog extends AppCompatDialogFragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        //set values for comparing start to end
+                        startDate = dayOfMonth;
+                        startMonth = month;
+                        startYear = year;
+                        //get start time in millis
+                        Calendar calendar1 = Calendar.getInstance();
+                        calendar1.set(startYear,startMonth,startDate);
+                        startConvertedToMillis = calendar1.getTimeInMillis();
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
@@ -89,6 +105,14 @@ public class AddTermDialog extends AppCompatDialogFragment {
                     @Override
                     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                         textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
+                        //set values for comparing start to end
+                        endDate = dayOfMonth;
+                        endMonth = month;
+                        endYear = year;
+                        //get start time in millis
+                        Calendar calendar1 = Calendar.getInstance();
+                        calendar1.set(endYear,endMonth,endDate);
+                        endConvertedToMillis = calendar1.getTimeInMillis();
                     }
                 }, mYear, mMonth, mDate);
                 datePickerDialog.show();
@@ -106,6 +130,38 @@ public class AddTermDialog extends AppCompatDialogFragment {
             listener = (AddTermDialogListener)context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + "must implement SchoolPlannerDialogListener");
+        }
+    }
+
+    //override pos button to control when dialog closes
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        AlertDialog alertDialog = (AlertDialog) getDialog();
+        Button okButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v)
+            {
+                performOkButtonAction();
+            }
+        });
+    }
+
+    private void performOkButtonAction() {
+        if (startConvertedToMillis < endConvertedToMillis) {
+            String termName = editTextName.getText().toString();
+            String termContact = textViewStartDate.getText().toString();
+            String termDOB = textViewEndDate.getText().toString();
+            listener.applyTexts(termName,termContact,termDOB);
+            //refresh list after adding data
+            ((MainActivity)getActivity()).refreshList();
+            //close dialog
+            dismiss();
+        }
+        else{
+            Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
         }
     }
 
