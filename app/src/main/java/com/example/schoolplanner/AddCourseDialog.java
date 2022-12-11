@@ -32,6 +32,8 @@ public class AddCourseDialog extends AppCompatDialogFragment {
     //for passing values to another activity
     public static final String COURSE_NOTIFICATION_INFO = "com.example.schoolplanner.COURSE_DIALOG_NOTIFICATION_INFO";
     String notificationInfo;
+    //intent for alarms
+    Intent intent;
     //for user to enter values
     private EditText editTextName, editTextCourseProfessor, editTextCourseProfessorPhone, editTextCourseProfessorEmail;
     //start and end dates
@@ -67,6 +69,8 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_course_dialog, null);
+        //intent for alarms
+        intent = CourseDetail.alarmIntent;
         //build the dialog
         builder.setView(view)
                 .setTitle("Add New Course")
@@ -103,10 +107,10 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         createNotificationChannel();
 
         //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
-        startHour = 8;
-        startMinute = 0;
+        startHour =20;
+        startMinute = 54;
         endHour = 20;
-        endMinute = 0;
+        endMinute = 55;
         //initialize start and end millis
         startConvertedToMillis=0;
         endConvertedToMillis=0;
@@ -279,7 +283,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "The course named " + editTextName.getText().toString() + " has begun.";
-            Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
+            //Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
             //random number for request code for intent
@@ -307,7 +311,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (editTextName.getText().toString()).toUpperCase() + "' has ended.";
-            Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
+            //Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
             //random number for request code for intent

@@ -63,6 +63,10 @@ public class AssessmentDetail extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     //for db connectivity
     DBHelper dbHelper;
+    //context for this activity
+    Context context;
+    //intent for alarms
+    Intent intent;
 
     ArrayAdapter adapter;
     //for holding index of selected item
@@ -88,10 +92,15 @@ public class AssessmentDetail extends AppCompatActivity {
         //database connection
         dbHelper = new DBHelper(this);
         assessmentNameOnly = "";
+        //set context
+        context = getApplicationContext();
+        //intent for alarms
+        intent = CourseDetail.alarmIntent;
+
 
         //get course ID from the intent passed over from previous activity
-        Intent intent = getIntent();
-        assessmentID = intent.getIntExtra(CourseDetail.ASSESSMENT_ID, 1000);
+        Intent myIntent = getIntent();
+        assessmentID = myIntent.getIntExtra(CourseDetail.ASSESSMENT_ID, 1000);
 
         //use assessmentID to get corresponding data
         Cursor cursor = dbHelper.getDataByID(assessmentID, "AssessmentInfo");
@@ -400,8 +409,8 @@ public class AssessmentDetail extends AppCompatActivity {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime){
             //set value of assessmentInfo to be passed as intent extra
-            assessmentInfo = "Assessment '"+ titleText.getText().toString()+"' has begun.";
-            Intent intent = new Intent(AssessmentDetail.this,AssessmentReminderBroadcast.class);
+            assessmentInfo = "Your assessment '" + (titleText.getText().toString()).toUpperCase() + "' has begun.";
+            //Intent intent = new Intent(AssessmentDetail.this,AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, assessmentInfo );
             intent.setAction("detailReminder");
             //random number for request code for intent
@@ -427,8 +436,8 @@ public class AssessmentDetail extends AppCompatActivity {
         long startConvertedToMillis = calendar1.getTimeInMillis();
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            assessmentInfo = "Assessment '" + titleText.getText().toString() + "' has ended.";
-            Intent intent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
+            assessmentInfo = "Your assessment '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
+            //Intent intent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, assessmentInfo);
             intent.setAction("detailReminder");
             //random number for request code for intent
@@ -449,31 +458,32 @@ public class AssessmentDetail extends AppCompatActivity {
 
     private void cancelReminder(String reminderType){
 
+        //Context context = getApplicationContext();
         int requestCode = 0; //for holding code stored in startAlert or endAlert
         Cursor cursor = dbHelper.getDataByName(nameOfAssessmentSelected, "AssessmentInfo");
         if (cursor.getCount() == 0) {
-            Toast.makeText(AssessmentDetail.this, "Request Code Error.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Request Code Error.", Toast.LENGTH_SHORT).show();
         }
         else {
             while (cursor.moveToNext()) {
                 if (reminderType.equals("start")) {
                     requestCode = cursor.getInt(5); //5 is startAlert
                     //for testing
-                    Toast.makeText(AssessmentDetail.this, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
-                if (reminderType.equals("end")) {
+                if (reminderType.equals("stop")) {
                     requestCode = cursor.getInt(6); //6 is endAlert
                     //for testing
-                    Toast.makeText(AssessmentDetail.this, "cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
             }
         }
         //use request code to cancel reminder
-        AlarmManager alarmManager = (AlarmManager)(AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
-        Intent myIntent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, requestCode, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-        pendingIntent.cancel();
+        //Intent intent = new Intent(context, AssessmentReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
     }
 
     public void goHome(){

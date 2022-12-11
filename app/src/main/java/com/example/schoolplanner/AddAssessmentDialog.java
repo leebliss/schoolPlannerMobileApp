@@ -37,6 +37,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
     String notificationInfo;
     //for db connectivity
     DBHelper dbHelper;
+    //intent for alarms
+    Intent intent;
     //for user to enter values
     private EditText editTextName;
     private Switch switchStartAlert, switchEndAlert;
@@ -71,6 +73,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_assessment_dialog, null);
+        //intent for alarms
+        intent = CourseDetail.alarmIntent;
 
         //build the dialog
         builder.setView(view)
@@ -338,7 +342,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Assessment " + (editTextName.getText().toString()) + "has begun.";
-            Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
+            //Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
             //random number for request code for intent
@@ -348,8 +352,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             AlarmManager alarmManager = (AlarmManager) ((CourseDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
-            //return the randomRequestCode to store for later deletion of intent
+            Toast.makeText(getActivity(), "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();            //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
         else return 1; //indicates time was in the past, reminder not set
@@ -366,7 +369,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Assessment '" + (editTextName.getText().toString()) + "' has ended.";
-            Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
+            //Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
             //random number for request code for intent
@@ -375,8 +378,8 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), randomRequestCode, intent, 0);
             AlarmManager alarmManager = (AlarmManager) ((CourseDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
-            //for tesing
-            Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //for testing
+            Toast.makeText(getActivity(), "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
