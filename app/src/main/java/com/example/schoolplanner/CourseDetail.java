@@ -198,10 +198,10 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         createNotificationChannel();
 
         //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
-        startHour = 8;
-        startMinute = 0;
-        endHour = 20;
-        endMinute = 0;
+        startHour = 13;
+        startMinute = 20;
+        endHour = 13;
+        endMinute = 14;
 
         //call local viewData method
         viewData();
@@ -268,7 +268,12 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
                 //reset previously selected item to transparent
                 if (currentlySelectedItem != -1 && currentlySelectedItem != i){
-                    parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
+                    try {
+                        parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    catch(Exception e){
+                        //do nothing, just need this in case the last selected item has been deleted
+                    }
                 }
                 currentlySelectedItem = i;
                 //get assessment name only
@@ -318,7 +323,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             //delete item
-                                            Boolean checkDeleteData = dbHelper.deleteData(separated[0], "CourseInfo");
+                                            Boolean checkDeleteData = dbHelper.deleteData(separated[0], "AssessmentInfo");
                                             if (checkDeleteData) {
                                                 Toast.makeText(CourseDetail.this, "Entry deleted.", Toast.LENGTH_SHORT).show();
                                                 nameOfSelectedItem = "";
@@ -330,7 +335,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, null) //does nothing
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setIcon(R.drawable.ic_baseline_warning_24)
                                     .show();
                         }
                         return true;
@@ -449,17 +454,11 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
-        case R.id.home:
-            goHome();
-            return(true);
         case R.id.back:
             finish();
             return(true);
-        case R.id.settings:
-            //add the function to perform here
-            return(true);
-        case R.id.about:
-            //add the function to perform here
+        case R.id.home:
+            goHome();
             return(true);
         case R.id.exit:
             moveTaskToBack(true);
@@ -562,7 +561,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "The course named " + titleText.getText().toString() + " has begun.";
+            notificationInfo = "Your course '" + (titleText.getText().toString()).toUpperCase() + "' has begun.";
             Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("detailReminder");
@@ -573,7 +572,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(CourseDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, "Start millis: "+String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -586,9 +585,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
-        long startConvertedToMillis = calendar1.getTimeInMillis();
+        long endConvertedToMillis = calendar1.getTimeInMillis();
         //compare present millis to new reminder time
-        if(startConvertedToMillis>presentTime) {
+        if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
             Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
@@ -599,9 +598,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             int randomRequestCode = r.nextInt(10000 - 1);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(CourseDetail.this, randomRequestCode, intent, 0);
             AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, endConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(CourseDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            Toast.makeText(CourseDetail.this, "End millis: "+String.valueOf(endConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -619,7 +618,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 if (reminderType.equals("start")) {
                     requestCode = cursor.getInt(5); //5 is startAlert
                     //for testing
-                    Toast.makeText(CourseDetail.this, String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CourseDetail.this, "Cancel code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
                 if (reminderType.equals("end")) {
                     requestCode = cursor.getInt(6); //6 is endAlert

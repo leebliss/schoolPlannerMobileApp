@@ -379,12 +379,6 @@ public class AssessmentDetail extends AppCompatActivity {
         case R.id.back:
             finish();
             return(true);
-        case R.id.settings:
-            //add the function to perform here
-            return(true);
-        case R.id.about:
-            //add the function to perform here
-            return(true);
         case R.id.exit:
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -417,7 +411,7 @@ public class AssessmentDetail extends AppCompatActivity {
             AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
             //for testing
-            Toast.makeText(AssessmentDetail.this, Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AssessmentDetail.this, "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -444,7 +438,7 @@ public class AssessmentDetail extends AppCompatActivity {
             AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
 
-            Toast.makeText(AssessmentDetail.this, Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            Toast.makeText(AssessmentDetail.this, "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //Toast.makeText(AssessmentDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
 
             //return the randomRequestCode to store for later deletion of intent
@@ -465,10 +459,12 @@ public class AssessmentDetail extends AppCompatActivity {
                 if (reminderType.equals("start")) {
                     requestCode = cursor.getInt(5); //5 is startAlert
                     //for testing
-                    Toast.makeText(AssessmentDetail.this, String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AssessmentDetail.this, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
                 if (reminderType.equals("end")) {
                     requestCode = cursor.getInt(6); //6 is endAlert
+                    //for testing
+                    Toast.makeText(AssessmentDetail.this, "cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
             }
         }

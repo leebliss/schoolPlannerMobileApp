@@ -173,7 +173,12 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 parent.getChildAt(i).setBackgroundColor(Color.YELLOW);
                 //reset previously selected item to transparent
                 if (currentlySelectedItem != -1 && currentlySelectedItem != i){
-                    parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
+                    try {
+                        parent.getChildAt(currentlySelectedItem).setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    catch(Exception e){
+                        //do nothing, just need this in case the last selected item has been deleted
+                    }
                 }
                 currentlySelectedItem = i;
                 //get course name only
@@ -235,7 +240,7 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                                         }
                                     })
                                     .setNegativeButton(android.R.string.no, null) //does nothing
-                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setIcon(R.drawable.ic_baseline_warning_24)
                                     .show();
                             }
                         return true;
@@ -306,17 +311,11 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) { switch(item.getItemId()) {
-        case R.id.home:
-            goHome();
-            return(true);
         case R.id.back:
             finish();
             return(true);
-        case R.id.settings:
-            //add the function to perform here
-            return(true);
-        case R.id.about:
-            //add the function to perform here
+        case R.id.home:
+            goHome();
             return(true);
         case R.id.exit:
             moveTaskToBack(true);
