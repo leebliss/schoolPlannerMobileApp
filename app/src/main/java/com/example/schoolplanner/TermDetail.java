@@ -38,7 +38,11 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
 
     //for passing values to another activity
     public static final String COURSE_ID = "com.example.schoolplanner.COURSE_ID";
-    //public static final String COURSE_NAME = "com.example.schoolplanner.COURSE_NAME";
+
+    //static intent to be used for alarms so they can be cancelled, must have common intent
+    static Intent courseAlarmIntent;
+    //intent for alarms
+    Intent intent;
 
     EditText titleText;
     private TextView textViewStartDate, textViewEndDate;
@@ -71,6 +75,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_term_detail);
+
+        //initialize alarmIntent, this is for course alarms
+        courseAlarmIntent = new Intent(TermDetail.this, CourseReminderBroadcast.class);
+        intent = courseAlarmIntent;
 
         //so editText layout elements do not trigger input keyboard on loading page
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

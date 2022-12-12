@@ -74,8 +74,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_assessment_dialog, null);
         //intent for alarms
-        intent = CourseDetail.alarmIntent;
-
+        intent = CourseDetail.assessmentAlarmIntent;
         //build the dialog
         builder.setView(view)
                 .setTitle("Add New Assessment")

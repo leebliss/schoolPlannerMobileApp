@@ -70,7 +70,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_course_dialog, null);
         //intent for alarms
-        intent = CourseDetail.alarmIntent;
+        intent = CourseDetail.assessmentAlarmIntent;
         //build the dialog
         builder.setView(view)
                 .setTitle("Add New Course")

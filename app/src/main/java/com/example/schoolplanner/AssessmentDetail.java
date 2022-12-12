@@ -94,9 +94,8 @@ public class AssessmentDetail extends AppCompatActivity {
         assessmentNameOnly = "";
         //set context
         context = getApplicationContext();
-        //intent for alarms
-        intent = CourseDetail.alarmIntent;
-
+        //set the local intent to the course detail static intent, this way they can be deleted from course detail
+        intent = CourseDetail.assessmentAlarmIntent;
 
         //get course ID from the intent passed over from previous activity
         Intent myIntent = getIntent();

@@ -55,8 +55,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     public static final String COURSE_NOTIFICATION_INFO = "com.example.schoolplanner.COURSE_DIALOG_NOTIFICATION_INFO";
 
     String notificationInfo;
-    //static intent to be used for the alarms so they can be cancelled, assigned to intent
-    static Intent alarmIntent;
+    //static intent to be used for alarms so they can be cancelled, must have common intent
+    static Intent assessmentAlarmIntent;
     //intent for alarms
     Intent intent;
     //context for this activity
@@ -111,9 +111,10 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_detail);
-        //initialize alarmIntent and assign to intent, this so that all classes using alarms have same form
-        alarmIntent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
-        intent = alarmIntent;
+        //initialize alarmIntent, this is for assessment alarms
+        assessmentAlarmIntent = new Intent(CourseDetail.this, AssessmentReminderBroadcast.class);
+        //set the local intent to the term detail static intent, this way they can be deleted from term detail
+        intent = TermDetail.courseAlarmIntent;
         //so editText layout elements do not trigger input keyboard on loading page
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         //database connection
@@ -208,10 +209,10 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         createNotificationChannel();
 
         //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
-        startHour = 20;
-        startMinute = 15;
-        endHour = 20;
-        endMinute = 16;
+        startHour = 21;
+        startMinute =34;
+        endHour = 21;
+        endMinute = 35;
 
         //call local viewData method
         viewData();
