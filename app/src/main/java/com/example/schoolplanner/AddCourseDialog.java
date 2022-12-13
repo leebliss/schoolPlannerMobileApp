@@ -70,7 +70,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_add_course_dialog, null);
         //intent for alarms
-        intent = CourseDetail.assessmentAlarmIntent;
+        intent = TermDetail.courseAlarmIntent;
         //build the dialog
         builder.setView(view)
                 .setTitle("Add New Course")
@@ -107,10 +107,10 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         createNotificationChannel();
 
         //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
-        startHour =20;
-        startMinute = 54;
+        startHour = 8;
+        startMinute = 0;
         endHour = 20;
-        endMinute = 55;
+        endMinute = 0;
         //initialize start and end millis
         startConvertedToMillis=0;
         endConvertedToMillis=0;
@@ -282,7 +282,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "The course named " + editTextName.getText().toString() + " has begun.";
+            notificationInfo = "Your course '" + (editTextName.getText().toString()).toUpperCase() + "' has begun.";
             //Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");

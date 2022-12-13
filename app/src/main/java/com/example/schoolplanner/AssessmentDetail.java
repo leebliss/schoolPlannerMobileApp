@@ -149,6 +149,24 @@ public class AssessmentDetail extends AppCompatActivity {
         //set assessmentInfo
         assessmentInfo = "Default Alert";
 
+        //set startDate, startMonth,startYear, startHour, and startMinute right here just in case alert switch is changed without picking new dates/times
+        String assessmentStart = textViewStartDate.getText().toString();
+        String assessmentEnd = textViewEndDate.getText().toString();
+        //parse start and end strings to integers for calendar
+        String[] ssd = assessmentStart.split("[-: ]");
+        String[] sed = assessmentEnd.split("[-: ]");
+        startDate = Integer.parseInt(ssd[1]); //day
+        startMonth = (Integer.parseInt(ssd[0]))-1; //month --minus one because months are 0-11
+        startYear = Integer.parseInt(ssd[2]); //year
+        startHour = Integer.parseInt(ssd[3]); //hour
+        startMinute = Integer.parseInt(ssd[4]); //minute
+        //set endDate, endMonth,endYear, endHour, and endMinute right here just in case alert switch is changed without picking new dates/times
+        endDate = Integer.parseInt(sed[1]); //day
+        endMonth = (Integer.parseInt(sed[0]))-1; //month --minus one because months are 0-11
+        endYear = Integer.parseInt(sed[2]); //year
+        endHour = Integer.parseInt(sed[3]); //hour
+        endMinute = Integer.parseInt(sed[4]); //minute
+
         //set listeners
         //listener for start date
         imageStartCalendar.setOnClickListener(new View.OnClickListener() {
@@ -285,7 +303,7 @@ public class AssessmentDetail extends AppCompatActivity {
                         String[] sed = assessmentEnd.split("[-: ]");
                         Log.d("split values", ssd[2]+","+sed[2]);
 
-                        //compare start and end
+                        /////////////compare start and end/////////////
                         boolean startLessThanEnd = false; //default
                         //compare year
                         if( Integer.parseInt(ssd[2])<(Integer.parseInt(sed[2])) )
@@ -334,6 +352,8 @@ public class AssessmentDetail extends AppCompatActivity {
                                 //delete previous reminder and set new one anytime switchState is true on save
                                 cancelReminder("start");
                                 startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                                Toast.makeText(AssessmentDetail.this, "startSwitch true", Toast.LENGTH_SHORT).show();
+
                             } else {  //cancel old reminder since no longer checked
                                 cancelReminder("start");
                             }
@@ -344,6 +364,7 @@ public class AssessmentDetail extends AppCompatActivity {
                                 //delete previous reminder and set new one anytime switchState is true on save
                                 cancelReminder("stop");
                                 endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
+                                Toast.makeText(AssessmentDetail.this, "endSwitch true", Toast.LENGTH_SHORT).show();
                             } else {  //cancel old reminder since no longer checked
                                 cancelReminder("stop");
                             }
@@ -415,7 +436,8 @@ public class AssessmentDetail extends AppCompatActivity {
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+            //PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,0);
             AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
             //for testing
@@ -432,8 +454,9 @@ public class AssessmentDetail extends AppCompatActivity {
         //variables for calendar
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(endYear,endMonth,endDate,endHour,endMinute,0);
-        long startConvertedToMillis = calendar1.getTimeInMillis();
-        if(startConvertedToMillis>presentTime) {
+        long endConvertedToMillis = calendar1.getTimeInMillis();
+        //for testing
+        if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             assessmentInfo = "Your assessment '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
             //Intent intent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
@@ -442,10 +465,12 @@ public class AssessmentDetail extends AppCompatActivity {
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, randomRequestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, randomRequestCode, intent, 0);
+            //PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, randomRequestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, endConvertedToMillis, pendingIntent);
 
+            Log.d("endAlertTime",""+endYear +" "+endMonth+" "+endDate+" "+endHour+" "+endMinute);
             Toast.makeText(AssessmentDetail.this, "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //Toast.makeText(AssessmentDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
 

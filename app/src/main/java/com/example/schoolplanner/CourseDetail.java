@@ -209,10 +209,24 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         createNotificationChannel();
 
         //preset start times to 8AM, end times to 8PM, no need for user to set these times for courses
-        startHour = 21;
-        startMinute =34;
-        endHour = 21;
-        endMinute = 35;
+        startHour = 8;
+        startMinute = 0;
+        endHour = 20;
+        endMinute = 0;
+
+        //set startDate, startMonth,startYear, startHour, and startMinute right here just in case alert switch is changed without picking new dates
+        String courseStart = textViewStartDate.getText().toString();
+        String courseEnd = textViewEndDate.getText().toString();
+        //parse start and end strings to integers for calendar
+        String[] ssd = courseStart.split("[-: ]");
+        String[] sed = courseEnd.split("[-: ]");
+        startDate = Integer.parseInt(ssd[1]); //day
+        startMonth = (Integer.parseInt(ssd[0]))-1; //month --minus one because months are 0-11
+        startYear = Integer.parseInt(ssd[2]); //year
+        //set endDate, endMonth,endYear, endHour, and endMinute right here just in case alert switch is changed without picking new dates/times
+        endDate = Integer.parseInt(sed[1]); //day
+        endMonth = (Integer.parseInt(sed[0]))-1; //month --minus one because months are 0-11
+        endYear = Integer.parseInt(sed[2]); //year
 
         //call local viewData method
         viewData();

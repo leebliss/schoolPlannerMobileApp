@@ -340,7 +340,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "Assessment " + (editTextName.getText().toString()) + "has begun.";
+            notificationInfo = "Your assessment '" + (editTextName.getText().toString()).toUpperCase() + "' has begun.";
             //Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
@@ -367,7 +367,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
         //compare present millis to new reminder time
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
-            notificationInfo = "Assessment '" + (editTextName.getText().toString()) + "' has ended.";
+            notificationInfo = "Your assessment '" + (editTextName.getText().toString()).toUpperCase() + "' has ended.";
             //Intent intent = new Intent(getActivity(), AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
