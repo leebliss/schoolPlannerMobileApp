@@ -20,10 +20,8 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
-
 import java.util.Calendar;
 import java.util.Random;
 
@@ -55,12 +53,9 @@ public class AddCourseDialog extends AppCompatDialogFragment {
     private AddCourseDialogListener listener;
     //for holding name of term to save to new course when added
     private int parentTermID=0;
-    //private String parentTerm="";
     //constructor for getting selected term from activity that launched this dialog
     public AddCourseDialog(String termThatOwnsMe, int termIDThatOwnsMe) {
         parentTermID = termIDThatOwnsMe;
-        //do I still need this?
-        //parentTerm = termThatOwnsMe;
     }
 
     @Override
@@ -118,7 +113,6 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         ////////////////////listeners////////////////////////////////////////
 
         //listener for start date
-
         imageStartCalendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,7 +287,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             AlarmManager alarmManager = (AlarmManager) ((TermDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -311,7 +305,6 @@ public class AddCourseDialog extends AppCompatDialogFragment {
         if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (editTextName.getText().toString()).toUpperCase() + "' has ended.";
-            //Intent intent = new Intent(getActivity(), CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("dialogReminder");
             //random number for request code for intent
@@ -321,7 +314,7 @@ public class AddCourseDialog extends AppCompatDialogFragment {
             AlarmManager alarmManager = (AlarmManager) ((TermDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, endConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(getActivity(), String.valueOf(endConvertedToMillis), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), String.valueOf(endConvertedToMillis), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }

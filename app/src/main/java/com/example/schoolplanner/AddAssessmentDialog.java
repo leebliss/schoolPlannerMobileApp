@@ -22,11 +22,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
-
-import java.time.Clock;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -351,7 +348,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             AlarmManager alarmManager = (AlarmManager) ((CourseDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(getActivity(), "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();            //return the randomRequestCode to store for later deletion of intent
+            //Toast.makeText(getActivity(), "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();            //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
         else return 1; //indicates time was in the past, reminder not set
@@ -378,7 +375,7 @@ public class AddAssessmentDialog extends AppCompatDialogFragment {
             AlarmManager alarmManager = (AlarmManager) ((CourseDetail) getActivity()).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(getActivity(), "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }

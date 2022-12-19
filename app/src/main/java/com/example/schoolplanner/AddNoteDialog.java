@@ -9,15 +9,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.provider.Telephony;
 import android.telephony.SmsManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.Toast;
@@ -40,7 +37,6 @@ public class AddNoteDialog extends AppCompatDialogFragment {
 
     /////////////////for displaying school planner contacts in a list/////////////////
     ArrayList<String> contactListItem;
-    //ArrayList<Integer> selectedItems; //to tack selected items
     ArrayAdapter contactListAdapter;
     ListView contactList;
 
@@ -49,7 +45,6 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     //for parsing name of selected item
     String nameOfSelectedItem;
     String courseNameOnly;
-    //int courseID;
 
     ////////////////for displaying all of user's contacts in a list to choose from///////////
     ArrayList<String> allContactslistItem;
@@ -57,17 +52,10 @@ public class AddNoteDialog extends AppCompatDialogFragment {
     ArrayAdapter allContactsAdapter;
     ListView allContactsList;
 
-
-    ImageButton upButton, downButton;
-    //for changing size of view accordingly
-    int viewSize;
     //listener
     private AddNoteDialogListener listener;
     //for holding ID of course to get note info
     private int parentCourseID=0;
-    //forManaging scroll of listView, which item is selected
-    int firstVisible;
-    int lastVisible;
     ArrayList<Integer> selectedContacts;
 
     //constructor for getting selected course from activity that launched this dialog
@@ -88,18 +76,12 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         contactListItem = new ArrayList<>();
         //for displaying all of user's contacts in a list to choose from
         allContactslistItem = new ArrayList<>();
-        //allContactsAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, allContactslistItem);
-        //allContactsUserList.setAdapter(allContactsAdapter);
-
         //for holding index and name of selected items
         currentlySelectedItem = -1;
         nameOfSelectedItem = "";
         courseNameOnly = "";
-        //for holding course ID
-        //courseID = 0;
-        //selectedItems = new ArrayList();  // to track the selected items
+        //to track the selected items
         selectedContacts = new ArrayList();
-
         //get hold of lists from layout
         allContactsList = view.findViewById(R.id.displayAllContactNames);
         contactList = view.findViewById(R.id.displayContactNames);
@@ -118,7 +100,6 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                 }
                 else { //add from all contacts to contacts
                     contactListAdapter.add(selectedListItem);
-                    //contactListAdapter.notifyDataSetChanged();
                     //rebuild adapter and call ListViewHelper bc list is now bigger
                     contactListAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, contactListItem);
                     contactList.setAdapter(contactListAdapter);
@@ -183,7 +164,8 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         int toShareOrNotToShare=0;
         Cursor cursor = dbHelper.getDataByID(parentCourseID, "CourseNotes");
         if (cursor.getCount() == 0) {
-            Toast.makeText(getActivity(), "No matches found", Toast.LENGTH_SHORT).show();
+            //for testing
+            //Toast.makeText(getActivity(), "No matches found", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
                 courseNoteContent = cursor.getString(1);
@@ -199,7 +181,6 @@ public class AddNoteDialog extends AppCompatDialogFragment {
         if(toShareOrNotToShare==1)shareSwitch.setChecked(true);
         else shareSwitch.setChecked(false);
         contactList = view.findViewById(R.id.displayContactNames);
-        //allContactsUserList = view.findViewById(R.id.displayAllContactNames);
         //get list of all contacts from user's phone
         getContactsList();
         //show contacts that are already saved to database for this
@@ -271,9 +252,8 @@ public class AddNoteDialog extends AppCompatDialogFragment {
                         //combine name and phone, then add to allContactsList
                         String nameAndPhone = name +": "+ phone;
                         allContactslistItem.add(nameAndPhone);
-                        //addContact(contactId, name, phone, photo);
                         //for testing
-                        Log.i("************Contact_Provider_Demo",phone);
+                        //Log.i("************Contact_Provider_Demo",phone);
                     }
                     //for passing into checkBoxBuilder, needs a String array to convert to charSequence array
                     allContactItem = new String[allContactslistItem.size()];
@@ -290,8 +270,14 @@ public class AddNoteDialog extends AppCompatDialogFragment {
 
         //clear all contact records for this course
         boolean cleared = dbHelper.deleteContactsByCourseID(parentCourseID);
-        if (cleared) Toast.makeText(getActivity(), "Old Contacts Cleared", Toast.LENGTH_SHORT).show();
-        else Toast.makeText(getActivity(), "Failed To Clear Contacts", Toast.LENGTH_SHORT).show();
+        if (cleared) {
+            //for testing
+            //Toast.makeText(getActivity(), "Old Contacts Cleared", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            //for testing
+            //Toast.makeText(getActivity(), "Failed To Clear Contacts", Toast.LENGTH_SHORT).show();
+        }
         //add new contact list for this course to db
         for(int i = 0; i < contactListItem.size();i++) {
             //parse name and phone number so they can be added to db separately

@@ -7,37 +7,24 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Adapter;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.ColorRes;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -58,7 +45,6 @@ public class AssessmentDetail extends AppCompatActivity {
     //for date picker
     private int mDate, mMonth, mYear, mHour, mMinute;
     private boolean startDateSet, endDateSet;
-    //Button save;
     //for bottom navigation menu
     private BottomNavigationView bottomNavigationView;
     //for db connectivity
@@ -352,7 +338,8 @@ public class AssessmentDetail extends AppCompatActivity {
                                 //delete previous reminder and set new one anytime switchState is true on save
                                 cancelReminder("start");
                                 startAlert = setStartReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                                Toast.makeText(AssessmentDetail.this, "startSwitch true", Toast.LENGTH_SHORT).show();
+                                //for testing
+                                //Toast.makeText(AssessmentDetail.this, "startSwitch true", Toast.LENGTH_SHORT).show();
 
                             } else {  //cancel old reminder since no longer checked
                                 cancelReminder("start");
@@ -364,7 +351,8 @@ public class AssessmentDetail extends AppCompatActivity {
                                 //delete previous reminder and set new one anytime switchState is true on save
                                 cancelReminder("stop");
                                 endAlert = setEndReminder(); //set to the returned request ID for that reminder intent, needs to be saved for deletion if wanted
-                                Toast.makeText(AssessmentDetail.this, "endSwitch true", Toast.LENGTH_SHORT).show();
+                                //for testing
+                                //Toast.makeText(AssessmentDetail.this, "endSwitch true", Toast.LENGTH_SHORT).show();
                             } else {  //cancel old reminder since no longer checked
                                 cancelReminder("stop");
                             }
@@ -430,18 +418,16 @@ public class AssessmentDetail extends AppCompatActivity {
         if(startConvertedToMillis>presentTime){
             //set value of assessmentInfo to be passed as intent extra
             assessmentInfo = "Your assessment '" + (titleText.getText().toString()).toUpperCase() + "' has begun.";
-            //Intent intent = new Intent(AssessmentDetail.this,AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, assessmentInfo );
             intent.setAction("detailReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
-            //PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,PendingIntent.FLAG_CANCEL_CURRENT);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this,randomRequestCode,intent,0);
             AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis,pendingIntent);
             //for testing
-            Toast.makeText(AssessmentDetail.this, "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(AssessmentDetail.this, "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -459,19 +445,17 @@ public class AssessmentDetail extends AppCompatActivity {
         if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             assessmentInfo = "Your assessment '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
-            //Intent intent = new Intent(AssessmentDetail.this, AssessmentReminderBroadcast.class);
             intent.putExtra(ASSESSMENT_NOTIFICATION_INFO, assessmentInfo);
             intent.setAction("detailReminder");
             //random number for request code for intent
             Random r = new Random();
             int randomRequestCode = r.nextInt(10000 - 1);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, randomRequestCode, intent, 0);
-            //PendingIntent pendingIntent = PendingIntent.getBroadcast(AssessmentDetail.this, randomRequestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
             AlarmManager alarmManager = (AlarmManager) (AssessmentDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, endConvertedToMillis, pendingIntent);
-
-            Log.d("endAlertTime",""+endYear +" "+endMonth+" "+endDate+" "+endHour+" "+endMinute);
-            Toast.makeText(AssessmentDetail.this, "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            //for testing
+            //Log.d("endAlertTime",""+endYear +" "+endMonth+" "+endDate+" "+endHour+" "+endMinute);
+            //Toast.makeText(AssessmentDetail.this, "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //Toast.makeText(AssessmentDetail.this, String.valueOf(startConvertedToMillis), Toast.LENGTH_SHORT).show();
 
             //return the randomRequestCode to store for later deletion of intent
@@ -486,24 +470,23 @@ public class AssessmentDetail extends AppCompatActivity {
         int requestCode = 0; //for holding code stored in startAlert or endAlert
         Cursor cursor = dbHelper.getDataByName(nameOfAssessmentSelected, "AssessmentInfo");
         if (cursor.getCount() == 0) {
-            Toast.makeText(context, "Request Code Error.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Request Code Error.", Toast.LENGTH_SHORT).show();
         }
         else {
             while (cursor.moveToNext()) {
                 if (reminderType.equals("start")) {
                     requestCode = cursor.getInt(5); //5 is startAlert
                     //for testing
-                    Toast.makeText(context, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
                 if (reminderType.equals("stop")) {
                     requestCode = cursor.getInt(6); //6 is endAlert
                     //for testing
-                    Toast.makeText(context, "cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
             }
         }
         //use request code to cancel reminder
-        //Intent intent = new Intent(context, AssessmentReminderBroadcast.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);

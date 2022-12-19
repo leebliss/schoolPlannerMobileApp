@@ -26,6 +26,7 @@
                 android:enabled="true"
                 android:minLines="5"
                 android:maxLines="5"
+                android:maxLength="150"
                 android:isScrollContainer="true"
                 android:hint="Type your note here"
                 android:background="#fafafa"

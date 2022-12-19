@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
@@ -61,7 +60,7 @@ public class AddContactDialog extends AppCompatDialogFragment {
         int toShareOrNotToShare=0;
         Cursor cursor = dbHelper.getDataByID(parentCourseID, "CourseNotes");
         if (cursor.getCount() == 0) {
-            Toast.makeText(getActivity(), "No matches found", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), "No matches found", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
                 courseNoteContent = cursor.getString(1);

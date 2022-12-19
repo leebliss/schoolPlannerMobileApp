@@ -1,38 +1,28 @@
 package com.example.schoolplanner;
 
-import android.app.AlarmManager;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements AddTermDialog.AddTermDialogListener {
 
     //for passing values to another activity
     public static final String TERM_ID = "com.example.schoolplanner.TERM_ID";
-    //public static final String ASSESSMENT_INFO = "com.example.schoolplanner.ASSESSMENT_INFO";
 
     TextView titleText;
     //Button addNew, update, delete;
@@ -66,13 +56,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         titleText.setText("Term List");
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        //buttons
-        /*
-        addNew = findViewById(R.id.btnInsert);
-        update = findViewById(R.id.btnUpdate);
-        delete = findViewById(R.id.btnDelete);
-         */
-
         //database connection
         dbHelper = new DBHelper(this);
         //for displaying data in a list
@@ -89,9 +72,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
 
         //call local viewData method
         viewData();
-
-        //set up notifications from assessment start and stop times
-        //setReminders();
 
         //set listeners
         //for clicking on list items
@@ -117,13 +97,14 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                 //pass term name to database to get term ID and assign to termID variable
                 Cursor cursor = dbHelper.getDataByName(termNameOnly, "TermInfo");
                 if (cursor.getCount() == 0) {
-                    Toast.makeText(MainActivity.this, "No matches found", Toast.LENGTH_SHORT).show();
+                    //for testing
+                    //Toast.makeText(MainActivity.this, "No matches found", Toast.LENGTH_SHORT).show();
                 } else {
                     while (cursor.moveToNext()) {
                         termID = cursor.getInt(0);
                     }
-                    //toast item
-                    Toast.makeText(MainActivity.this, termID + " " + termNameOnly, Toast.LENGTH_SHORT).show();
+                    //for testing
+                    //Toast.makeText(MainActivity.this, termID + " " + termNameOnly, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -233,8 +214,10 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
     }
     private void viewData(){
         Cursor cursor = dbHelper.viewData("term");
-        if(cursor.getCount() == 0)
-            Toast.makeText(this, "No data to show", Toast.LENGTH_SHORT).show();
+        if(cursor.getCount() == 0) {
+            //for testing
+            //Toast.makeText(this, "No data to show", Toast.LENGTH_SHORT).show();
+        }
         else{
             //display name and start/end dates
             while (cursor.moveToNext()) {
@@ -243,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
                 termEndDate = cursor.getString(3);
                 String nameAndDates = (cursor.getString(1))+ "\n"+termStartDate+" to "+termEndDate;
                 listItem.add(nameAndDates); //index 0 is name
-                //listItem.add(cursor.getString(0)); //index 0 is name
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
             userList.setAdapter(adapter);

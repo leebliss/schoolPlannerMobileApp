@@ -11,39 +11,26 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Layout;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.ColorRes;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -76,8 +63,6 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
     private Switch sAlert, eAlert;
     //for date picker
     private int mDate, mMonth, mYear;
-    //TextView displayTermsText;
-    // Button addNew, update, save, delete;
     //for bottom navigation menu
     private BottomNavigationView bottomNavigationView;
     //for db connectivity
@@ -137,7 +122,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         //use courseID to get corresponding data
         Cursor cursor = dbHelper.getDataByID(courseID, "CourseInfo");
         if (cursor.getCount() == 0) {
-            Toast.makeText(CourseDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(CourseDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
                 nameOfCourseSelected = cursor.getString(1); //this is the course featured in this term detail
@@ -150,7 +135,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 courseProfessorPhone = cursor.getString(8);
                 courseProfessorEmail = cursor.getString(9);
             }
-            //toast item
+            //for testing
             //Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
         }
 
@@ -312,8 +297,8 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                     while (cursor.moveToNext()) {
                         assessmentID = cursor.getInt(0);
                     }
-                    //toast item
-                    Toast.makeText(CourseDetail.this, "" + assessmentNameOnly, Toast.LENGTH_SHORT).show();
+                    //for testing
+                    //Toast.makeText(CourseDetail.this, "" + assessmentNameOnly, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -511,7 +496,6 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
                 if(cursor.getInt(7)==courseID) { //index 7 is the courseID foreign key for AssessmentInfo DB
                     String nameAndDates = (cursor.getString(1)) + "\n" + (cursor.getString(2)) + " to " + (cursor.getString(3));
                     listItem.add(nameAndDates);
-                    //listItem.add(cursor.getString(0)); //index 0 is name
                 }
             }
             adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listItem);
@@ -588,7 +572,6 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         if(startConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (titleText.getText().toString()).toUpperCase() + "' has begun.";
-            //Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("detailReminder");
             //random number for request code for intent
@@ -598,7 +581,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, startConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(CourseDetail.this, "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(CourseDetail.this, "start code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -616,7 +599,6 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         if(endConvertedToMillis>presentTime) {
             //set value of assessmentInfo to be passed as intent extra
             notificationInfo = "Your course '" + (titleText.getText().toString()).toUpperCase() + "' has ended.";
-            //Intent intent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
             intent.putExtra(COURSE_NOTIFICATION_INFO, notificationInfo);
             intent.setAction("detailReminder");
             //random number for request code for intent
@@ -626,7 +608,7 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
             AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, endConvertedToMillis, pendingIntent);
             //for testing
-            Toast.makeText(CourseDetail.this, "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(CourseDetail.this, "end code: "+Integer.toString(randomRequestCode), Toast.LENGTH_SHORT).show();
             //return the randomRequestCode to store for later deletion of intent
             return randomRequestCode;
         }
@@ -637,30 +619,24 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         int requestCode = 0; //for holding code stored in startAlert or endAlert
         Cursor cursor = dbHelper.getDataByName(nameOfCourseSelected, "CourseInfo");
         if (cursor.getCount() == 0) {
-            Toast.makeText(context, "Request Code Error.", Toast.LENGTH_SHORT).show();
+            //for testing
+            //Toast.makeText(context, "Request Code Error.", Toast.LENGTH_SHORT).show();
         }
         else {
             while (cursor.moveToNext()) {
                 if (reminderType.equals("start")) {
                     requestCode = cursor.getInt(5); //5 is startAlert
                     //for testing
-                    Toast.makeText(context, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "cancel start code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
                 if (reminderType.equals("stop")) {
                     requestCode = cursor.getInt(6); //6 is endAlert
                     //for testing
-                    Toast.makeText(context, "Cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "Cancel end code: "+String.valueOf(requestCode), Toast.LENGTH_SHORT).show();
                 }
             }
         }
         //use request code to cancel reminder
-        /*
-        AlarmManager alarmManager = (AlarmManager)(CourseDetail.this).getSystemService(Context.ALARM_SERVICE);
-        //Intent myIntent = new Intent(CourseDetail.this, CourseReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(CourseDetail.this, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        pendingIntent.cancel();
-        alarmManager.cancel(pendingIntent);
-         */
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);

@@ -239,7 +239,6 @@ public class DBHelper extends SQLiteOpenHelper {
             case "CourseInfo":
                 tableName = "CourseInfo";
                 primaryName = "courseName";
-                //cursor = DB.rawQuery("Select * from CourseInfo where courseName = ?", new String[]{name} );
                 break;
             case "AssessmentInfo":
                 tableName = "AssessmentInfo";

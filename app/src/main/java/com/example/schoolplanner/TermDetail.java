@@ -11,26 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
-
-import androidx.annotation.ColorRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -51,7 +43,6 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
     private int mDate, mMonth, mYear;
     //for bottom navigation menu
     private BottomNavigationView bottomNavigationView;
-    //Button addNew, update, delete, save;
     //for db connectivity
     DBHelper dbHelper;
     //for displaying data in a list
@@ -100,7 +91,8 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         //use termID to get other info from same row
         Cursor cursor = dbHelper.getDataByID(termID, "TermInfo");
         if (cursor.getCount() == 0) {
-            Toast.makeText(TermDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
+            //for testing
+            //Toast.makeText(TermDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
         } else {
             while (cursor.moveToNext()) {
                 nameOfTermSelected = cursor.getString(1);
@@ -122,15 +114,6 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         String endHolder = termEndDate;
         textViewEndDate.setText(endHolder);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-
-        //buttons
-        /*
-        addNew = findViewById(R.id.btnInsert);
-        update = findViewById(R.id.btnUpdate);
-        save = findViewById(R.id.btnSave);
-        delete = findViewById(R.id.btnDelete);
-         */
-
 
         //call local viewData method
         viewData();
@@ -195,13 +178,14 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
                 //pass course name to database to get course ID and assign to courseID variable
                 Cursor cursor = dbHelper.getDataByName(courseNameOnly, "CourseInfo");
                 if (cursor.getCount() == 0) {
-                    Toast.makeText(TermDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
+                    //for testing
+                    //Toast.makeText(TermDetail.this, "No matches found", Toast.LENGTH_SHORT).show();
                 } else {
                     while (cursor.moveToNext()) {
                         courseID = cursor.getInt(0);
                     }
-                    //toast item
-                    Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
+                    //for testing
+                    //Toast.makeText(TermDetail.this, "" + courseNameOnly, Toast.LENGTH_SHORT).show();
                 }
             }
         });
