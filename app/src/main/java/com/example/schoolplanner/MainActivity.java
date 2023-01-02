@@ -19,7 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements AddTermDialog.AddTermDialogListener {
+public class MainActivity extends AppCompatActivity implements AddTermDialog.AddTermDialogListener, SearchCoursesDialog.SearchCoursesDialogListener {
 
     //for passing values to another activity
     public static final String TERM_ID = "com.example.schoolplanner.TERM_ID";
@@ -197,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         case R.id.back:
             Toast.makeText(MainActivity.this, "This is the home screen.", Toast.LENGTH_SHORT).show();
             return(true);
+        case R.id.search:
+            openSearchDialog();
+            return true;
         case R.id.exit:
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -236,6 +239,10 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
     public void  openDialog(){
         AddTermDialog addTermDialog = new AddTermDialog();
         addTermDialog.show(getSupportFragmentManager(), "Add Term Dialog");
+    }
+    public void  openSearchDialog(){
+        SearchCoursesDialog searchCoursesDialog = new SearchCoursesDialog();
+        searchCoursesDialog.show(getSupportFragmentManager(), "Search Dialog");
     }
     @Override
     public void applyTexts(String termName, String startDate, String endDate) {
