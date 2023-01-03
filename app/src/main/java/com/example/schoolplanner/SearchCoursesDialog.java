@@ -20,17 +20,7 @@ import java.util.Calendar;
 public class SearchCoursesDialog extends AppCompatDialogFragment {
     //for user to enter values
     private EditText editTextName;
-    private TextView textViewStartDate, textViewEndDate;
-    private ImageView imageStartCalendar, imageEndCalendar;
-    //for holding dates and times for comparing start and end
-    private int startDate, startMonth,startYear;
-    private int endDate, endMonth,endYear;
 
-    //for holding start and end times in millis
-    long startConvertedToMillis;
-    long endConvertedToMillis;
-    //for date picker
-    private int mDate, mMonth, mYear;
     //listener
     private SearchCoursesDialogListener listener;
 
@@ -42,80 +32,21 @@ public class SearchCoursesDialog extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.layout_search_courses_dialog, null);
         //build the dialog
         builder.setView(view)
-                .setTitle("Search Your Schedule")
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setTitle("Search Your Schedule for a Course")
+                .setNegativeButton("Finished", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         //nothing needed here, only closing the dialog
                     }
                 })
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Search", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         //overriding this in onResume()
                     }
                 });
 
-        editTextName = view.findViewById(R.id.termName);
-        textViewStartDate = view.findViewById(R.id.termStartDate);
-        imageStartCalendar = view.findViewById(R.id.termStartCalendar);
-        textViewEndDate = view.findViewById(R.id.termEndDate);
-        imageEndCalendar = view.findViewById(R.id.termEndCalendar);
-
-        //initialize start and end millis
-        startConvertedToMillis=0;
-        endConvertedToMillis=0;
-
-        //listener for start date
-        imageStartCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar Cal = Calendar.getInstance();
-                mDate = Cal.get(Calendar.DATE);
-                mMonth = Cal.get(Calendar.MONTH);
-                mYear = Cal.get(Calendar.YEAR);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        textViewStartDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
-                        //set values for comparing start to end
-                        startDate = dayOfMonth;
-                        startMonth = month;
-                        startYear = year;
-                        //get start time in millis
-                        Calendar calendar1 = Calendar.getInstance();
-                        calendar1.set(startYear,startMonth,startDate);
-                        startConvertedToMillis = calendar1.getTimeInMillis();
-                    }
-                }, mYear, mMonth, mDate);
-                datePickerDialog.show();
-            }
-        });
-        //listener for end date
-        imageEndCalendar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar Cal = Calendar.getInstance();
-                mDate = Cal.get(Calendar.DATE);
-                mMonth = Cal.get(Calendar.MONTH);
-                mYear = Cal.get(Calendar.YEAR);
-                DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), android.R.style.Theme_DeviceDefault_Dialog, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                        textViewEndDate.setText((month+1)+"-"+dayOfMonth+"-"+year);
-                        //set values for comparing start to end
-                        endDate = dayOfMonth;
-                        endMonth = month;
-                        endYear = year;
-                        //get start time in millis
-                        Calendar calendar1 = Calendar.getInstance();
-                        calendar1.set(endYear,endMonth,endDate);
-                        endConvertedToMillis = calendar1.getTimeInMillis();
-                    }
-                }, mYear, mMonth, mDate);
-                datePickerDialog.show();
-            }
-        });
+        editTextName = view.findViewById(R.id.courseName);
 
         return builder.create();
     }
@@ -148,27 +79,11 @@ public class SearchCoursesDialog extends AppCompatDialogFragment {
     }
 
     private void performOkButtonAction() {
-        if (startConvertedToMillis <= endConvertedToMillis) {
-            String termName = editTextName.getText().toString();
-            String termStart = textViewStartDate.getText().toString();
-            String termEnd = textViewEndDate.getText().toString();
-            //test for all fields being filled
-            if(termName.equals("") || termStart.equals("") || termEnd.equals("")){
-                Toast.makeText(getActivity(), "ERROR: All fields must be filled.", Toast.LENGTH_SHORT).show();
-            }
-            else {
-                listener.applyTexts(termName, termStart, termEnd);
-                //refresh list after adding data
-                ((MainActivity) getActivity()).refreshList();
-                //close dialog
-                dismiss();
-            }
-        }
-        else{
-            Toast.makeText(getActivity(), "ERROR: End is before Start.", Toast.LENGTH_SHORT).show();
-        }
+        //use pos button to search for courses in schedule
+        Toast.makeText(getActivity(), "Search for course here.", Toast.LENGTH_SHORT).show();
     }
+
     public interface SearchCoursesDialogListener{
-        void applyTexts(String termName, String startDate, String endDate);
+        void applyTexts();
     }
 }

@@ -253,6 +253,10 @@ public class MainActivity extends AppCompatActivity implements AddTermDialog.Add
         else
             Toast.makeText(MainActivity.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
     }
+    @Override
+    public void applyTexts() {
+        //nothing to do here
+    }
     public void openTermDetailActivity(int termID){
         Intent intent =new Intent(this, TermDetail.class);
         intent.putExtra(TERM_ID, termID );
