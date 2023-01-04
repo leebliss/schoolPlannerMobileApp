@@ -6,7 +6,7 @@
 
     <EditText
         android:textSize="20dp"
-        android:hint="Enter Course Name"
+        android:hint="Enter name or part of name."
         android:id="@+id/courseName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             android:textSize="20dp" />
 
         <ListView
-            android:id="@+id/displayContactNames"
+            android:id="@+id/displayCoursesFound"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/searchListHeader"

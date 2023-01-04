@@ -4,28 +4,45 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class SearchCoursesDialog extends AppCompatDialogFragment {
     //for user to enter values
-    private EditText editTextName;
+    private EditText searchString;
+    //for db connectivity
+    DBHelper dbHelper;
+    //for displaying data in a list
+    ArrayList<String> listItem;
+    ArrayAdapter adapter;
+    ListView matchList;
 
     //listener
     private SearchCoursesDialogListener listener;
 
     @Override
     public Dialog onCreateDialog( Bundle savedInstanceState) {
+
+        //database connection
+        dbHelper = new DBHelper(getActivity());
+        //for displaying data in a list
+        listItem = new ArrayList<>();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         //inflate layout
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -45,8 +62,9 @@ public class SearchCoursesDialog extends AppCompatDialogFragment {
                         //overriding this in onResume()
                     }
                 });
-
-        editTextName = view.findViewById(R.id.courseName);
+        //get hold of layout items
+        matchList = view.findViewById(R.id.displayCoursesFound);
+        searchString = view.findViewById(R.id.courseName);
 
         return builder.create();
     }
@@ -78,8 +96,34 @@ public class SearchCoursesDialog extends AppCompatDialogFragment {
         });
     }
 
+        ///////////////////////the methods////////////////////////
+
+    private void viewMatches(){
+        //clear list so data is fresh
+        listItem.clear();
+        //get value entered to search on
+        String searchThis = searchString.getText().toString();
+        //step through data
+        Cursor cursor = dbHelper.viewData("course");
+        if(cursor.getCount() == 0)
+            Toast.makeText(getActivity(), "No matches found.", Toast.LENGTH_SHORT).show();
+        else{
+            while (cursor.moveToNext()) {
+                if(cursor.getString(1).equals(searchThis)) { //index 1 is the courseName for CourseInfo DB
+                    String nameAndTerm = "'"+searchThis+" found in term 'XXX'"; //need to use termID to get termName here
+                    listItem.add(nameAndTerm);
+                }
+            }
+            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listItem);
+            matchList.setAdapter(adapter);
+            //programatically reset height of listview each time viewData is called
+            ListViewHelper.setListViewHeightBasedOnChildren(matchList);
+        }
+    }
+
     private void performOkButtonAction() {
         //use pos button to search for courses in schedule
+        viewMatches();
         Toast.makeText(getActivity(), "Search for course here.", Toast.LENGTH_SHORT).show();
     }
 
