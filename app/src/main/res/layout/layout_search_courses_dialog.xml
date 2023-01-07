@@ -6,7 +6,7 @@
 
     <EditText
         android:textSize="20dp"
-        android:hint="Enter name or part of name."
+        android:hint="Enter a name or part of a name."
         android:id="@+id/courseName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

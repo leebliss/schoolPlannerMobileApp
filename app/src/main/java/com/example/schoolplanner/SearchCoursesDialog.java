@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -98,33 +99,57 @@ public class SearchCoursesDialog extends AppCompatDialogFragment {
 
         ///////////////////////the methods////////////////////////
 
+    private void performOkButtonAction() {
+        //use pos button to search for courses in schedule
+        viewMatches();
+    }
+
     private void viewMatches(){
         //clear list so data is fresh
         listItem.clear();
         //get value entered to search on
         String searchThis = searchString.getText().toString();
         //step through data
+        int hits = 0;
         Cursor cursor = dbHelper.viewData("course");
         if(cursor.getCount() == 0)
+            //nothing in the database
             Toast.makeText(getActivity(), "No matches found.", Toast.LENGTH_SHORT).show();
         else{
             while (cursor.moveToNext()) {
-                if(cursor.getString(1).equals(searchThis)) { //index 1 is the courseName for CourseInfo DB
-                    String nameAndTerm = "'"+searchThis+" found in term 'XXX'"; //need to use termID to get termName here
+                if(cursor.getString(1).contains(searchThis)) { //index 1 is the courseName for CourseInfo DB
+                    hits=1;
+                    //get termID that owns matching course
+                    int termID = cursor.getInt(10); //index 10 is the termID foreign key for CourseInfo DB
+                    //for testing
+                    Log.d("termID=", String.valueOf(termID));
+                    //use termID to get term name
+                    Cursor cursor2 = dbHelper.getDataByID(termID,"TermInfo");
+                    String termName = "";
+                    while (cursor2.moveToNext()) {
+                        termName = cursor2.getString(1); //index 1 is the termName for TermInfo DB
+                    }
+                    //for testing
+                    Log.d("termName=", termName);
+                    String nameAndTerm = "'"+cursor.getString(1)+"' found in term '"+termName+"'";
+                    //add searchCoursesDialog connection to other activities
                     listItem.add(nameAndTerm);
                 }
             }
-            adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listItem);
-            matchList.setAdapter(adapter);
-            //programatically reset height of listview each time viewData is called
-            ListViewHelper.setListViewHeightBasedOnChildren(matchList);
+            if(hits==0) Toast.makeText(getActivity(), "No matches found.", Toast.LENGTH_SHORT).show();
+            //test for nothing entered, in which case we do not want to show results
+            if(searchThis.equals("")){
+                Toast.makeText(getActivity(), "Enter a name or part of a name.", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                //for testing
+                Log.d("searchThis=", String.valueOf(searchThis));
+                adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, listItem);
+                matchList.setAdapter(adapter);
+                //programatically reset height of listview each time viewData is called
+                ListViewHelper.setListViewHeightBasedOnChildren(matchList);
+            }
         }
-    }
-
-    private void performOkButtonAction() {
-        //use pos button to search for courses in schedule
-        viewMatches();
-        Toast.makeText(getActivity(), "Search for course here.", Toast.LENGTH_SHORT).show();
     }
 
     public interface SearchCoursesDialogListener{

@@ -26,7 +26,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class TermDetail extends AppCompatActivity implements AddCourseDialog.AddCourseDialogListener {
+public class TermDetail extends AppCompatActivity implements AddCourseDialog.AddCourseDialogListener,SearchCoursesDialog.SearchCoursesDialogListener {
 
     //for passing values to another activity
     public static final String COURSE_ID = "com.example.schoolplanner.COURSE_ID";
@@ -309,6 +309,9 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         case R.id.home:
             goHome();
             return(true);
+        case R.id.search:
+            openSearchDialog();
+            return true;
         case R.id.exit:
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -347,6 +350,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
         AddCourseDialog addCourseDialog = new AddCourseDialog(nameOfTermSelected, termID);
         addCourseDialog.show(getSupportFragmentManager(), "Add Course Dialog");
     }
+    public void  openSearchDialog(){
+        SearchCoursesDialog searchCoursesDialog = new SearchCoursesDialog();
+        searchCoursesDialog.show(getSupportFragmentManager(), "Search Dialog");
+    }
     @Override
     public void applyTexts(String courseName, String startDate, String endDate, String status, int startAlert, int endAlert, String professor, String phone, String email, int termID) {
 
@@ -355,6 +362,10 @@ public class TermDetail extends AppCompatActivity implements AddCourseDialog.Add
             Toast.makeText(TermDetail.this, "New Entry Inserted", Toast.LENGTH_SHORT).show();
         else
             Toast.makeText(TermDetail.this, "New Entry Not Inserted", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void applyTexts() {
+        //nothing to do here
     }
     public void openCourseDetailActivity(int ID){
         Intent intent =new Intent(this, CourseDetail.class);
