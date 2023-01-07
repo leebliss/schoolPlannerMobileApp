@@ -28,7 +28,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import java.util.Calendar;
 import java.util.Random;
 
-public class AssessmentDetail extends AppCompatActivity {
+public class AssessmentDetail extends AppCompatActivity implements SearchCoursesDialog.SearchCoursesDialogListener {
 
     //for passing values to another activity
     public static final String ASSESSMENT_NOTIFICATION_INFO = "com.example.schoolplanner.ASSESSMENT_DETAIL_NOTIFICATION_INFO";
@@ -396,6 +396,9 @@ public class AssessmentDetail extends AppCompatActivity {
         case R.id.back:
             finish();
             return(true);
+        case R.id.search:
+            openSearchDialog();
+            return true;
         case R.id.exit:
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -491,6 +494,16 @@ public class AssessmentDetail extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
+    }
+
+    @Override
+    public void applyTexts() {
+        //nothing to do here
+    }
+
+    public void  openSearchDialog(){
+        SearchCoursesDialog searchCoursesDialog = new SearchCoursesDialog();
+        searchCoursesDialog.show(getSupportFragmentManager(), "Search Dialog");
     }
 
     public void goHome(){

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
-public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener,AddNoteDialog.AddNoteDialogListener  {
+public class CourseDetail extends AppCompatActivity implements AddAssessmentDialog.AddAssessmentDialogListener,AddNoteDialog.AddNoteDialogListener,SearchCoursesDialog.SearchCoursesDialogListener  {
 
     //for passing values to another activity
     public static final String ASSESSMENT_ID = "com.example.schoolplanner.ASSESSMENT_ID";
@@ -471,6 +471,9 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         case R.id.home:
             goHome();
             return(true);
+        case R.id.search:
+            openSearchDialog();
+            return true;
         case R.id.exit:
             moveTaskToBack(true);
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -512,6 +515,10 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         AddNoteDialog addNoteDialog = new AddNoteDialog(courseID);
         addNoteDialog.show(getSupportFragmentManager(), "Add Note Dialog");
     }
+    public void  openSearchDialog(){
+        SearchCoursesDialog searchCoursesDialog = new SearchCoursesDialog();
+        searchCoursesDialog.show(getSupportFragmentManager(), "Search Dialog");
+    }
 
     //for opening addAssessmentDialog, passes 7 arguments
     @Override
@@ -543,6 +550,12 @@ public class CourseDetail extends AppCompatActivity implements AddAssessmentDial
         else
             Toast.makeText(CourseDetail.this, "New Contact Not Inserted", Toast.LENGTH_SHORT).show();
     }
+    //this is called when the search course dialog closes, no info to save to DB
+    @Override
+    public void applyTexts() {
+        //nothing to do here
+    }
+
     public void openAssessmentDetailActivity(int ID){
         Intent intent =new Intent(this, AssessmentDetail.class);
         intent.putExtra(ASSESSMENT_ID, ID);

@@ -132,7 +132,6 @@ public class SearchCoursesDialog extends AppCompatDialogFragment {
                     //for testing
                     Log.d("termName=", termName);
                     String nameAndTerm = "'"+cursor.getString(1)+"' found in term '"+termName+"'";
-                    //add searchCoursesDialog connection to other activities
                     listItem.add(nameAndTerm);
                 }
             }
