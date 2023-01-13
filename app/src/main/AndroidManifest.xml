@@ -32,6 +32,9 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SecureEntry"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

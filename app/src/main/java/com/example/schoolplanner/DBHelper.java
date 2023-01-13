@@ -14,10 +14,8 @@ public class DBHelper extends SQLiteOpenHelper {
     //create the databases
     @Override
     public void onCreate(SQLiteDatabase DB) {
-        //for secure login
+        //user login
         DB.execSQL("create Table LoginData (userID INTEGER primary key AUTOINCREMENT, userLogin TEXT, userPassword TEXT)");
-        //create a test login, functionality for administratively creating new users is outside the scope of this project
-        insertUserData("testUser", "testPassword");
         //table for term info
         DB.execSQL("create Table TermInfo (termID INTEGER primary key AUTOINCREMENT, termName TEXT, startDate TEXT, endDate TEXT)");
         //table for course info
@@ -34,6 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase DB, int i, int ii) {
+        DB.execSQL("drop Table if exists LoginData");
         DB.execSQL("drop Table if exists TermInfo");
         DB.execSQL("drop Table if exists CourseInfo");
         DB.execSQL("drop Table if exists AssessmentInfo");
@@ -305,6 +304,10 @@ public class DBHelper extends SQLiteOpenHelper {
             case "ContactInfo":
                 tableName = "ContactInfo";
                 primaryName = "contactName";
+                break;
+            case "LoginData":
+                tableName = "LoginData";
+                primaryName = "userLogin";
                 break;
             default:
                 break;
