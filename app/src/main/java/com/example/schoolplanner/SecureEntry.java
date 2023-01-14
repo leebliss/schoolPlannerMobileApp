@@ -37,7 +37,10 @@ public class SecureEntry extends AppCompatActivity {
         submitLogin = findViewById(R.id.loginButton);
 
         //create a test login--functionality for administratively creating new users is outside the scope of this project
-        dbHelper.insertUserData("name", "password");
+        Cursor cursor = dbHelper.getDataByName("name", "LoginData");
+        if (cursor.getCount() == 0) { //need to create test login DB entry
+            dbHelper.insertUserData("name", "password");
+        }
 
         //listener for submit button
         submitLogin.setOnClickListener(new View.OnClickListener() {
@@ -46,9 +49,7 @@ public class SecureEntry extends AppCompatActivity {
                 String userName = loginName.getText().toString();
                 String userPassword = password.getText().toString();
                 Boolean validPassword = false;
-                //check values against database, pass through or error mssg
                 //right now the login data is for testing only, admin code for creating users is outside scope of this project
-                //use assessmentID to get corresponding data
                 Cursor cursor = dbHelper.getDataByName(userName, "LoginData");
                 if (cursor.getCount() == 0) {
                     Toast.makeText(SecureEntry.this, "Access Denied", Toast.LENGTH_SHORT).show();
