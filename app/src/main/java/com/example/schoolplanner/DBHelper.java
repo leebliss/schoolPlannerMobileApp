@@ -15,19 +15,19 @@ public class DBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase DB) {
         //user login
-        DB.execSQL("create Table LoginData (userID INTEGER primary key AUTOINCREMENT, userLogin TEXT, userPassword TEXT)");
+        DB.execSQL("create Table LoginData (userID INTEGER primary key AUTOINCREMENT, userLogin TEXT NOT NULL, userPassword TEXT NOT NULL)");
         //table for term info
-        DB.execSQL("create Table TermInfo (termID INTEGER primary key AUTOINCREMENT, termName TEXT, startDate TEXT, endDate TEXT)");
+        DB.execSQL("create Table TermInfo (termID INTEGER primary key AUTOINCREMENT, termName TEXT NOT NULL, startDate TEXT NOT NULL, endDate TEXT NOT NULL)");
         //table for course info
-        DB.execSQL("create Table CourseInfo (courseID INTEGER primary key AUTOINCREMENT, courseName TEXT,startDate TEXT, endDate TEXT, status TEXT, startAlert INTEGER, endAlert INTEGER," +
+        DB.execSQL("create Table CourseInfo (courseID INTEGER primary key AUTOINCREMENT, courseName TEXT NOT NULL,startDate TEXT NOT NULL, endDate TEXT NOT NULL, status TEXT NOT NULL, startAlert INTEGER, endAlert INTEGER," +
                 "professor TEXT, phone TEXT, email TEXT, termID INTEGER,FOREIGN KEY(termID) REFERENCES TermInfo(termID))");
         //table for assessment info
-        DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT, startDate TEXT, endDate TEXT, type TEXT, startAlert INTEGER, endAlert INTEGER, courseID INTEGER,"+
+        DB.execSQL("create Table AssessmentInfo (assessmentID INTEGER primary key AUTOINCREMENT, assessmentName TEXT NOT NULL, startDate TEXT NOT NULL, endDate TEXT NOT NULL, type TEXT NOT NULL, startAlert INTEGER, endAlert INTEGER, courseID INTEGER,"+
                 "FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
         //table for course notes
         DB.execSQL("create Table CourseNotes (courseNoteID INTEGER primary key AUTOINCREMENT, courseNote TEXT, shared INTEGER, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
         //table for contacts
-        DB.execSQL("create Table ContactInfo (ContactID INTEGER primary key AUTOINCREMENT, contactName TEXT, contactPhone TEXT, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
+        DB.execSQL("create Table ContactInfo (ContactID INTEGER primary key AUTOINCREMENT, contactName TEXT NOT NULL, contactPhone TEXT NOT NULL, courseID INTEGER, FOREIGN KEY(courseID) REFERENCES CourseInfo(courseID))");
     }
 
     @Override
